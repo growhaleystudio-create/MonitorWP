@@ -1,0 +1,121 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Site {
+  id             Int             @id @default(autoincrement())
+  name           String
+  url            String
+  apiKey         String          @unique // X-API-Key for Agent auth
+  isActive       Boolean         @default(true)
+  lastSeenAt     DateTime?
+  status         String          @default("unknown") // online, offline, unknown
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  wpMemoryUsage  Float?
+  diskTotal      Float?
+  diskFree       Float?
+  cpuLoad        Float?
+  plugins        Plugin[]
+  uptimeLogs     UptimeLog[]
+  errorLogs      ErrorLog[]
+  securityEvents SecurityEvent[]
+  alerts         Alert[]
+  seoPlugin      String?         @default("none")
+  seoTotalPosts  Int?            @default(0)
+  seoRecentPosts String?         // JSON string: recent articles
+  scaResults     String?         // JSON string: SCA policies check
+  scaScore       Int?            @default(0)
+  trafficLogs    TrafficLog[]
+}
+
+model Plugin {
+  id             Int       @id @default(autoincrement())
+  siteId         Int
+  site           Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  name           String
+  slug           String
+  version        String
+  latestVersion  String?
+  isActive       Boolean
+  isExpired      Boolean   @default(false)
+  expiredAt      DateTime?
+  requiresUpdate Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([siteId, slug])
+}
+
+model UptimeLog {
+  id             Int      @id @default(autoincrement())
+  siteId         Int
+  site           Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  statusCode     Int
+  responseTimeMs Int
+  isUp           Boolean
+  checkedAt      DateTime @default(now())
+}
+
+model ErrorLog {
+  id          Int      @id @default(autoincrement())
+  siteId      Int
+  site        Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  errorCode   Int      // 404, 500, etc.
+  url         String
+  message     String?
+  userAgent   String?
+  ipAddress   String?
+  referer     String?
+  count       Int      @default(1)
+  firstSeen   DateTime @default(now())
+  lastSeen    DateTime @default(now())
+}
+
+model SecurityEvent {
+  id        Int      @id @default(autoincrement())
+  siteId    Int
+  site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  eventType String   // login_success, login_failed, file_change, injection_sqli, etc.
+  detail    String   // JSON string
+  ipAddress String?
+  username  String?
+  createdAt DateTime @default(now())
+}
+
+model Alert {
+  id           Int       @id @default(autoincrement())
+  siteId       Int
+  site         Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  alertType    String    // site_down, plugin_expired, etc.
+  message      String
+  severity     String    // info, warning, critical
+  telegramSent Boolean   @default(false)
+  readAt       DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+model Setting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model TrafficLog {
+  id         Int      @id @default(autoincrement())
+  siteId     Int
+  site       Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  url        String
+  ipAddress  String?
+  userAgent  String?
+  referer    String?
+  visitedAt  DateTime @default(now())
+
+  @@index([siteId, visitedAt])
+}

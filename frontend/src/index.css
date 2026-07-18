@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#f3f7f9] text-slate-700 font-sans transition-colors duration-200 antialiased font-normal;
+    font-weight: 400;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-slate-900 tracking-tight;
+    font-weight: 600 !important;
+  }
+}
+
+/* --- Clean Professional SaaS Theme Styles --- */
+
+/* Page subtitle (red/coral uppercase label above titles) */
+.page-subtitle {
+  @apply text-[10px] text-coral uppercase tracking-widest block mb-1;
+  font-weight: 600 !important;
+}
+
+/* Clean cards with 4px left border */
+.saas-card {
+  @apply bg-white rounded border border-slate-100/80 shadow-card pl-6 pr-6 py-6 border-l-4 border-l-primary-teal transition-all duration-200 relative;
+}
+
+.saas-card-gold {
+  @apply saas-card border-l-accent-gold;
+}
+
+.saas-card-coral {
+  @apply saas-card border-l-coral;
+}
+
+.saas-card-sky {
+  @apply saas-card border-l-sky;
+}
+
+/* Clean buttons */
+.btn-pill {
+  @apply rounded px-5 py-2.5 text-[13px] tracking-wide transition-all duration-150 active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-sm select-none;
+  font-weight: 600 !important;
+}
+
+/* Accent Gold CTA */
+.btn-gold {
+  @apply btn-pill bg-accent-gold hover:bg-accent-dark text-slate-900 border border-accent-dark/10;
+}
+
+/* Teal Active button */
+.btn-teal {
+  @apply btn-pill bg-primary-teal hover:bg-primary-dark text-white border border-primary-dark/10;
+}
+
+/* Outline button */
+.btn-outline {
+  @apply btn-pill bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition;
+}
+
+/* Standard clean inputs */
+.clean-input {
+  @apply bg-white border border-slate-200 focus:border-primary-teal focus:ring-4 focus:ring-primary-teal/10 outline-none rounded px-4 py-3 text-slate-800 text-sm shadow-sm transition-all duration-150;
+}
+
+/* Micro-badge for statuses */
+.saas-badge {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px];
+  font-weight: 600 !important;
+}
+
+/* Custom modern, subtle scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1; /* soft slate */
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; /* darker slate on hover */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+/* Analyst font-weight scaling overrides to make the app look thin and clean */
+@layer utilities {
+  .font-extrabold {
+    font-weight: 600 !important;
+  }
+  .font-bold {
+    font-weight: 600 !important;
+  }
+  .font-black {
+    font-weight: 700 !important;
+  }
+  .font-semibold {
+    font-weight: 500 !important; /* Semibold scales down to medium */
+  }
+}

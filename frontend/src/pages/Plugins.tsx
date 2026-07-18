@@ -1,0 +1,232 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import PetLoader from '../components/PetLoader';
+import {
+  Plug,
+  Search,
+  Filter,
+  AlertTriangle,
+  ExternalLink
+} from 'lucide-react';
+
+interface Plugin {
+  id: number;
+  name: string;
+  slug: string;
+  version: string;
+  latestVersion: string | null;
+  isActive: boolean;
+  isExpired: boolean;
+  expiredAt: string | null;
+  requiresUpdate: boolean;
+  updatedAt: string;
+  site: {
+    name: string;
+    url: string;
+    isActive: boolean;
+  };
+  siteId: number;
+}
+
+function Plugins() {
+  const [plugins, setPlugins] = useState<Plugin[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Filters
+  const [searchTerm, setSearchTerm] = useState('');
+  const [siteFilter, setSiteFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+
+  useEffect(() => {
+    const fetchPlugins = async () => {
+      try {
+        const response = await axios.get('/api/dashboard/plugins');
+        setPlugins(response.data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching plugins:', err);
+        setError('Failed to fetch aggregated plugin lists.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPlugins();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <PetLoader size={64} state="running" text="Scanning global plugins..." />
+      </div>
+    );
+  }
+
+  // Get unique sites for filter dropdown
+  const uniqueSites = Array.from(new Set(plugins.map((p) => p.site.name))).sort();
+
+  // Filter plugins
+  const filteredPlugins = plugins.filter((plugin) => {
+    const matchesSearch =
+      plugin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      plugin.slug.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesSite = siteFilter === '' || plugin.site.name === siteFilter;
+
+    let matchesStatus = true;
+    if (statusFilter === 'active') matchesStatus = plugin.isActive;
+    else if (statusFilter === 'inactive') matchesStatus = !plugin.isActive;
+    else if (statusFilter === 'expired') matchesStatus = plugin.isExpired;
+    else if (statusFilter === 'update') matchesStatus = plugin.requiresUpdate;
+
+    return matchesSearch && matchesSite && matchesStatus;
+  });
+
+  return (
+    <div className="flex flex-col gap-8 text-primary-dark">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span className="page-subtitle">Global Scoreboard</span>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Aggregated Plugins</h2>
+        </div>
+      </div>
+
+      {error && (
+        <div className="p-4 rounded-md bg-coral/10 border-2 border-coral text-coral-dark text-xs font-bold shadow-sm">
+          {error}
+        </div>
+      )}
+
+      {/* Filter Toolbar */}
+      <div className="bg-white border-2 border-primary-teal/15 rounded p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-card">
+        {/* Search */}
+        <div className="relative w-full md:max-w-xs">
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-primary-teal/70">
+            <Search className="h-4 w-4" />
+          </span>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-9 pr-4 py-2.5 bg-cream border-2 border-primary-teal/20 focus:border-primary-teal outline-none rounded-md text-xs font-bold text-primary-dark shadow-sm"
+            placeholder="Search plugins..."
+          />
+        </div>
+
+        {/* Filters Dropdown */}
+        <div className="flex flex-wrap items-center gap-4 w-full md:w-auto justify-end">
+          <div className="flex items-center gap-2 shrink-0">
+            <Filter className="h-4 w-4 text-primary-teal" />
+            <span className="text-xs text-primary-dark/85 font-extrabold uppercase tracking-wider">Filter:</span>
+          </div>
+
+          {/* Site Filter */}
+          <select
+            value={siteFilter}
+            onChange={(e) => setSiteFilter(e.target.value)}
+            className="px-3 py-2.5 bg-cream border-2 border-primary-teal/25 focus:border-primary-teal text-xs font-bold text-primary-dark rounded-md w-full md:w-44 shadow-sm"
+          >
+            <option value="">All Websites</option>
+            {uniqueSites.map((siteName) => (
+              <option key={siteName} value={siteName}>
+                {siteName}
+              </option>
+            ))}
+          </select>
+
+          {/* Status Filter */}
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-3 py-2.5 bg-cream border-2 border-primary-teal/25 focus:border-primary-teal text-xs font-bold text-primary-dark rounded-md w-full md:w-44 shadow-sm"
+          >
+            <option value="">All Statuses</option>
+            <option value="active">Active only</option>
+            <option value="inactive">Inactive only</option>
+            <option value="expired">Expired licenses</option>
+            <option value="update">Update available</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Plugins Table */}
+      <div className="bg-white border-2 border-primary-teal/15 rounded shadow-card overflow-hidden">
+        {filteredPlugins.length === 0 ? (
+          <div className="p-16 text-center text-slate-500 flex flex-col items-center gap-3 font-medium">
+            <Plug className="h-10 w-10 text-primary-teal" />
+            <p className="font-extrabold text-primary-dark">No plugins match your filter criteria.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-primary-bg/30 border-b border-primary-teal/15 text-[10px] font-extrabold text-primary-teal/80 uppercase tracking-wider">
+                  <th className="py-4 px-6">Plugin Name</th>
+                  <th className="py-4 px-6">Website</th>
+                  <th className="py-4 px-6 text-center">Status</th>
+                  <th className="py-4 px-6 text-center">Version</th>
+                  <th className="py-4 px-6 text-center">Latest Version</th>
+                  <th className="py-4 px-6 text-right">License</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-primary-teal/10 text-sm font-medium">
+                {filteredPlugins.map((plugin) => (
+                  <tr key={plugin.id} className="hover:bg-primary-bg/15 transition">
+                    <td className="py-4 px-6 flex flex-col gap-0.5">
+                      <span className="font-extrabold text-primary-dark">{plugin.name}</span>
+                      <span className="text-[11px] text-slate-500 font-mono">{plugin.slug}</span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <Link
+                        to={`/sites/${plugin.siteId}`}
+                        className="font-extrabold text-primary-teal hover:text-primary-light flex items-center gap-1"
+                      >
+                        {plugin.site.name}
+                        <ExternalLink className="h-3 w-3" />
+                      </Link>
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold ${
+                        plugin.isActive
+                          ? 'bg-success/10 text-success'
+                          : 'bg-slate-100 text-slate-400'
+                      }`}>
+                        {plugin.isActive ? 'Active' : 'Inactive'}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6 text-center text-primary-dark">
+                      v{plugin.version}
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      {plugin.requiresUpdate ? (
+                        <span className="text-accent-dark font-black flex items-center justify-center gap-1">
+                          <AlertTriangle className="h-4 w-4" />
+                          v{plugin.latestVersion}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400 font-medium">v{plugin.version}</span>
+                      )}
+                    </td>
+                    <td className="py-4 px-6 text-right">
+                      {plugin.isExpired ? (
+                        <span className="inline-flex px-2 py-0.5 rounded bg-coral/15 text-coral text-xs font-bold border border-coral/25">
+                          Expired {plugin.expiredAt ? new Date(plugin.expiredAt).toLocaleDateString() : ''}
+                        </span>
+                      ) : (
+                        <span className="text-success text-xs font-extrabold uppercase">Valid</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default Plugins;

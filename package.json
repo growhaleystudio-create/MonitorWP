@@ -1,0 +1,22 @@
+{
+  "name": "wp-monitoring-dashboard",
+  "version": "1.0.0",
+  "description": "WordPress Multi-Site Monitoring Dashboard",
+  "main": "index.js",
+  "scripts": {
+    "backend:install": "cd backend && npm install",
+    "frontend:install": "cd frontend && npm install",
+    "install:all": "npm install && npm run backend:install && npm run frontend:install",
+    "postinstall": "npm run backend:install && npm run frontend:install",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend:dev": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "build": "npm run build:frontend && npm run build:backend",
+    "start": "cd backend && npm start"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
