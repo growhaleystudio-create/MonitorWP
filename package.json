@@ -7,7 +7,7 @@
     "backend:install": "cd backend && npm install",
     "frontend:install": "cd frontend && npm install",
     "install:all": "npm install && npm run backend:install && npm run frontend:install",
-    "postinstall": "npm run backend:install && npm run frontend:install",
+    "postinstall": "npm run backend:install && npm run frontend:install && cd backend && npx prisma generate",
     "backend:dev": "cd backend && npm run dev",
     "frontend:dev": "cd frontend && npm run dev",
     "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",

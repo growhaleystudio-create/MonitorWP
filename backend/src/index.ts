@@ -19,7 +19,7 @@ import {
   saveSettings,
   testTelegram,
 } from './controllers/dashboardController';
-import { startUptimeScheduler } from './services/uptime';
+import { startUptimeScheduler, runUptimeCycleImmediateAwaited } from './services/uptime';
 
 // Load environment variables
 dotenv.config();
@@ -93,6 +93,21 @@ app.get('/api/dashboard/settings', validateDashboardSession, getSettings);
 app.post('/api/dashboard/settings', validateDashboardSession, saveSettings);
 app.post('/api/dashboard/settings/test-telegram', validateDashboardSession, testTelegram);
 
+// --- Cron Route for Serverless (Vercel) ---
+app.get('/api/cron/check-uptime', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    await runUptimeCycleImmediateAwaited();
+    res.json({ success: true, message: 'Uptime checks completed' });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // --- Serve Frontend Static Files (Production) ---
 const frontendBuildPath = path.join(__dirname, '../../frontend/dist');
 app.use(express.static(frontendBuildPath));
@@ -106,7 +121,12 @@ app.get('*', (req, res) => {
 async function startServer() {
   await seedDefaultSettings();
   
-  // Start background uptime checking scheduler
+  if (process.env.VERCEL) {
+    console.log('Running in Vercel Serverless environment.');
+    return;
+  }
+
+  // Start background uptime checking scheduler (standard server only)
   startUptimeScheduler();
 
   app.listen(PORT, () => {
@@ -114,6 +134,15 @@ async function startServer() {
   });
 }
 
-startServer().catch((error) => {
-  console.error('Failed to start server:', error);
-});
+if (!process.env.VERCEL) {
+  startServer().catch((error) => {
+    console.error('Failed to start server:', error);
+  });
+} else {
+  // Run seeding on serverless start
+  seedDefaultSettings().catch((error) => {
+    console.error('Failed to seed default settings on Vercel:', error);
+  });
+}
+
+export default app;

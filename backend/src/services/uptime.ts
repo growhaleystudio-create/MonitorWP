@@ -151,3 +151,23 @@ export async function runUptimeCycleImmediate() {
     console.error('Error in immediate uptime check:', error);
   }
 }
+
+/**
+ * Runs a check on all active sites immediately and awaits all pings (for Serverless/Vercel Cron).
+ */
+export async function runUptimeCycleImmediateAwaited() {
+  try {
+    const sites = await prisma.site.findMany({ where: { isActive: true } });
+    const promises = sites.map(async (site) => {
+      try {
+        await checkSiteUptime(site.id);
+      } catch (err) {
+        console.error(`Error checking site ${site.name} uptime:`, err);
+      }
+    });
+    await Promise.all(promises);
+    console.log('All uptime checks completed.');
+  } catch (error) {
+    console.error('Error in awaited uptime check:', error);
+  }
+}
