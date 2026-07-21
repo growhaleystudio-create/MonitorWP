@@ -527,8 +527,11 @@ function wp_monitor_push_data() {
             delete_option('wp_monitor_error_buffer');
             delete_option('wp_monitor_security_buffer');
             delete_option('wp_monitor_traffic_buffer');
+            return true;
         }
+        return new WP_Error('http_status_' . $code, "Server returned HTTP status code $code");
     }
+    return $response;
 }
 
 /**
@@ -564,4 +567,71 @@ function wp_monitor_agent_deactivation() {
     if ($timestamp) {
         wp_unschedule_event($timestamp, 'wp_monitor_push_hook');
     }
+}
+
+/**
+ * Admin Menu Page for WP Monitor Agent
+ */
+add_action('admin_menu', 'wp_monitor_agent_add_admin_menu');
+function wp_monitor_agent_add_admin_menu() {
+    add_options_page(
+        'WP Monitor Agent',
+        'WP Monitor Agent',
+        'manage_options',
+        'wp-monitor-agent',
+        'wp_monitor_agent_render_admin_page'
+    );
+}
+
+function wp_monitor_agent_render_admin_page() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+
+    $sync_result = null;
+
+    if (isset($_POST['wp_monitor_manual_sync']) && check_admin_referer('wp_monitor_sync_action', 'wp_monitor_sync_nonce')) {
+        $sync_result = wp_monitor_push_data();
+    }
+
+    $api_key = WP_MONITOR_API_KEY;
+    $server_url = WP_MONITOR_SERVER_URL;
+    ?>
+    <div class="wrap">
+        <h1>WordPress Multi-Site Monitor Agent</h1>
+        <hr />
+
+        <?php if ($sync_result === true): ?>
+            <div class="notice notice-success is-dismissible"><p>✅ <strong>Sync Berhasil!</strong> Data RAM, CPU, Disk, Plugin, & Log berhasil dikirim ke Dashboard central.</p></div>
+        <?php elseif (is_wp_error($sync_result)): ?>
+            <div class="notice notice-error is-dismissible"><p>❌ <strong>Sync Gagal:</strong> <?php echo esc_html($sync_result->get_error_message()); ?></p></div>
+        <?php endif; ?>
+
+        <table class="form-table">
+            <tr>
+                <th scope="row">Server URL</th>
+                <td><code><?php echo esc_html($server_url ?: 'Belum diatur (WP_MONITOR_SERVER_URL)'); ?></code></td>
+            </tr>
+            <tr>
+                <th scope="row">API Key</th>
+                <td><code><?php echo esc_html($api_key ? substr($api_key, 0, 8) . '...' : 'Belum diatur (WP_MONITOR_API_KEY)'); ?></code></td>
+            </tr>
+            <tr>
+                <th scope="row">Status Konfigurasi</th>
+                <td>
+                    <?php if (!empty($api_key) && !empty($server_url)): ?>
+                        <span style="color: green; font-weight: bold;">✔ Terkonfigurasi</span>
+                    <?php else: ?>
+                        <span style="color: red; font-weight: bold;">✖ Belum Terkonfigurasi di wp-config.php</span>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        </table>
+
+        <form method="post" action="" style="margin-top: 20px;">
+            <?php wp_nonce_field('wp_monitor_sync_action', 'wp_monitor_sync_nonce'); ?>
+            <input type="submit" name="wp_monitor_manual_sync" class="button button-primary button-hero" value="⚡ Sync Data ke Dashboard Sekarang" <?php disabled(empty($api_key) || empty($server_url)); ?> />
+        </form>
+    </div>
+    <?php
 }
