@@ -508,7 +508,7 @@ function wp_monitor_push_data() {
     
     $response = wp_remote_post(rtrim($server_url, '/') . '/api/agent/push', [
         'method'      => 'POST',
-        'timeout'     => 15,
+        'timeout'     => 45,
         'redirection' => 5,
         'httpversion' => '1.0',
         'blocking'    => true,

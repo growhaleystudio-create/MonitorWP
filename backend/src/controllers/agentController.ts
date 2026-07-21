@@ -50,71 +50,69 @@ export async function handleAgentPush(req: Request, res: Response) {
         },
       });
 
-      for (const p of plugins) {
-        if (!p.slug || !p.name) continue;
+      // Fetch all existing plugins in 1 query to avoid N+1 queries
+      const existingPlugins = await prisma.plugin.findMany({
+        where: { siteId: site.id },
+      });
+      const existingMap = new Map(existingPlugins.map((p) => [p.slug, p]));
 
-        // Check if plugin existed before to detect status changes
-        const existingPlugin = await prisma.plugin.findUnique({
-          where: {
-            siteId_slug: {
-              siteId: site.id,
-              slug: p.slug,
+      // Execute upserts in parallel
+      await Promise.all(
+        plugins.map(async (p: any) => {
+          if (!p.slug || !p.name) return;
+
+          const existingPlugin = existingMap.get(p.slug);
+
+          const updatedPlugin = await prisma.plugin.upsert({
+            where: {
+              siteId_slug: {
+                siteId: site.id,
+                slug: p.slug,
+              },
             },
-          },
-        });
-
-        // Upsert plugin
-        const updatedPlugin = await prisma.plugin.upsert({
-          where: {
-            siteId_slug: {
-              siteId: site.id,
-              slug: p.slug,
+            update: {
+              name: p.name,
+              version: p.version || '',
+              latestVersion: p.latest_version || null,
+              isActive: !!p.is_active,
+              isExpired: !!p.is_expired,
+              expiredAt: p.expired_at ? new Date(p.expired_at) : null,
+              requiresUpdate: !!p.requires_update,
+              updatedAt: now,
             },
-          },
-          update: {
-            name: p.name,
-            version: p.version || '',
-            latestVersion: p.latest_version || null,
-            isActive: !!p.is_active,
-            isExpired: !!p.is_expired,
-            expiredAt: p.expired_at ? new Date(p.expired_at) : null,
-            requiresUpdate: !!p.requires_update,
-            updatedAt: now,
-          },
-          create: {
-            siteId: site.id,
-            name: p.name,
-            slug: p.slug,
-            version: p.version || '',
-            latestVersion: p.latest_version || null,
-            isActive: !!p.is_active,
-            isExpired: !!p.is_expired,
-            expiredAt: p.expired_at ? new Date(p.expired_at) : null,
-            requiresUpdate: !!p.requires_update,
-          },
-        });
-
-        // Check for alerts
-        // Alert on newly expired plugin
-        if (updatedPlugin.isExpired && (!existingPlugin || !existingPlugin.isExpired)) {
-          await triggerAlert({
-            siteId: site.id,
-            alertType: 'plugin_expired',
-            message: `Plugin "${updatedPlugin.name}" has expired (License expired: ${updatedPlugin.expiredAt?.toLocaleDateString() || 'N/A'})`,
-            severity: 'warning',
+            create: {
+              siteId: site.id,
+              name: p.name,
+              slug: p.slug,
+              version: p.version || '',
+              latestVersion: p.latest_version || null,
+              isActive: !!p.is_active,
+              isExpired: !!p.is_expired,
+              expiredAt: p.expired_at ? new Date(p.expired_at) : null,
+              requiresUpdate: !!p.requires_update,
+            },
           });
-        }
 
-        // Alert on new update available
-        if (updatedPlugin.requiresUpdate && (!existingPlugin || !existingPlugin.requiresUpdate)) {
-          await triggerAlert({
-            siteId: site.id,
-            alertType: 'plugin_update',
-            message: `Plugin "${updatedPlugin.name}" has an update available. Installed: v${updatedPlugin.version}, Latest: v${updatedPlugin.latestVersion}`,
-            severity: 'info',
-          });
-        }
-      }
+          // Check for alerts
+          if (updatedPlugin.isExpired && (!existingPlugin || !existingPlugin.isExpired)) {
+            await triggerAlert({
+              siteId: site.id,
+              alertType: 'plugin_expired',
+              message: `Plugin "${updatedPlugin.name}" has expired (License expired: ${updatedPlugin.expiredAt?.toLocaleDateString() || 'N/A'})`,
+              severity: 'warning',
+            });
+          }
+
+          if (updatedPlugin.requiresUpdate && (!existingPlugin || !existingPlugin.requiresUpdate)) {
+            await triggerAlert({
+              siteId: site.id,
+              alertType: 'plugin_update',
+              message: `Plugin "${updatedPlugin.name}" has an update available. Installed: v${updatedPlugin.version}, Latest: v${updatedPlugin.latestVersion}`,
+              severity: 'info',
+            });
+          }
+        })
+      );
     }
 
     // 3. Process Error Logs (aggregated)
