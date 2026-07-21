@@ -13,7 +13,7 @@
     "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
     "build:frontend": "cd frontend && npm run build",
     "build:backend": "cd backend && npm run build",
-    "build": "npm run build:frontend && npm run build:backend && cd backend && npx prisma db push --accept-data-loss",
+    "build": "npm run build:frontend && npm run build:backend",
     "start": "cd backend && npm start"
   },
   "dependencies": {
