@@ -42,24 +42,41 @@ It provides real-time Uptime monitoring, SSL Certificate Expiry tracking, Securi
 
 ## 🚀 Quick Start (Installation)
 
-### Option 1: One-Line Installer Script (Recommended)
+### 🪟 Windows Installation
 
-Run this command on your Linux/macOS server terminal:
+#### Option A: Windows PowerShell 1-Line Installer (Docker Desktop)
+Run this command in PowerShell (Admin):
+```powershell
+iwr -useb https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/install.ps1 | iex
+```
 
+#### Option B: Windows Native (Without Docker, using Node.js)
+If you don't use Docker, ensure [Node.js v18+](https://nodejs.org/) is installed:
+```powershell
+git clone https://github.com/growhaleystudio-create/MonitorWP.git
+cd MonitorWP
+npm run install:all
+npm run build
+npm start
+```
+
+---
+
+### 🐧 Linux / macOS Installation
+
+#### Option A: One-Line Installer Script
 ```bash
 curl -fsSL https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/install.sh | bash
 ```
 
-### Option 2: Docker Compose
-
+#### Option B: Docker Compose
 ```bash
-# 1. Clone the repository
 git clone https://github.com/growhaleystudio-create/MonitorWP.git
 cd MonitorWP
-
-# 2. Start the container
 docker compose up -d
 ```
+
+---
 
 Open your browser and navigate to: **`http://localhost:3000`**
 - **Default Username**: `admin`

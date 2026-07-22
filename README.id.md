@@ -43,26 +43,43 @@ Platform ini menyediakan pemantauan Uptime real-time, pelacakan masa aktif serti
 
 ## 🚀 Panduan Instalasi Cepat
 
-### Opsi 1: Script Installer 1 Baris (Rekomendasi)
+### 🪟 Instalasi di Windows
 
-Jalankan perintah ini di terminal server Linux/macOS Anda:
+#### Opsi A: PowerShell 1-Line Installer (Dengan Docker Desktop)
+Jalankan perintah ini di PowerShell Windows Anda:
+```powershell
+iwr -useb https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/install.ps1 | iex
+```
 
+#### Opsi B: Windows Native (Tanpa Docker, Menggunakan Node.js)
+Jika Anda tidak menggunakan Docker, pastikan sudah menginstall [Node.js (v18+)](https://nodejs.org/):
+```powershell
+git clone https://github.com/growhaleystudio-create/MonitorWP.git
+cd MonitorWP
+npm run install:all
+npm run build
+npm start
+```
+
+---
+
+### 🐧 Instalasi di Linux / macOS
+
+#### Opsi A: Script Installer 1 Baris
 ```bash
 curl -fsSL https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/install.sh | bash
 ```
 
-### Opsi 2: Menggunakan Docker Compose
-
+#### Opsi B: Menggunakan Docker Compose
 ```bash
-# 1. Clone repositori
 git clone https://github.com/growhaleystudio-create/MonitorWP.git
 cd MonitorWP
-
-# 2. Jalankan container
 docker compose up -d
 ```
 
-Buka browser Anda dan akses: **`http://IP_SERVER:3000`**
+---
+
+Buka browser Anda dan akses: **`http://localhost:3000`**
 - **Username Default**: `admin`
 - **Password Default**: `admin`
 
