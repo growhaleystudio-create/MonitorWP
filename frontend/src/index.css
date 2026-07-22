@@ -18,15 +18,15 @@
   }
 }
 
-/* --- Harmonized Dark & Light Theme System --- */
+/* --- Clean Modern SaaS Theme System --- */
 
 .page-subtitle {
   @apply text-[10px] text-coral uppercase tracking-wider block mb-0.5 font-bold;
 }
 
-/* Harmonized Card Styling */
+/* Standard Sleek Card Styling (Clean, non-bubbly corners) */
 .saas-card {
-  @apply bg-white dark:bg-[#0f172a] rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-4 border-l-4 border-l-primary-teal transition-all duration-200 relative;
+  @apply bg-white dark:bg-[#0f172a] rounded-lg border border-slate-200/80 dark:border-slate-800 shadow-sm p-4 border-l-4 border-l-primary-teal transition-all duration-200 relative;
 }
 
 .saas-card-gold {
@@ -41,9 +41,9 @@
   @apply saas-card border-l-sky;
 }
 
-/* Buttons */
+/* Standard Buttons */
 .btn-pill {
-  @apply rounded-lg px-3.5 py-1.5 text-[12px] font-semibold tracking-tight transition-all duration-150 active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer shadow-sm select-none;
+  @apply rounded-md px-3.5 py-1.5 text-[12px] font-semibold tracking-tight transition-all duration-150 active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer shadow-sm select-none;
 }
 
 .btn-gold {
@@ -58,13 +58,13 @@
   @apply btn-pill bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition;
 }
 
-/* Harmonized Inputs */
+/* Standard Inputs */
 .clean-input, .cream-input {
-  @apply bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:border-primary-teal focus:ring-2 focus:ring-primary-teal/20 outline-none rounded-lg px-3 py-1.5 text-slate-900 dark:text-slate-100 text-[13px] shadow-sm transition-all duration-150;
+  @apply bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:border-primary-teal focus:ring-2 focus:ring-primary-teal/20 outline-none rounded-md px-3 py-1.5 text-slate-900 dark:text-slate-100 text-[13px] shadow-sm transition-all duration-150;
 }
 
 .saas-badge {
-  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold tracking-tight;
+  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold tracking-tight;
 }
 
 /* Custom modern, subtle scrollbar styles */

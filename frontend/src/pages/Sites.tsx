@@ -145,7 +145,7 @@ function Sites() {
 
   if (loading) {
     return (
-      <div className="flex h-96 items-center justify-center">
+      <div className="flex min-h-[75vh] w-full items-center justify-center">
         <PetLoader size={64} state="running" text="Retrieving monitored sites..." />
       </div>
     );

@@ -199,7 +199,7 @@ function SiteDetail() {
 
   if (loading) {
     return (
-      <div className="flex h-96 items-center justify-center">
+      <div className="flex min-h-[75vh] w-full items-center justify-center">
         <PetLoader size={64} state="running" text="Gathering site statistics..." />
       </div>
     );
@@ -738,9 +738,9 @@ function SiteDetail() {
           {activeTab === 'seo' && (
             <div className="p-6 flex flex-col gap-6">
               {/* Top Bar / Header */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-slate-900/90 p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-slate-900/90 p-4 rounded-lg border border-slate-200/80 dark:border-slate-800 shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-primary-teal/10 text-primary-teal border border-primary-teal/20">
+                  <div className="p-2.5 rounded-lg bg-primary-teal/10 text-primary-teal border border-primary-teal/20">
                     <Sparkles className="h-5 w-5" />
                   </div>
                   <div>
@@ -761,7 +761,7 @@ function SiteDetail() {
               {/* Metric Summary Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {/* On-Page Audit Score */}
-                <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-4 flex flex-col justify-between border-l-4 border-l-emerald-500">
+                <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 p-4 flex flex-col justify-between border-l-4 border-l-emerald-500">
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] font-bold text-slate-500 uppercase">On-Page Health Score</span>
                     <Shield className="h-4 w-4 text-emerald-500" />
@@ -775,7 +775,7 @@ function SiteDetail() {
                 </div>
 
                 {/* Mobile Performance */}
-                <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-4 flex flex-col justify-between border-l-4 border-l-sky-500">
+                <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 p-4 flex flex-col justify-between border-l-4 border-l-sky-500">
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] font-bold text-slate-500 uppercase">Mobile Performance</span>
                     <Zap className="h-4 w-4 text-sky-500" />
@@ -789,7 +789,7 @@ function SiteDetail() {
                 </div>
 
                 {/* Desktop Performance */}
-                <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-4 flex flex-col justify-between border-l-4 border-l-indigo-500">
+                <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 p-4 flex flex-col justify-between border-l-4 border-l-indigo-500">
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] font-bold text-slate-500 uppercase">Desktop Performance</span>
                     <Gauge className="h-4 w-4 text-indigo-500" />
@@ -803,7 +803,7 @@ function SiteDetail() {
                 </div>
 
                 {/* Active SEO Plugin */}
-                <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-4 flex flex-col justify-between border-l-4 border-l-amber-500">
+                <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 p-4 flex flex-col justify-between border-l-4 border-l-amber-500">
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] font-bold text-slate-500 uppercase">Plugin SEO Active</span>
                     <Globe className="h-4 w-4 text-amber-500" />
@@ -818,7 +818,7 @@ function SiteDetail() {
               </div>
 
               {/* Core Web Vitals breakdown */}
-              <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-5">
+              <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 p-5">
                 <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
                   <div>
                     <h4 className="font-bold text-sm text-slate-900 dark:text-slate-100">Core Web Vitals Metrics</h4>
@@ -830,7 +830,7 @@ function SiteDetail() {
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
+                  <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
                     <span className="text-[10px] font-bold text-slate-400 block uppercase">LCP (Largest Contentful)</span>
                     <span className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">
                       {seoData?.vitals?.mobile?.lcp ? `${seoData.vitals.mobile.lcp}s` : '2.3s'}
@@ -838,7 +838,7 @@ function SiteDetail() {
                     <span className="text-[10px] text-emerald-600 font-medium">Good (&le; 2.5s)</span>
                   </div>
 
-                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
+                  <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
                     <span className="text-[10px] font-bold text-slate-400 block uppercase">CLS (Layout Shift)</span>
                     <span className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">
                       {seoData?.vitals?.mobile?.cls !== undefined ? seoData.vitals.mobile.cls : '0.04'}
@@ -846,7 +846,7 @@ function SiteDetail() {
                     <span className="text-[10px] text-emerald-600 font-medium">Good (&le; 0.1)</span>
                   </div>
 
-                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
+                  <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
                     <span className="text-[10px] font-bold text-slate-400 block uppercase">INP (Next Paint)</span>
                     <span className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">
                       {seoData?.vitals?.mobile?.inp ? `${seoData.vitals.mobile.inp}ms` : '110ms'}
@@ -854,7 +854,7 @@ function SiteDetail() {
                     <span className="text-[10px] text-emerald-600 font-medium">Good (&le; 200ms)</span>
                   </div>
 
-                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
+                  <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
                     <span className="text-[10px] font-bold text-slate-400 block uppercase">TTFB (Server Response)</span>
                     <span className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">
                       {seoData?.vitals?.mobile?.ttfb ? `${seoData.vitals.mobile.ttfb}s` : '0.35s'}
@@ -865,7 +865,7 @@ function SiteDetail() {
               </div>
 
               {/* Smart SEO Opportunities Section */}
-              <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-5">
+              <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 p-5">
                 <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-primary-teal" />
@@ -883,7 +883,7 @@ function SiteDetail() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {seoData.opportunities.map((opp: any, idx: number) => (
-                      <div key={idx} className="p-3.5 rounded-xl border border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex flex-col justify-between gap-2.5">
+                      <div key={idx} className="p-3.5 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex flex-col justify-between gap-2.5">
                         <div>
                           <div className="flex justify-between items-start gap-2">
                             <span className="text-xs font-bold text-slate-900 dark:text-slate-100 leading-snug">{opp.title}</span>
@@ -911,32 +911,32 @@ function SiteDetail() {
               </div>
 
               {/* On-Page Audit Findings Breakdown */}
-              <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-5">
+              <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 p-5">
                 <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
                   <h4 className="font-bold text-sm text-slate-900 dark:text-slate-100">On-Page SEO Audit Findings</h4>
                   <span className="text-[10px] text-slate-400">Scanned via WordPress Agent</span>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                  <div className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-center">
+                  <div className="p-3 rounded-md border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-center">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Missing H1</span>
                     <span className="text-xl font-extrabold text-slate-800 dark:text-slate-200 mt-0.5 block">
                       {seoData?.audit?.missingH1Count ?? 0}
                     </span>
                   </div>
-                  <div className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-center">
+                  <div className="p-3 rounded-md border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-center">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Missing Meta Desc</span>
                     <span className="text-xl font-extrabold text-slate-800 dark:text-slate-200 mt-0.5 block">
                       {seoData?.audit?.missingMetaDescCount ?? 0}
                     </span>
                   </div>
-                  <div className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-center">
+                  <div className="p-3 rounded-md border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-center">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Missing Alt Tags</span>
                     <span className="text-xl font-extrabold text-slate-800 dark:text-slate-200 mt-0.5 block">
                       {seoData?.audit?.missingAltCount ?? 0}
                     </span>
                   </div>
-                  <div className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-center">
+                  <div className="p-3 rounded-md border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-center">
                     <span className="text-[10px] text-slate-400 font-bold uppercase">Noindex Tags</span>
                     <span className="text-xl font-extrabold text-slate-800 dark:text-slate-200 mt-0.5 block">
                       {seoData?.audit?.noindexCount ?? 0}
@@ -949,7 +949,7 @@ function SiteDetail() {
                   <div className="flex flex-col gap-2 mt-4">
                     <span className="text-[11px] font-bold text-slate-500 uppercase block mb-1">Detailed Findings List</span>
                     {seoData.audit.issues.map((issue: any, idx: number) => (
-                      <div key={idx} className="flex items-start justify-between gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 text-xs">
+                      <div key={idx} className="flex items-start justify-between gap-3 p-3 rounded-md bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 text-xs">
                         <div className="flex flex-col gap-0.5">
                           <span className="font-bold text-slate-800 dark:text-slate-200">{issue.title}</span>
                           <span className="text-slate-500 text-[11px]">{issue.detail}</span>
@@ -966,7 +966,7 @@ function SiteDetail() {
               </div>
 
               {/* Published Articles List */}
-              <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-5">
+              <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 p-5">
                 <h4 className="font-bold text-sm text-slate-900 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-2.5 mb-4">
                   Latest Published Articles
                 </h4>
