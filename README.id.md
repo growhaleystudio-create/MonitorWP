@@ -23,6 +23,10 @@
 
 ## 📌 Ringkasan
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docs/dashboard-preview.png" alt="Growhaley Monitor Dashboard Preview" width="100%" />
+</p>
+
 **Growhaley Monitor** adalah dashboard pemantauan terpusat ringan yang dirancang untuk memantau status kesehatan website **WordPress** maupun **Non-WordPress** (Node.js, Laravel, React, HTML Statis, dll) dari satu panel terpadu.
 
 Platform ini menyediakan pemantauan Uptime real-time, pelacakan masa aktif sertifikat SSL, audit event keamanan, pemeriksaan pembaruan plugin, serta notifikasi instan via **Telegram Bot**.

@@ -22,6 +22,10 @@
 
 ## 📌 Overview
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docs/dashboard-preview.png" alt="Growhaley Monitor Dashboard Preview" width="100%" />
+</p>
+
 **Growhaley Monitor** is a lightweight, self-hosted monitoring dashboard designed to track **WordPress** and **Non-WordPress** (Node.js, Laravel, React, Static HTML, etc.) websites from a centralized panel.
 
 It provides real-time Uptime monitoring, SSL Certificate Expiry tracking, Security event auditing, Plugin vulnerability checks, and instant **Telegram Bot Alerts**.
