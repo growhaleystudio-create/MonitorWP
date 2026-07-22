@@ -26,20 +26,26 @@
   <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docs/dashboard-preview.png" alt="Growhaley Monitor Dashboard Preview" width="100%" />
 </p>
 
-**Growhaley Monitor** is a lightweight, self-hosted monitoring dashboard designed to track **WordPress** and **Non-WordPress** (Node.js, Laravel, React, Static HTML, etc.) websites from a centralized panel.
+**Growhaley Monitor** is a lightweight **"WAZUH Lite"** & self-hosted monitoring dashboard designed to track **WordPress** and **Non-WordPress** (Node.js, Laravel, React, Static HTML, etc.) websites from a centralized panel.
 
-It provides real-time Uptime monitoring, SSL Certificate Expiry tracking, Security event auditing, Plugin vulnerability checks, and instant **Telegram Bot Alerts**.
+Acting as a streamlined SIEM & Uptime monitor, it provides real-time Uptime checks, SSL Expiry tracking, Security auditing (SQLi, XSS, Brute Force), **Lightweight SEO Analytics**, Plugin vulnerability checks, and instant **Telegram Bot Alerts**.
 
 ---
 
 ## ✨ Key Features
 
-- **⚡ Dual Site Monitoring**:
-  - **WordPress Nodes**: Plugin updates, license expiration check, memory/CPU telemetry, security audit logs (SQLi, XSS, Brute Force).
+- **🛡️ WAZUH Lite Web Security Engine**:
+  - **Attack Detection**: Real-time detection of SQL Injection (SQLi), Cross-Site Scripting (XSS), Path Traversal, & Brute Force login attempts.
+  - **File Integrity & Security Audit**: Audit login activity, failed logins, and suspicious file modifications without heavy server overhead.
+- **📈 Lightweight SEO Analytics & Content Tracking**:
+  - **SEO Health Monitoring**: Detect active SEO plugins (Yoast, RankMath, AIOSEO, SEOPress) and post status.
+  - **Content & Traffic Stats**: Track total published articles, recent content updates, and visitor traffic metrics.
+- **⚡ Dual Site Monitoring (WP + Non-WP)**:
+  - **WordPress Nodes**: Plugin updates, license expiration check, memory/CPU telemetry.
   - **Non-WP Websites & Apps**: Synthetic HTTP pings, SSL Certificate Expiry countdown, Keyword matching (Defacement detection).
 - **🔒 SSL / TLS Certificate Tracker**: Automatic warning alerts when SSL certificates expire within 7 or 14 days.
-- **🚀 1-Command Installation**: Deploy in seconds using Docker or curl installation script.
 - **📲 Instant Telegram Notifications**: Get notified on Telegram when a site goes down, comes back online, or SSL is about to expire.
+- **🚀 1-Command Installation**: Deploy in seconds using Docker, PowerShell, or curl installation scripts.
 - **🔄 Auto Update Checker**: Built-in GitHub release notification engine to notify you of new software versions.
 
 ---

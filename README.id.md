@@ -27,21 +27,27 @@
   <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docs/dashboard-preview.png" alt="Growhaley Monitor Dashboard Preview" width="100%" />
 </p>
 
-**Growhaley Monitor** adalah dashboard pemantauan terpusat ringan yang dirancang untuk memantau status kesehatan website **WordPress** maupun **Non-WordPress** (Node.js, Laravel, React, HTML Statis, dll) dari satu panel terpadu.
+**Growhaley Monitor** adalah platform pemantauan terpusat versi **"WAZUH Lite"** & self-hosted yang dirancang untuk memantau status kesehatan website **WordPress** maupun **Non-WordPress** (Node.js, Laravel, React, HTML Statis, dll) dari satu panel terpadu.
 
-Platform ini menyediakan pemantauan Uptime real-time, pelacakan masa aktif sertifikat SSL, audit event keamanan, pemeriksaan pembaruan plugin, serta notifikasi instan via **Telegram Bot**.
+Berfungsi sebagai alternatif SIEM & Uptime monitor yang sangat ringan, platform ini menyediakan pemantauan Uptime real-time, pelacakan SSL Expiry, audit event keamanan (SQLi, XSS, Brute Force), **Analitik SEO Ringan**, pembaruan plugin, serta notifikasi instan via **Telegram Bot**.
 
 ---
 
 ## ✨ Fitur Utama
 
-- **⚡ Pemantauan Dua Tipe Situs**:
-  - **WordPress Nodes**: Pembaruan plugin, lisensi kedaluwarsa, pemantauan memori/CPU, serta audit log keamanan (SQLi, XSS, Brute Force).
+- **🛡️ Engine Keamanan "WAZUH Lite"**:
+  - **Deteksi Serangan Real-Time**: Mendeteksi percobaan serangan SQL Injection (SQLi), Cross-Site Scripting (XSS), Path Traversal, & Brute Force login secara otomatis.
+  - **Audit Keamanan & Integritas File**: Mencatat riwayat login sukses/gagal serta perubahan file mencurigakan tanpa beban server yang berat.
+- **📈 Analitik SEO Ringan & Pelacakan Konten**:
+  - **Monitoring SEO**: Mendeteksi plugin SEO aktif (Yoast, RankMath, AIOSEO, SEOPress) serta kesehatan postingan.
+  - **Statistik Konten & Traffic**: Memantau jumlah artikel yang dipublikasikan, update konten terbaru, serta grafik lalu lintas pengunjung.
+- **⚡ Pemantauan Dua Tipe Situs (WP + Non-WP)**:
+  - **WordPress Nodes**: Pembaruan plugin, lisensi kedaluwarsa, pemantauan telemetri memori/CPU.
   - **Website & Aplikasi Non-WP**: Synthetic HTTP ping, hitung mundur masa berlaku Sertifikat SSL, serta pencocokan kata kunci (deteksi defacement).
 - **🔒 SSL / TLS Certificate Tracker**: Notifikasi peringatan otomatis saat sertifikat SSL tersisa kurang dari 7 atau 14 hari.
-- **🚀 Instalasi 1-Command**: Jalankan dalam hitungan detik menggunakan Docker atau script instalasi curl.
 - **📲 Notifikasi Telegram Real-Time**: Dapatkan pemberitahuan langsung di Telegram saat situs down, kembali online, atau SSL akan expired.
-- **🔄 Auto Update Checker**: Sistem bawaan untuk mendeteksi jika ada rilis versi baru aplikasi dari GitHub Growhaley.
+- **🚀 Instalasi 1-Command**: Jalankan dalam hitungan detik menggunakan Docker, PowerShell, atau script instalasi curl.
+- **🔄 Auto Update Checker**: Sistem bawaan untuk mendeteksi rilis versi baru dari GitHub Growhaley.
 
 ---
 
