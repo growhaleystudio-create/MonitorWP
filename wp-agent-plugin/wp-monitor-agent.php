@@ -3,9 +3,10 @@
  * Plugin Name: WordPress Multi-Site Monitor Agent
  * Plugin URI: https://github.com/growhaleystudio-create/MonitorWP
  * Description: Lightweight monitoring agent that sends site status, plugin info, error logs, and security events to the central dashboard.
- * Version: 1.0.0
- * Author: Internal IT Team
- * License: GPL2
+ * Version: 1.1.0
+ * Author: Growhaley Studio
+ * Author URI: https://github.com/growhaleystudio-create
+ * License: GPLv3
  */
 
 if (!defined('ABSPATH')) {
