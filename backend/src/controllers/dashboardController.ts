@@ -17,87 +17,130 @@ function generateApiKey(): string {
  */
 export async function getOverview(req: Request, res: Response) {
   try {
-    const totalSites = await prisma.site.count();
-    const onlineSites = await prisma.site.count({ where: { status: 'online' } });
-    const offlineSites = await prisma.site.count({ where: { status: 'offline' } });
+    let totalSites = 0;
+    let onlineSites = 0;
+    let offlineSites = 0;
+    let totalPluginsNeedingUpdate = 0;
+    let totalPluginsExpired = 0;
+    let recentErrors = 0;
 
-    const totalPluginsNeedingUpdate = await prisma.plugin.count({
-      where: { requiresUpdate: true, site: { isActive: true } },
-    });
+    try {
+      totalSites = await prisma.site.count();
+      onlineSites = await prisma.site.count({ where: { status: 'online' } });
+      offlineSites = await prisma.site.count({ where: { status: 'offline' } });
+    } catch (e) {
+      console.error('Error counting sites:', e);
+    }
 
-    const totalPluginsExpired = await prisma.plugin.count({
-      where: { isExpired: true, site: { isActive: true } },
-    });
+    try {
+      totalPluginsNeedingUpdate = await prisma.plugin.count({
+        where: { requiresUpdate: true, site: { isActive: true } },
+      });
+      totalPluginsExpired = await prisma.plugin.count({
+        where: { isExpired: true, site: { isActive: true } },
+      });
+    } catch (e) {
+      console.error('Error counting plugins:', e);
+    }
 
-    // Sum of errors in last 24 hours
-    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const recentErrorsSum = await prisma.errorLog.aggregate({
-      where: { lastSeen: { gte: oneDayAgo } },
-      _sum: { count: true },
-    });
-    const recentErrors = recentErrorsSum._sum.count || 0;
+    try {
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const recentErrorsSum = await prisma.errorLog.aggregate({
+        where: { lastSeen: { gte: oneDayAgo } },
+        _sum: { count: true },
+      });
+      recentErrors = recentErrorsSum?._sum?.count || 0;
+    } catch (e) {
+      console.error('Error aggregating error logs:', e);
+    }
 
-    // Recent 15 alerts for timeline
-    const alerts = await prisma.alert.findMany({
-      take: 15,
-      orderBy: { createdAt: 'desc' },
-      include: { site: true },
-    });
+    let alerts: any[] = [];
+    try {
+      alerts = await prisma.alert.findMany({
+        take: 15,
+        orderBy: { createdAt: 'desc' },
+        include: { site: true },
+      });
+    } catch (e) {
+      console.error('Error fetching alerts:', e);
+    }
 
-    // Recent 15 security events
-    const securityEvents = await prisma.securityEvent.findMany({
-      take: 15,
-      orderBy: { createdAt: 'desc' },
-      include: { site: true },
-    });
+    let securityEvents: any[] = [];
+    try {
+      securityEvents = await prisma.securityEvent.findMany({
+        take: 15,
+        orderBy: { createdAt: 'desc' },
+        include: { site: true },
+      });
+    } catch (e) {
+      console.error('Error fetching security events:', e);
+    }
 
-    // Combine and sort events
     const timeline = [
       ...alerts.map(a => ({
         id: `alert-${a.id}`,
         type: 'alert',
-        siteName: a.site.name,
-        eventType: a.alertType,
-        message: a.message,
-        severity: a.severity,
+        siteName: a.site?.name || 'System',
+        eventType: a.alertType || 'alert',
+        message: a.message || '',
+        severity: a.severity || 'info',
         createdAt: a.createdAt,
       })),
       ...securityEvents.map(s => ({
         id: `sec-${s.id}`,
         type: 'security',
-        siteName: s.site.name,
-        eventType: s.eventType,
-        message: `${s.eventType.replace('_', ' ')}: ${s.username ? `User: ${s.username}` : ''} (${s.ipAddress || 'unknown IP'})`,
-        severity: s.eventType.startsWith('injection_') ? 'critical' : (s.eventType === 'login_failed' ? 'warning' : 'info'),
+        siteName: s.site?.name || 'System',
+        eventType: s.eventType || 'event',
+        message: `${(s.eventType || 'event').replace('_', ' ')}: ${s.username ? `User: ${s.username}` : ''} (${s.ipAddress || 'unknown IP'})`,
+        severity: (s.eventType && s.eventType.startsWith('injection_')) ? 'critical' : (s.eventType === 'login_failed' ? 'warning' : 'info'),
         createdAt: s.createdAt,
       }))
     ]
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, 20);
 
-    // Quick overview of all sites
-    const quickSites = await prisma.site.findMany({
-      select: {
-        id: true,
-        name: true,
-        url: true,
-        status: true,
-        lastSeenAt: true,
-        wpMemoryUsage: true,
-        diskTotal: true,
-        diskFree: true,
-        cpuLoad: true,
-        seoPlugin: true,
-        seoTotalPosts: true,
-        seoRecentPosts: true,
-        _count: {
-          select: {
-            plugins: { where: { requiresUpdate: true } },
+    let quickSites: any[] = [];
+    try {
+      quickSites = await prisma.site.findMany({
+        select: {
+          id: true,
+          name: true,
+          url: true,
+          status: true,
+          lastSeenAt: true,
+          wpMemoryUsage: true,
+          diskTotal: true,
+          diskFree: true,
+          cpuLoad: true,
+          seoPlugin: true,
+          seoTotalPosts: true,
+          seoRecentPosts: true,
+          _count: {
+            select: {
+              plugins: { where: { requiresUpdate: true } },
+            }
           }
-        }
-      },
-      orderBy: { name: 'asc' },
-    });
+        },
+        orderBy: { name: 'asc' },
+      });
+    } catch (e) {
+      console.error('Error fetching quickSites:', e);
+      // Fallback simple query if column selection failed
+      try {
+        quickSites = await prisma.site.findMany({
+          select: {
+            id: true,
+            name: true,
+            url: true,
+            status: true,
+            lastSeenAt: true,
+          },
+          orderBy: { name: 'asc' },
+        });
+      } catch (err) {
+        console.error('Fallback quickSites query also failed:', err);
+      }
+    }
 
     res.json({
       stats: {
@@ -113,7 +156,7 @@ export async function getOverview(req: Request, res: Response) {
     });
   } catch (error) {
     console.error('Error fetching dashboard overview:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: (error as Error).message || 'Internal Server Error' });
   }
 }
 
