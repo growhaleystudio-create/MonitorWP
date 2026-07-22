@@ -1,8 +1,8 @@
 import express from 'express';
 import axios from 'axios';
-import { prisma } from './db';
-import { validateAgentKey } from './middleware/auth';
-import { handleAgentPush } from './controllers/agentController';
+import { prisma } from '../db';
+import { validateAgentKey } from '../middleware/auth';
+import { handleAgentPush } from '../controllers/agentController';
 
 const app = express();
 app.use(express.json());

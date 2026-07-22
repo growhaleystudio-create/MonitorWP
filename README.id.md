@@ -100,7 +100,7 @@ Buka browser Anda dan akses: **`http://localhost:3000`**
 1. Di Dashboard, buka menu **Sites** dan klik **Add Website**.
 2. Pilih platform **WordPress**.
 3. Salin **API Key** yang dihasilkan.
-4. Unduh file `wp-agent-plugin.zip` dari dashboard atau menu release.
+4. Unduh file `wp-monitor-agent.zip` dari dashboard atau menu release.
 5. Tambahkan baris berikut pada file `wp-config.php` di WordPress Anda:
 
 ```php

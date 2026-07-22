@@ -633,12 +633,10 @@ export async function testTelegram(req: Request, res: Response) {
 export async function downloadAgentPlugin(req: Request, res: Response) {
   try {
     const possiblePaths = [
-      path.join(__dirname, '../../wp-monitor-agent.zip'),
-      path.join(__dirname, '../../wp-agent-plugin.zip'),
-      path.join(__dirname, '../../../wp-monitor-agent.zip'),
-      path.join(__dirname, '../../../wp-agent-plugin.zip'),
       path.join(process.cwd(), 'wp-monitor-agent.zip'),
-      path.join(process.cwd(), 'wp-agent-plugin.zip'),
+      path.join(process.cwd(), '../wp-monitor-agent.zip'),
+      path.join(__dirname, '../../wp-monitor-agent.zip'),
+      path.join(__dirname, '../../../wp-monitor-agent.zip'),
     ];
 
     const targetPath = possiblePaths.find((p) => fs.existsSync(p));

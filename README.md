@@ -99,7 +99,7 @@ Open your browser and navigate to: **`http://localhost:3000`**
 1. In the Dashboard, go to **Sites** and click **Add Website**.
 2. Select **WordPress** as the platform.
 3. Copy the generated **API Key**.
-4. Download the `wp-agent-plugin.zip` from the dashboard or release section.
+4. Download the `wp-monitor-agent.zip` from the dashboard or release section.
 5. Add the following constants to your WordPress `wp-config.php`:
 
 ```php
