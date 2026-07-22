@@ -4,12 +4,12 @@
 
   # 🛡️ Growhaley Monitor
 
-  **An Open-Source Multi-Site (WordPress + Non-WP) Uptime & Security Monitoring Platform**
+  **An Open-Source Multi-Site (WordPress + Non-WP) Uptime, Security & SEO Engine Monitoring Platform**
 
   [![License: GPL v3](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
   [![Docker Ready](https://img.shields.io/badge/Docker-Ready-099ce5.svg?logo=docker&logoColor=white)](docker-compose.yml)
   [![Version](https://img.shields.io/badge/Version-v1.0.0-gold.svg)](#)
-  [![Built By](https://img.shields.io/badge/Maintained%20By-Growhaley%20Studio-darkgreen.svg)](https://github.com/growhaleystudio)
+  [![Maintained By](https://img.shields.io/badge/Maintained%20By-Growhaley%20Studio-darkgreen.svg)](https://github.com/growhaleystudio-create)
 
   ---
 
@@ -26,27 +26,29 @@
   <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docs/dashboard-preview.png" alt="Growhaley Monitor Dashboard Preview" width="100%" />
 </p>
 
-**Growhaley Monitor** is a lightweight **"WAZUH Lite"** & self-hosted monitoring dashboard designed to track **WordPress** and **Non-WordPress** (Node.js, Laravel, React, Static HTML, etc.) websites from a centralized panel.
+**Growhaley Monitor** is a lightweight **"WAZUH Lite"** & self-hosted monitoring dashboard designed to track **WordPress** and **Non-WordPress** (Node.js, Laravel, React, Static HTML, etc.) websites from a single, centralized panel.
 
-Acting as a streamlined SIEM & Uptime monitor, it provides real-time Uptime checks, SSL Expiry tracking, Security auditing (SQLi, XSS, Brute Force), **Lightweight SEO Analytics**, Plugin vulnerability checks, and instant **Telegram Bot Alerts**.
+Combining Uptime checks, SSL Expiry tracking, SIEM-like Web Application Firewall auditing, **CrawlSEO-inspired SEO & Core Web Vitals Optimization Engine**, and **Telegram Bot Alerts**, it keeps your web infrastructure secure, performant, and search-engine optimized.
 
 ---
 
 ## ✨ Key Features
 
+- **🎯 CrawlSEO-Inspired SEO & Performance Engine**:
+  - **On-Page Audit Scanner**: Automated local scanning for missing H1 tags, missing Meta Descriptions (Yoast, RankMath, AIOSEO support), missing image `alt` attributes, and accidental `noindex` directives.
+  - **Google Core Web Vitals**: Measures LCP, CLS, INP, TTFB, and Lighthouse Performance Scores for Mobile & Desktop.
+  - **Smart SEO Opportunities Engine**: Algorithmic detection for *Striking Distance* keywords (ranks 4-20), *Low CTR* articles, *Content Decay* (>6 months old), and *Keyword Cannibalization*.
 - **🛡️ WAZUH Lite Web Security Engine**:
   - **Attack Detection**: Real-time detection of SQL Injection (SQLi), Cross-Site Scripting (XSS), Path Traversal, & Brute Force login attempts.
   - **File Integrity & Security Audit**: Audit login activity, failed logins, and suspicious file modifications without heavy server overhead.
-- **📈 Lightweight SEO Analytics & Content Tracking**:
-  - **SEO Health Monitoring**: Detect active SEO plugins (Yoast, RankMath, AIOSEO, SEOPress) and post status.
-  - **Content & Traffic Stats**: Track total published articles, recent content updates, and visitor traffic metrics.
 - **⚡ Dual Site Monitoring (WP + Non-WP)**:
-  - **WordPress Nodes**: Plugin updates, license expiration check, memory/CPU telemetry.
+  - **WordPress Nodes**: Plugin updates, license expiration checks, memory/CPU telemetry.
   - **Non-WP Websites & Apps**: Synthetic HTTP pings, SSL Certificate Expiry countdown, Keyword matching (Defacement detection).
+- **🎨 Harmonized Dark / Light Mode**:
+  - Dynamic theme switcher with `localStorage` persistence and clean, non-bubbly standard SaaS design system.
 - **🔒 SSL / TLS Certificate Tracker**: Automatic warning alerts when SSL certificates expire within 7 or 14 days.
 - **📲 Instant Telegram Notifications**: Get notified on Telegram when a site goes down, comes back online, or SSL is about to expire.
 - **🚀 1-Command Installation**: Deploy in seconds using Docker, PowerShell, or curl installation scripts.
-- **🔄 Auto Update Checker**: Built-in GitHub release notification engine to notify you of new software versions.
 
 ---
 
@@ -99,7 +101,7 @@ Open your browser and navigate to: **`http://localhost:3000`**
 1. In the Dashboard, go to **Sites** and click **Add Website**.
 2. Select **WordPress** as the platform.
 3. Copy the generated **API Key**.
-4. Download the `wp-monitor-agent.zip` from the dashboard or release section.
+4. Download the `wp-monitor-agent.zip` from the dashboard.
 5. Add the following constants to your WordPress `wp-config.php`:
 
 ```php
