@@ -481,14 +481,14 @@ function Sites() {
                 <div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">Node Registered Successfully!</h3>
                   <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                    Unduh plugin agent di bawah ini dan konfigurasikan <b>wp-config.php</b>.
+                    Unduh plugin agent di bawah ini dan isi API Key di menu <b>Settings &gt; WP Monitor Agent</b> pada WP Admin.
                   </p>
                 </div>
 
                 {/* Download Plugin Step Card */}
-                <div className="bg-primary-teal/10 border border-primary-teal/30 rounded-xl p-4 text-left flex flex-col gap-2.5">
+                <div className="bg-primary-teal/10 border border-primary-teal/30 rounded-lg p-4 text-left flex flex-col gap-2.5">
                   <span className="font-bold text-slate-900 dark:text-slate-100 text-xs uppercase tracking-wider flex items-center gap-1.5">
-                    ⚡ Langkah 1: Plugin WordPress Agent
+                    ⚡ Langkah 1: Install Plugin Agent
                   </span>
                   <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-snug">
                     Unduh file <b>wp-monitor-agent.zip</b> lalu upload melalui WordPress Admin (<b>Plugins &gt; Add New &gt; Upload Plugin</b>).
@@ -503,17 +503,20 @@ function Sites() {
                   </button>
                 </div>
 
-                <div className="flex flex-col gap-3 text-left bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl p-4 text-xs font-medium">
+                <div className="flex flex-col gap-3 text-left bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg p-4 text-xs font-medium">
                   <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-2 mb-1">
                     <span className="font-bold text-slate-900 dark:text-slate-100 text-xs uppercase tracking-wider">
-                      🔑 Langkah 2: Kunci Konfigurasi
+                      🔑 Langkah 2: Tempel API Key di WP Admin
                     </span>
                   </div>
+                  <p className="text-[11px] text-slate-500">
+                    Buka <b>Settings &gt; WP Monitor Agent</b> di WordPress, lalu tempelkan Server URL (<code>{window.location.origin}</code>) dan API Key:
+                  </p>
                   <div className="flex flex-col gap-1">
                     <span className="text-primary-teal font-bold uppercase tracking-wider text-[10px]">
                       API KEY (X-API-KEY)
                     </span>
-                    <div className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg py-2 px-3 justify-between">
+                    <div className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md py-2 px-3 justify-between">
                       <code className="text-rose-600 dark:text-rose-400 font-mono font-bold select-all truncate">{createdSite.apiKey}</code>
                       <button
                         onClick={() => copyToClipboard(createdSite.apiKey)}

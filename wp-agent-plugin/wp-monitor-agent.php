@@ -12,12 +12,19 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-// Define default server and api key from wp-config if set
-if (!defined('WP_MONITOR_API_KEY')) {
-    define('WP_MONITOR_API_KEY', get_option('wp_monitor_api_key', ''));
+// Helper functions to get API key & Server URL from constants (wp-config) or WP options database
+function wp_monitor_get_api_key() {
+    if (defined('WP_MONITOR_API_KEY') && WP_MONITOR_API_KEY !== '') {
+        return WP_MONITOR_API_KEY;
+    }
+    return get_option('wp_monitor_api_key', '');
 }
-if (!defined('WP_MONITOR_SERVER_URL')) {
-    define('WP_MONITOR_SERVER_URL', get_option('wp_monitor_server_url', ''));
+
+function wp_monitor_get_server_url() {
+    if (defined('WP_MONITOR_SERVER_URL') && WP_MONITOR_SERVER_URL !== '') {
+        return WP_MONITOR_SERVER_URL;
+    }
+    return get_option('wp_monitor_server_url', '');
 }
 
 /**
@@ -551,8 +558,8 @@ function wp_monitor_run_onpage_seo_audit() {
  */
 add_action('wp_monitor_push_hook', 'wp_monitor_push_data');
 function wp_monitor_push_data() {
-    $api_key = WP_MONITOR_API_KEY;
-    $server_url = WP_MONITOR_SERVER_URL;
+    $api_key = wp_monitor_get_api_key();
+    $server_url = wp_monitor_get_server_url();
     
     if (empty($api_key) || empty($server_url)) {
         return; // Credentials not configured
@@ -691,50 +698,141 @@ function wp_monitor_agent_render_admin_page() {
         return;
     }
 
+    $notice = null;
     $sync_result = null;
 
+    // Handle Save Settings
+    if (isset($_POST['wp_monitor_save_settings']) && check_admin_referer('wp_monitor_save_settings_action', 'wp_monitor_save_settings_nonce')) {
+        $input_url = esc_url_raw(trim($_POST['wp_monitor_server_url'] ?? ''));
+        $input_key = sanitize_text_field(trim($_POST['wp_monitor_api_key'] ?? ''));
+
+        update_option('wp_monitor_server_url', $input_url);
+        update_option('wp_monitor_api_key', $input_key);
+
+        $notice = [
+            'type' => 'success',
+            'msg'  => '✅ Konfigurasi berhasil disimpan! Anda dapat melakukan Sync Data sekarang.'
+        ];
+    }
+
+    // Handle Manual Sync
     if (isset($_POST['wp_monitor_manual_sync']) && check_admin_referer('wp_monitor_sync_action', 'wp_monitor_sync_nonce')) {
         $sync_result = wp_monitor_push_data();
     }
 
-    $api_key = WP_MONITOR_API_KEY;
-    $server_url = WP_MONITOR_SERVER_URL;
-    ?>
-    <div class="wrap">
-        <h1>WordPress Multi-Site Monitor Agent</h1>
-        <hr />
+    $api_key = wp_monitor_get_api_key();
+    $server_url = wp_monitor_get_server_url();
 
-        <?php if ($sync_result === true): ?>
-            <div class="notice notice-success is-dismissible"><p>✅ <strong>Sync Berhasil!</strong> Data RAM, CPU, Disk, Plugin, & Log berhasil dikirim ke Dashboard central.</p></div>
-        <?php elseif (is_wp_error($sync_result)): ?>
-            <div class="notice notice-error is-dismissible"><p>❌ <strong>Sync Gagal:</strong> <?php echo esc_html($sync_result->get_error_message()); ?></p></div>
+    $is_key_hardcoded = defined('WP_MONITOR_API_KEY') && WP_MONITOR_API_KEY !== '';
+    $is_url_hardcoded = defined('WP_MONITOR_SERVER_URL') && WP_MONITOR_SERVER_URL !== '';
+    ?>
+    <div class="wrap" style="max-width: 850px;">
+        <h1 style="display: flex; align-items: center; gap: 8px;">
+            🛡️ Growhaley WP Monitor Agent Settings
+        </h1>
+        <p style="color: #64748b; font-size: 13px;">
+            Atur Server URL dan API Key untuk menghubungkan situs WordPress ini dengan Central Dashboard MonitorWP.
+        </p>
+        <hr style="margin-bottom: 20px;" />
+
+        <?php if (!empty($notice)): ?>
+            <div class="notice notice-<?php echo esc_attr($notice['type']); ?> is-dismissible">
+                <p><?php echo esc_html($notice['msg']); ?></p>
+            </div>
         <?php endif; ?>
 
-        <table class="form-table">
-            <tr>
-                <th scope="row">Server URL</th>
-                <td><code><?php echo esc_html($server_url ?: 'Belum diatur (WP_MONITOR_SERVER_URL)'); ?></code></td>
-            </tr>
-            <tr>
-                <th scope="row">API Key</th>
-                <td><code><?php echo esc_html($api_key ? substr($api_key, 0, 8) . '...' : 'Belum diatur (WP_MONITOR_API_KEY)'); ?></code></td>
-            </tr>
-            <tr>
-                <th scope="row">Status Konfigurasi</th>
-                <td>
-                    <?php if (!empty($api_key) && !empty($server_url)): ?>
-                        <span style="color: green; font-weight: bold;">✔ Terkonfigurasi</span>
-                    <?php else: ?>
-                        <span style="color: red; font-weight: bold;">✖ Belum Terkonfigurasi di wp-config.php</span>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        </table>
+        <?php if ($sync_result === true): ?>
+            <div class="notice notice-success is-dismissible">
+                <p>✅ <strong>Sync Berhasil!</strong> Data RAM, CPU, Disk, Plugin, Error Log & Audit SEO berhasil dikirim ke Dashboard.</p>
+            </div>
+        <?php elseif (is_wp_error($sync_result)): ?>
+            <div class="notice notice-error is-dismissible">
+                <p>❌ <strong>Sync Gagal:</strong> <?php echo esc_html($sync_result->get_error_message()); ?></p>
+            </div>
+        <?php endif; ?>
 
-        <form method="post" action="" style="margin-top: 20px;">
-            <?php wp_nonce_field('wp_monitor_sync_action', 'wp_monitor_sync_nonce'); ?>
-            <input type="submit" name="wp_monitor_manual_sync" class="button button-primary button-hero" value="⚡ Sync Data ke Dashboard Sekarang" <?php disabled(empty($api_key) || empty($server_url)); ?> />
-        </form>
+        <!-- Settings Form -->
+        <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <h2 style="margin-top: 0; font-size: 16px; font-weight: 700; color: #0f172a;">🔑 Konfigurasi Koneksi</h2>
+            
+            <form method="post" action="">
+                <?php wp_nonce_field('wp_monitor_save_settings_action', 'wp_monitor_save_settings_nonce'); ?>
+                
+                <table class="form-table" role="presentation">
+                    <tr>
+                        <th scope="row"><label for="wp_monitor_server_url">Dashboard Server URL</label></th>
+                        <td>
+                            <input
+                                type="url"
+                                id="wp_monitor_server_url"
+                                name="wp_monitor_server_url"
+                                value="<?php echo esc_attr($server_url); ?>"
+                                class="regular-text"
+                                placeholder="https://monitor-wp.vercel.app"
+                                required
+                                <?php echo $is_url_hardcoded ? 'readonly' : ''; ?>
+                            />
+                            <?php if ($is_url_hardcoded): ?>
+                                <p class="description" style="color: #0284c7;">🔒 Di-override melalui constant <code>WP_MONITOR_SERVER_URL</code> di <code>wp-config.php</code>.</p>
+                            <?php else: ?>
+                                <p class="description">Contoh: <code>https://monitor-wp.vercel.app</code> atau <code>http://192.168.1.100:3000</code></p>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="wp_monitor_api_key">API Key (X-API-KEY)</label></th>
+                        <td>
+                            <input
+                                type="text"
+                                id="wp_monitor_api_key"
+                                name="wp_monitor_api_key"
+                                value="<?php echo esc_attr($api_key); ?>"
+                                class="regular-text"
+                                placeholder="Tempelkan API Key dari Dashboard"
+                                required
+                                style="font-family: monospace;"
+                                <?php echo $is_key_hardcoded ? 'readonly' : ''; ?>
+                            />
+                            <?php if ($is_key_hardcoded): ?>
+                                <p class="description" style="color: #0284c7;">🔒 Di-override melalui constant <code>WP_MONITOR_API_KEY</code> di <code>wp-config.php</code>.</p>
+                            <?php else: ?>
+                                <p class="description">Dapatkan API Key saat menambah situs di menu <b>Sites > Add Website</b> pada Dashboard.</p>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Status Koneksi</th>
+                        <td>
+                            <?php if (!empty($api_key) && !empty($server_url)): ?>
+                                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: #dcfce7; color: #166534; font-weight: 700; border-radius: 4px; font-size: 12px; border: 1px solid #bbf7d0;">
+                                    ✔ Terkonfigurasi & Aktif
+                                </span>
+                            <?php else: ?>
+                                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: #fee2e2; color: #991b1b; font-weight: 700; border-radius: 4px; font-size: 12px; border: 1px solid #fecaca;">
+                                    ✖ Belum Terkonfigurasi (Isi Server URL & API Key)
+                                </span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                </table>
+
+                <p class="submit" style="margin-bottom: 0;">
+                    <input type="submit" name="wp_monitor_save_settings" class="button button-primary" value="Simpan Konfigurasi" />
+                </p>
+            </form>
+        </div>
+
+        <!-- Manual Sync Section -->
+        <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <h2 style="margin-top: 0; font-size: 16px; font-weight: 700; color: #0f172a;">⚡ Manual Data Sync</h2>
+            <p style="color: #64748b; font-size: 13px; margin-bottom: 16px;">
+                Secara default, plugin ini mengirimkan telemetri secara otomatis setiap <b>15 menit</b>. Anda dapat menekan tombol di bawah untuk menguji pengiriman data riil secara instan.
+            </p>
+            <form method="post" action="">
+                <?php wp_nonce_field('wp_monitor_sync_action', 'wp_monitor_sync_nonce'); ?>
+                <input type="submit" name="wp_monitor_manual_sync" class="button button-secondary" value="⚡ Test Sync Data Sekarang" <?php disabled(empty($api_key) || empty($server_url)); ?> />
+            </form>
+        </div>
     </div>
     <?php
 }
