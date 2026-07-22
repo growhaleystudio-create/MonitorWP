@@ -74,7 +74,7 @@ function App() {
       {token ? (
         <div className="flex min-h-screen bg-bg-light dark:bg-bg-dark text-slate-800 dark:text-slate-100">
           <Sidebar onLogout={handleLogout} isCollapsed={isSidebarCollapsed} onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)} />
-          <main className={`flex-1 px-6 pt-20 pb-8 md:py-8 overflow-y-auto max-w-7xl mx-auto w-full transition-all duration-300 ${isSidebarCollapsed ? 'md:pl-24' : 'md:pl-72'}`}>
+          <main className={`flex-1 px-6 pt-20 pb-8 md:py-8 overflow-y-auto max-w-7xl mx-auto w-full transition-all duration-300 ${isSidebarCollapsed ? 'md:pl-20' : 'md:pl-60'}`}>
             <Routes>
               <Route path="/" element={<Overview />} />
               <Route path="/sites" element={<Sites />} />
