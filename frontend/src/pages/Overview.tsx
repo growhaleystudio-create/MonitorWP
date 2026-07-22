@@ -341,9 +341,9 @@ function Overview() {
           {/* Charts Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Response Latency over Time */}
-            <div className="lg:col-span-2 bg-white rounded border border-slate-100 shadow-card p-6 flex flex-col gap-4">
+            <div className="lg:col-span-2 bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 flex flex-col gap-4">
               <div>
-                <h3 className="font-bold text-slate-800 text-sm">Response Trends over Time</h3>
+                <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm">Response Trends over Time</h3>
                 <p className="text-[11px] text-slate-400 mt-0.5">Average ping response latency across sites</p>
               </div>
               <div className="h-64 w-full mt-2">
@@ -358,7 +358,7 @@ function Overview() {
                     <XAxis dataKey="time" stroke="#94a3b8" fontSize={10} tickLine={false} />
                     <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} unit="ms" />
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#fff', borderColor: '#e2e8f0', borderRadius: '12px', fontSize: '12px' }}
+                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f8fafc', borderRadius: '8px', fontSize: '12px' }}
                     />
                     <Area type="monotone" dataKey="latency" name="Latency" stroke="#187DB4" strokeWidth={2.5} fillOpacity={1} fill="url(#colorLatency)" />
                   </AreaChart>
@@ -367,9 +367,9 @@ function Overview() {
             </div>
 
             {/* Website availability segments donut */}
-            <div className="bg-white rounded border border-slate-100 shadow-card p-6 flex flex-col justify-between gap-4">
+            <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 flex flex-col justify-between gap-4">
               <div>
-                <h3 className="font-bold text-slate-800 text-sm">Website Availability</h3>
+                <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm">Website Availability</h3>
                 <p className="text-[11px] text-slate-400 mt-0.5">Distribution of node states</p>
               </div>
 
@@ -393,13 +393,13 @@ function Overview() {
                         ))}
                       </Pie>
                       <Tooltip
-                        contentStyle={{ backgroundColor: '#fff', borderColor: '#e2e8f0', borderRadius: '10px', fontSize: '11px' }}
+                        contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f8fafc', borderRadius: '8px', fontSize: '11px' }}
                       />
                     </PieChart>
                   </ResponsiveContainer>
                 )}
                 <div className="absolute flex flex-col items-center justify-center">
-                  <span className="text-2xl font-black text-slate-900 leading-none">
+                  <span className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 leading-none">
                     {stats?.totalSites || 0}
                   </span>
                   <span className="text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
@@ -413,16 +413,16 @@ function Overview() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-primary-teal"></span>
-                    <span className="text-slate-500">Online</span>
+                    <span className="text-slate-500 dark:text-slate-400">Online</span>
                   </div>
-                  <span className="text-slate-900 font-extrabold">{stats?.onlineSites || 0}</span>
+                  <span className="text-slate-900 dark:text-slate-100 font-bold">{stats?.onlineSites || 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-coral"></span>
-                    <span className="text-slate-500">Offline</span>
+                    <span className="text-slate-500 dark:text-slate-400">Offline</span>
                   </div>
-                  <span className="text-slate-900 font-extrabold">{stats?.offlineSites || 0}</span>
+                  <span className="text-slate-900 dark:text-slate-100 font-bold">{stats?.offlineSites || 0}</span>
                 </div>
               </div>
             </div>
@@ -431,7 +431,7 @@ function Overview() {
           {/* Monitored Scoreboard */}
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center px-1">
-              <h3 className="font-bold text-slate-800 text-sm">Monitored Scoreboard</h3>
+              <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm">Monitored Scoreboard</h3>
               <Link
                 to="/sites"
                 className="text-xs font-bold text-primary-teal hover:underline flex items-center gap-1 transition"
@@ -441,7 +441,7 @@ function Overview() {
               </Link>
             </div>
 
-            <div className="bg-white border border-slate-100 rounded shadow-card overflow-hidden">
+            <div className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-lg shadow-sm overflow-hidden">
               {quickSites.length === 0 ? (
                 <div className="p-12 text-center text-slate-400 text-sm font-medium">
                   No websites registered. <Link to="/sites" className="text-primary-teal hover:underline font-bold">Register one now</Link>.
@@ -450,22 +450,22 @@ function Overview() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="border-b border-slate-100 bg-slate-50/50 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
-                        <th className="py-4 px-4">Website</th>
-                        <th className="py-4 px-4 text-center">WP RAM Peak</th>
-                        <th className="py-4 px-4 text-center">Disk Usage</th>
-                        <th className="py-4 px-4 text-center">CPU Load</th>
-                        <th className="py-4 px-4 text-center">SEO Engine</th>
-                        <th className="py-4 px-4 text-center">Status</th>
-                        <th className="py-4 px-4 text-right">Warnings</th>
-                        <th className="py-4 px-4 text-center">Last Contact</th>
+                      <tr className="border-b border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                        <th className="py-3 px-4">Website</th>
+                        <th className="py-3 px-4 text-center">WP RAM Peak</th>
+                        <th className="py-3 px-4 text-center">Disk Usage</th>
+                        <th className="py-3 px-4 text-center">CPU Load</th>
+                        <th className="py-3 px-4 text-center">SEO Engine</th>
+                        <th className="py-3 px-4 text-center">Status</th>
+                        <th className="py-3 px-4 text-right">Warnings</th>
+                        <th className="py-3 px-4 text-center">Last Contact</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 text-xs font-bold">
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs font-semibold">
                       {quickSites.map((site) => (
-                        <tr key={site.id} className="hover:bg-slate-50/40 transition">
-                          <td className="py-4 px-4 flex flex-col gap-0.5">
-                            <span className="font-extrabold text-slate-800">
+                        <tr key={site.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition">
+                          <td className="py-3 px-4 flex flex-col gap-0.5">
+                            <span className="font-bold text-slate-800 dark:text-slate-200">
                               <Link to={`/sites/${site.id}`} className="hover:text-primary-teal flex items-center gap-1">
                                 {site.name}
                                 <ArrowUpRight className="h-3.5 w-3.5 opacity-60" />
@@ -581,9 +581,9 @@ function Overview() {
       {activeTab === 'seo' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fadeIn">
           {/* SEO Score by Website Bar Chart */}
-          <div className="lg:col-span-2 bg-white rounded border border-slate-100 shadow-card p-6 flex flex-col gap-4">
+          <div className="lg:col-span-2 bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 flex flex-col gap-4">
             <div>
-              <h3 className="font-bold text-slate-800 text-sm">SEO Performance by Site</h3>
+              <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm">SEO Performance by Site</h3>
               <p className="text-[11px] text-slate-400 mt-0.5">Average SEO score of latest articles per monitored website</p>
             </div>
             <div className="h-64 w-full mt-2">
@@ -623,7 +623,7 @@ function Overview() {
                       <XAxis dataKey="name" stroke="#94a3b8" fontSize={10} tickLine={false} />
                       <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} domain={[0, 100]} />
                       <Tooltip
-                        contentStyle={{ backgroundColor: '#fff', borderColor: '#e2e8f0', borderRadius: '12px', fontSize: '12px' }}
+                        contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f8fafc', borderRadius: '8px', fontSize: '12px' }}
                         formatter={(value) => [`${value} / 100`, 'Avg SEO Score']}
                       />
                       <Bar dataKey="score" radius={[6, 6, 0, 0]} maxBarSize={45}>
@@ -641,9 +641,9 @@ function Overview() {
           </div>
 
           {/* SEO Engine Distribution Donut */}
-          <div className="bg-white rounded border border-slate-100 shadow-card p-6 flex flex-col justify-between gap-4">
+          <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 flex flex-col justify-between gap-4">
             <div>
-              <h3 className="font-bold text-slate-800 text-sm">SEO Engine Distribution</h3>
+              <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm">SEO Engine Distribution</h3>
               <p className="text-[11px] text-slate-400 mt-0.5">Active SEO plugins across all websites</p>
             </div>
 
@@ -685,12 +685,12 @@ function Overview() {
                           ))}
                         </Pie>
                         <Tooltip
-                          contentStyle={{ backgroundColor: '#fff', borderColor: '#e2e8f0', borderRadius: '10px', fontSize: '11px' }}
+                          contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f8fafc', borderRadius: '8px', fontSize: '11px' }}
                         />
                       </PieChart>
                     </ResponsiveContainer>
                     <div className="absolute flex flex-col items-center justify-center">
-                      <span className="text-2xl font-black text-slate-900 leading-none">
+                      <span className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 leading-none">
                         {quickSites.filter(s => s.seoPlugin && s.seoPlugin !== 'none').length}
                       </span>
                       <span className="text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-wider">
@@ -704,24 +704,24 @@ function Overview() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="h-2.5 w-2.5 rounded-full bg-[#8B5CF6]"></span>
-                        <span className="text-slate-500">Yoast SEO</span>
+                        <span className="text-slate-500 dark:text-slate-400">Yoast SEO</span>
                       </div>
-                      <span className="text-slate-900 font-extrabold">{yoastCount}</span>
+                      <span className="text-slate-900 dark:text-slate-100 font-bold">{yoastCount}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="h-2.5 w-2.5 rounded-full bg-[#3B82F6]"></span>
-                        <span className="text-slate-500">RankMath SEO</span>
+                        <span className="text-slate-500 dark:text-slate-400">RankMath SEO</span>
                       </div>
-                      <span className="text-slate-900 font-extrabold">{rankMathCount}</span>
+                      <span className="text-slate-900 dark:text-slate-100 font-bold">{rankMathCount}</span>
                     </div>
                     {noneCount > 0 && (
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="h-2.5 w-2.5 rounded-full bg-[#94A3B8]"></span>
-                          <span className="text-slate-500">No SEO Plugin</span>
+                          <span className="text-slate-500 dark:text-slate-400">No SEO Plugin</span>
                         </div>
-                        <span className="text-slate-900 font-extrabold">{noneCount}</span>
+                        <span className="text-slate-900 dark:text-slate-100 font-bold">{noneCount}</span>
                       </div>
                     )}
                   </div>
@@ -734,18 +734,18 @@ function Overview() {
 
       {activeTab === 'security' && (
         <div className="flex flex-col gap-4 animate-fadeIn">
-          <h3 className="font-bold text-slate-800 text-sm px-1">Incidents & Log Activity</h3>
-          <div className="bg-white border border-slate-100 rounded shadow-card p-6 flex flex-col gap-5 max-h-[500px] overflow-y-auto">
+          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm px-1">Incidents & Log Activity</h3>
+          <div className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-lg shadow-sm p-6 flex flex-col gap-5 max-h-[500px] overflow-y-auto">
             {timeline.length === 0 ? (
               <div className="p-12 text-center text-slate-400 text-sm font-medium">
                 No recent incidents logged.
               </div>
             ) : (
-              <div className="relative border-l border-slate-100 pl-4 flex flex-col gap-6">
+              <div className="relative border-l border-slate-200 dark:border-slate-800 pl-4 flex flex-col gap-6">
                 {timeline.map((event) => (
                   <div key={event.id} className="relative">
                     {/* Circle Node */}
-                    <span className="absolute -left-[27px] top-0.5 p-0.5 bg-white rounded-full border border-slate-200 z-10 shadow-sm">
+                    <span className="absolute -left-[27px] top-0.5 p-0.5 bg-white dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 z-10 shadow-sm">
                       {getEventIcon(event)}
                     </span>
                     <div className="flex flex-col gap-1 pl-2">
@@ -757,7 +757,7 @@ function Overview() {
                           {new Date(event.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
-                      <p className="font-bold text-xs text-slate-800 leading-snug">
+                      <p className="font-bold text-xs text-slate-800 dark:text-slate-200 leading-snug">
                         {event.message}
                       </p>
                     </div>

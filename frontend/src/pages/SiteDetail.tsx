@@ -207,8 +207,8 @@ function SiteDetail() {
 
   if (!site) {
     return (
-      <div className="bg-white border-2 border-primary-teal/15 rounded p-12 text-center shadow-card">
-        <p className="text-primary-dark text-lg font-extrabold">Site not found</p>
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-12 text-center shadow-sm">
+        <p className="text-slate-900 dark:text-slate-100 text-lg font-bold">Site not found</p>
         <Link to="/sites" className="text-primary-teal hover:underline font-bold mt-2 inline-block">
           Back to Monitored Sites
         </Link>
@@ -269,63 +269,63 @@ function SiteDetail() {
       {/* Overview Cards & Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Quick details */}
-        <div className="bg-white border-2 border-primary-teal/15 rounded shadow-card p-6 flex flex-col justify-between gap-6 border-l-[6px] border-l-primary-teal">
+        <div className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-lg shadow-sm p-6 flex flex-col justify-between gap-6 border-l-4 border-l-primary-teal">
           <div className="flex flex-col gap-4">
-            <h3 className="font-extrabold text-primary-dark text-base border-b border-primary-teal/15 pb-2">
+            <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm border-b border-slate-100 dark:border-slate-800 pb-2">
               Telemetry Status
             </h3>
-            <div className="flex flex-col gap-3 text-xs font-bold">
-              <div className="flex justify-between border-b border-primary-teal/10 pb-2.5">
-                <span className="text-slate-500 uppercase">Last Contact</span>
-                <span className="text-primary-dark">
+            <div className="flex flex-col gap-3 text-xs font-semibold">
+              <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                <span className="text-slate-400 uppercase text-[10px] font-bold">Last Contact</span>
+                <span className="text-slate-900 dark:text-slate-100">
                   {site.lastSeenAt ? new Date(site.lastSeenAt).toLocaleString('id-ID') : 'Never'}
                 </span>
               </div>
-              <div className="flex justify-between border-b border-primary-teal/10 pb-2.5">
-                <span className="text-slate-500 uppercase">Latency Ping</span>
-                <span className="text-primary-teal">{getAverageResponseTime()} ms</span>
+              <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                <span className="text-slate-400 uppercase text-[10px] font-bold">Latency Ping</span>
+                <span className="text-primary-teal font-bold">{getAverageResponseTime()} ms</span>
               </div>
-              <div className="flex justify-between border-b border-primary-teal/10 pb-2.5">
-                <span className="text-slate-500 uppercase">Uptime Score</span>
-                <span className="text-success">{getUptimePercentage()}%</span>
+              <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                <span className="text-slate-400 uppercase text-[10px] font-bold">Uptime Score</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-bold">{getUptimePercentage()}%</span>
               </div>
-              <div className="flex justify-between border-b border-primary-teal/10 pb-2.5">
-                <span className="text-slate-500 uppercase">WP Memory Peak</span>
-                <span className="text-primary-dark">{site.wpMemoryUsage ? `${site.wpMemoryUsage} MB` : 'N/A'}</span>
+              <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                <span className="text-slate-400 uppercase text-[10px] font-bold">WP Memory Peak</span>
+                <span className="text-slate-900 dark:text-slate-100">{site.wpMemoryUsage ? `${site.wpMemoryUsage} MB` : 'N/A'}</span>
               </div>
-              <div className="flex justify-between border-b border-primary-teal/10 pb-2.5">
-                <span className="text-slate-500 uppercase">Disk space</span>
-                <span className="text-primary-dark">
+              <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                <span className="text-slate-400 uppercase text-[10px] font-bold">Disk space</span>
+                <span className="text-slate-900 dark:text-slate-100">
                   {site.diskTotal ? `${Math.round(site.diskTotal - site.diskFree!)} / ${site.diskTotal} GB` : 'N/A'}
                 </span>
               </div>
-              <div className="flex justify-between border-b border-primary-teal/10 pb-2.5">
-                <span className="text-slate-500 uppercase">System CPU Load</span>
-                <span className="text-primary-dark">{site.cpuLoad !== null ? `${site.cpuLoad.toFixed(2)}` : 'N/A'}</span>
+              <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                <span className="text-slate-400 uppercase text-[10px] font-bold">System CPU Load</span>
+                <span className="text-slate-900 dark:text-slate-100">{site.cpuLoad !== null ? `${site.cpuLoad.toFixed(2)}` : 'N/A'}</span>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <span className="text-[9px] font-extrabold text-primary-teal/70 uppercase tracking-widest pl-1">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
               Secret API Key
             </span>
-            <div className="flex items-center gap-2 bg-cream border-2 border-primary-teal/20 rounded-md py-2 px-3 justify-between text-xs">
-              <code className="text-coral font-mono font-bold select-all truncate">{site.apiKey}</code>
+            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-md py-2 px-3 justify-between text-xs">
+              <code className="text-rose-600 dark:text-rose-400 font-mono font-bold select-all truncate">{site.apiKey}</code>
               <button
                 onClick={copyApiKey}
-                className="text-slate-500 hover:text-primary-dark p-1 transition"
+                className="text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 p-1 transition"
                 title="Copy API key"
               >
-                {copiedKey ? <Check className="h-4 w-4 text-success" /> : <Copy className="h-4 w-4" />}
+                {copiedKey ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />}
               </button>
             </div>
           </div>
         </div>
 
         {/* Latency Chart */}
-        <div className="bg-white border-2 border-primary-teal/15 rounded shadow-card p-6 lg:col-span-2 flex flex-col gap-4">
-          <h3 className="font-extrabold text-primary-dark text-base border-b border-primary-teal/15 pb-2">
+        <div className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-lg shadow-sm p-6 lg:col-span-2 flex flex-col gap-4">
+          <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm border-b border-slate-100 dark:border-slate-800 pb-2">
             Response Latency Stream (Last 50 Pings)
           </h3>
           <div className="h-48 w-full mt-2">
@@ -337,11 +337,11 @@ function SiteDetail() {
                     <stop offset="95%" stopColor="#187DB4" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="time" stroke="#0F4F73" fontSize={11} tickLine={false} />
-                <YAxis stroke="#0F4F73" fontSize={11} tickLine={false} unit="ms" />
+                <XAxis dataKey="time" stroke="#94a3b8" fontSize={11} tickLine={false} />
+                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} unit="ms" />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#187DB4', color: '#0F4F73', borderRadius: '8px' }}
-                  itemStyle={{ color: '#0F4F73', fontWeight: 'bold' }}
+                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f8fafc', borderRadius: '8px' }}
+                  itemStyle={{ color: '#38bdf8', fontWeight: 'bold' }}
                 />
                 <Area type="monotone" dataKey="ms" name="Ping" stroke="#187DB4" strokeWidth={3} fillOpacity={1} fill="url(#colorMs)" />
               </AreaChart>
@@ -352,15 +352,15 @@ function SiteDetail() {
 
       {/* Tabs */}
       <div className="flex flex-col gap-6">
-        <div className="border-b-2 border-dashed border-primary-teal/20 flex flex-wrap gap-2">
+        <div className="border-b border-slate-200 dark:border-slate-800 flex flex-wrap gap-2">
           {(['plugins', 'errors', 'security', 'seo', 'traffic'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-5 py-3 border-b-3 font-extrabold text-xs tracking-wider uppercase transition-all ${
+              className={`px-4 py-2.5 border-b-2 font-bold text-xs tracking-wider uppercase transition-all ${
                 activeTab === tab
-                  ? 'border-primary-teal text-primary-teal bg-primary-bg/50'
-                  : 'border-transparent text-primary-dark/60 hover:text-primary-dark'
+                  ? 'border-primary-teal text-primary-teal font-extrabold'
+                  : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
               {tab.toUpperCase()}
@@ -369,7 +369,7 @@ function SiteDetail() {
         </div>
 
         {/* Tab Contents */}
-        <div className="bg-white border-2 border-primary-teal/15 rounded shadow-card overflow-hidden">
+        <div className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-lg shadow-sm overflow-hidden">
           {activeTab === 'plugins' && (
             <div>
               {plugins.length === 0 ? (
@@ -511,41 +511,41 @@ function SiteDetail() {
                 {/* 1. Vulnerability Severity Cards Grid (Wazuh Style) */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                   {/* Critical */}
-                  <div className="bg-white border-2 border-red-500/20 hover:border-red-500/40 rounded p-4 flex flex-col gap-1 shadow-sm transition hover:shadow-red-500/5 duration-300 relative overflow-hidden group">
+                  <div className="bg-white dark:bg-slate-900/90 border border-red-200 dark:border-red-950/60 rounded-lg p-4 flex flex-col gap-1 shadow-sm relative overflow-hidden group">
                     <div className="absolute top-0 left-0 w-1.5 h-full bg-red-500"></div>
-                    <span className="text-[10px] font-extrabold text-red-500/80 uppercase tracking-wider pl-1.5">Critical</span>
+                    <span className="text-[10px] font-bold text-red-500/80 uppercase tracking-wider pl-1.5">Critical</span>
                     <div className="flex items-baseline justify-between mt-1 pl-1.5">
-                      <span className="text-3xl font-black text-red-600 leading-none group-hover:scale-105 transition-transform">{vuln.critical}</span>
+                      <span className="text-3xl font-extrabold text-red-600 dark:text-red-400 leading-none">{vuln.critical}</span>
                       <span className="text-[9px] font-bold text-red-400">Risk Severity</span>
                     </div>
                   </div>
 
                   {/* High */}
-                  <div className="bg-white border-2 border-orange-500/20 hover:border-orange-500/40 rounded p-4 flex flex-col gap-1 shadow-sm transition hover:shadow-orange-500/5 duration-300 relative overflow-hidden group">
+                  <div className="bg-white dark:bg-slate-900/90 border border-orange-200 dark:border-orange-950/60 rounded-lg p-4 flex flex-col gap-1 shadow-sm relative overflow-hidden group">
                     <div className="absolute top-0 left-0 w-1.5 h-full bg-orange-500"></div>
-                    <span className="text-[10px] font-extrabold text-orange-500/80 uppercase tracking-wider pl-1.5">High</span>
+                    <span className="text-[10px] font-bold text-orange-500/80 uppercase tracking-wider pl-1.5">High</span>
                     <div className="flex items-baseline justify-between mt-1 pl-1.5">
-                      <span className="text-3xl font-black text-orange-600 leading-none group-hover:scale-105 transition-transform">{vuln.high}</span>
+                      <span className="text-3xl font-extrabold text-orange-600 dark:text-orange-400 leading-none">{vuln.high}</span>
                       <span className="text-[9px] font-bold text-orange-400">Risk Severity</span>
                     </div>
                   </div>
 
                   {/* Medium */}
-                  <div className="bg-white border-2 border-yellow-500/20 hover:border-yellow-500/40 rounded p-4 flex flex-col gap-1 shadow-sm transition hover:shadow-yellow-500/5 duration-300 relative overflow-hidden group">
+                  <div className="bg-white dark:bg-slate-900/90 border border-yellow-200 dark:border-amber-950/60 rounded-lg p-4 flex flex-col gap-1 shadow-sm relative overflow-hidden group">
                     <div className="absolute top-0 left-0 w-1.5 h-full bg-yellow-500"></div>
-                    <span className="text-[10px] font-extrabold text-yellow-600 uppercase tracking-wider pl-1.5">Medium</span>
+                    <span className="text-[10px] font-bold text-yellow-600 dark:text-amber-400 uppercase tracking-wider pl-1.5">Medium</span>
                     <div className="flex items-baseline justify-between mt-1 pl-1.5">
-                      <span className="text-3xl font-black text-yellow-600 leading-none group-hover:scale-105 transition-transform">{vuln.medium}</span>
-                      <span className="text-[9px] font-bold text-yellow-400">Risk Severity</span>
+                      <span className="text-3xl font-extrabold text-yellow-600 dark:text-amber-400 leading-none">{vuln.medium}</span>
+                      <span className="text-[9px] font-bold text-yellow-500">Risk Severity</span>
                     </div>
                   </div>
 
                   {/* Low */}
-                  <div className="bg-white border-2 border-blue-500/20 hover:border-blue-500/40 rounded p-4 flex flex-col gap-1 shadow-sm transition hover:shadow-blue-500/5 duration-300 relative overflow-hidden group">
+                  <div className="bg-white dark:bg-slate-900/90 border border-blue-200 dark:border-blue-950/60 rounded-lg p-4 flex flex-col gap-1 shadow-sm relative overflow-hidden group">
                     <div className="absolute top-0 left-0 w-1.5 h-full bg-blue-500"></div>
-                    <span className="text-[10px] font-extrabold text-blue-500/80 uppercase tracking-wider pl-1.5">Low</span>
+                    <span className="text-[10px] font-bold text-blue-500/80 uppercase tracking-wider pl-1.5">Low</span>
                     <div className="flex items-baseline justify-between mt-1 pl-1.5">
-                      <span className="text-3xl font-black text-blue-600 leading-none group-hover:scale-105 transition-transform">{vuln.low}</span>
+                      <span className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 leading-none">{vuln.low}</span>
                       <span className="text-[9px] font-bold text-blue-400">Risk Severity</span>
                     </div>
                   </div>
@@ -554,20 +554,20 @@ function SiteDetail() {
                 {/* 2. SCA Audit Results & FIM / Event Trend Evolution */}
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
                   {/* Left: SCA Hardening Audit Checklist (3 columns) */}
-                  <div className="lg:col-span-3 bg-white rounded border border-slate-100 shadow-sm p-5 flex flex-col gap-4">
-                    <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+                  <div className="lg:col-span-3 bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 shadow-sm p-5 flex flex-col gap-4">
+                    <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
                       <div>
-                        <h4 className="font-extrabold text-slate-800 text-sm">Security Configuration Assessment (SCA)</h4>
+                        <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm">Security Configuration Assessment (SCA)</h4>
                         <p className="text-[11px] text-slate-400 mt-0.5">Automated server hardening audit check</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="w-16 bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                        <div className="w-16 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden">
                           <div 
                             className="bg-emerald-500 h-full rounded-full"
                             style={{ width: `${site.scaScore ?? 0}%` }}
                           ></div>
                         </div>
-                        <span className="text-xs font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
+                        <span className="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-200/50">
                           {site.scaScore ?? 0}% SCA
                         </span>
                       </div>
@@ -580,15 +580,15 @@ function SiteDetail() {
                     ) : (
                       <div className="flex flex-col gap-3.5 max-h-[360px] overflow-y-auto pr-1">
                         {scaList.map((item: any, idx: number) => (
-                          <div key={idx} className="flex items-start justify-between gap-3 p-2.5 rounded border border-slate-50 hover:bg-slate-50/50 transition">
+                          <div key={idx} className="flex items-start justify-between gap-3 p-2.5 rounded border border-slate-100 dark:border-slate-800/60 hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition">
                             <div className="flex flex-col gap-0.5">
-                              <span className="text-xs font-extrabold text-slate-800">{item.policy}</span>
+                              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{item.policy}</span>
                               <span className="text-[10px] text-slate-400 font-normal leading-relaxed">{item.description}</span>
                             </div>
-                            <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-black uppercase shrink-0 ${
+                            <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase shrink-0 ${
                               item.status === 'passed'
-                                ? 'bg-emerald-50 text-emerald-600 border border-emerald-200/50'
-                                : 'bg-red-50 text-red-600 border border-red-200/50 animate-pulse'
+                                ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 border border-emerald-200/50'
+                                : 'bg-red-50 text-red-600 dark:bg-red-950/40 border border-red-200/50 animate-pulse'
                             }`}>
                               {item.status}
                             </span>
@@ -601,10 +601,10 @@ function SiteDetail() {
                   {/* Right: Security Events Count Evolution & Core File Modification List (2 columns) */}
                   <div className="lg:col-span-2 flex flex-col gap-6">
                     {/* Security events count line chart */}
-                    <div className="bg-white rounded border border-slate-100 shadow-sm p-5 flex flex-col gap-4">
+                    <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 shadow-sm p-5 flex flex-col gap-4">
                       <div>
-                        <h4 className="font-extrabold text-slate-800 text-sm">Security Events Evolution</h4>
-                        <p className="text-[11px] text-slate-400 mt-0.5">Insidents and warnings count last 30 days</p>
+                        <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm">Security Events Evolution</h4>
+                        <p className="text-[11px] text-slate-400 mt-0.5">Incidents and warnings count last 30 days</p>
                       </div>
                       <div className="h-40 w-full mt-1">
                         {secChart.length === 0 ? (
@@ -621,7 +621,7 @@ function SiteDetail() {
                               <XAxis dataKey="date" stroke="#94a3b8" fontSize={9} tickLine={false} />
                               <YAxis stroke="#94a3b8" fontSize={9} tickLine={false} allowDecimals={false} />
                               <Tooltip
-                                contentStyle={{ backgroundColor: '#fff', borderColor: '#e2e8f0', borderRadius: '12px', fontSize: '11px' }}
+                                contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f8fafc', borderRadius: '8px', fontSize: '11px' }}
                                 formatter={(value) => [value, 'Incidents']}
                               />
                               <Area type="monotone" dataKey="count" stroke="#EF6C4A" strokeWidth={2} fillOpacity={1} fill="url(#colorSecurity)" />
@@ -632,9 +632,9 @@ function SiteDetail() {
                     </div>
 
                     {/* FIM (File Integrity Monitoring) Modified list */}
-                    <div className="bg-white rounded border border-slate-100 shadow-sm p-5 flex flex-col gap-3">
+                    <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 shadow-sm p-5 flex flex-col gap-3">
                       <div>
-                        <h4 className="font-extrabold text-slate-800 text-sm">File Integrity Monitoring (FIM)</h4>
+                        <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm">File Integrity Monitoring (FIM)</h4>
                         <p className="text-[11px] text-slate-400 mt-0.5">Recent modifications of critical WordPress files</p>
                       </div>
 
@@ -648,13 +648,13 @@ function SiteDetail() {
                             .filter(e => e.eventType === 'file_change')
                             .slice(0, 5)
                             .map((event) => (
-                              <div key={event.id} className="flex items-start justify-between p-2 rounded bg-red-50/30 border border-red-100/50 text-[11px] font-bold text-slate-800">
+                              <div key={event.id} className="flex items-start justify-between p-2 rounded bg-red-50/50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/40 text-[11px] font-bold text-slate-800 dark:text-slate-200">
                                 <div className="flex flex-col gap-0.5">
-                                  <span className="text-red-700 font-extrabold flex items-center gap-1">
+                                  <span className="text-red-600 dark:text-red-400 font-extrabold flex items-center gap-1">
                                     <AlertOctagon className="h-3 w-3 shrink-0" />
                                     Modifikasi Terdeteksi
                                   </span>
-                                  <span className="text-[10px] text-slate-500 font-normal">{event.detail}</span>
+                                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">{event.detail}</span>
                                 </div>
                                 <span className="text-[9px] text-slate-400 font-semibold shrink-0">
                                   {new Date(event.createdAt).toLocaleTimeString('id-ID')}
@@ -668,9 +668,9 @@ function SiteDetail() {
                 </div>
 
                 {/* 3. Detailed Security Event Log Table */}
-                <div className="bg-white rounded border border-slate-100 shadow-sm p-5 flex flex-col gap-4">
+                <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 shadow-sm p-5 flex flex-col gap-4">
                   <div>
-                    <h4 className="font-extrabold text-slate-800 text-sm">Full Security Event Alerts</h4>
+                    <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm">Full Security Event Alerts</h4>
                     <p className="text-[11px] text-slate-400 mt-0.5">Detailed raw security alerts logged by the WordPress agent</p>
                   </div>
 
@@ -1072,24 +1072,24 @@ function SiteDetail() {
                 <div className="flex flex-col gap-8">
                   {/* Traffic cards */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-5 rounded bg-primary-bg/15 border border-primary-teal/15 border-l-[6px] border-l-[#187DB4]">
+                    <div className="p-5 rounded-lg bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 border-l-4 border-l-sky-500 shadow-sm">
                       <p className="text-xs text-slate-500 uppercase font-bold">Total Pageviews (30 Days)</p>
-                      <h4 className="text-3xl font-extrabold text-primary-dark mt-1">
+                      <h4 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mt-1">
                         {trafficStats.totalPageviews30d.toLocaleString('id-ID')}
                       </h4>
                     </div>
 
-                    <div className="p-5 rounded bg-primary-bg/15 border border-primary-teal/15 border-l-[6px] border-l-success">
+                    <div className="p-5 rounded-lg bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 border-l-4 border-l-emerald-500 shadow-sm">
                       <p className="text-xs text-slate-500 uppercase font-bold">Unique Visitors (30 Days)</p>
-                      <h4 className="text-3xl font-extrabold text-primary-dark mt-1">
+                      <h4 className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 mt-1">
                         {trafficStats.totalUniqueVisitors30d.toLocaleString('id-ID')}
                       </h4>
                     </div>
                   </div>
 
                   {/* Traffic Chart */}
-                  <div className="border border-primary-teal/15 rounded p-5">
-                    <h4 className="font-extrabold text-primary-dark text-sm border-b border-primary-teal/15 pb-2.5 mb-4">
+                  <div className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-lg p-5 shadow-sm">
+                    <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm border-b border-slate-100 dark:border-slate-800 pb-2.5 mb-4">
                       Daily Traffic Trend (Last 30 Days)
                     </h4>
                     <div className="h-56 w-full mt-2">
@@ -1105,10 +1105,10 @@ function SiteDetail() {
                               <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
                             </linearGradient>
                           </defs>
-                          <XAxis dataKey="date" stroke="#0F4F73" fontSize={10} tickLine={false} />
-                          <YAxis stroke="#0F4F73" fontSize={10} tickLine={false} />
+                          <XAxis dataKey="date" stroke="#94a3b8" fontSize={10} tickLine={false} />
+                          <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} />
                           <Tooltip
-                            contentStyle={{ backgroundColor: '#ffffff', borderColor: '#187DB4', color: '#0F4F73', borderRadius: '8px' }}
+                            contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f8fafc', borderRadius: '8px' }}
                             itemStyle={{ fontWeight: 'bold' }}
                           />
                           <Area type="monotone" dataKey="pageviews" name="Pageviews" stroke="#187DB4" strokeWidth={2.5} fillOpacity={1} fill="url(#colorPageviews)" />
@@ -1121,25 +1121,25 @@ function SiteDetail() {
                   {/* Top Pages and Top Referrers grid */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Top Pages */}
-                    <div className="border border-primary-teal/15 rounded p-5">
-                      <h4 className="font-extrabold text-primary-dark text-sm border-b border-primary-teal/15 pb-2.5 mb-4">
+                    <div className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-lg p-5 shadow-sm">
+                      <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm border-b border-slate-100 dark:border-slate-800 pb-2.5 mb-4">
                         Top Visited Pages (Last 30 Days)
                       </h4>
                       {trafficStats.topPages.length === 0 ? (
-                        <p className="text-xs text-slate-444 italic py-4">No pageview data.</p>
+                        <p className="text-xs text-slate-400 italic py-4">No pageview data.</p>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="w-full text-left">
                             <thead>
-                              <tr className="bg-primary-bg/30 border-b border-primary-teal/10 text-[9px] font-extrabold text-primary-teal/70 uppercase">
+                              <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200/80 dark:border-slate-700/80 text-[10px] font-bold text-slate-500 uppercase">
                                 <th className="py-2 px-3">Page Path</th>
                                 <th className="py-2 px-3 text-right">Pageviews</th>
                               </tr>
                             </thead>
-                            <tbody className="divide-y divide-primary-teal/5 text-xs font-semibold">
+                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs font-semibold">
                               {trafficStats.topPages.map((item, index) => (
-                                <tr key={index} className="hover:bg-primary-bg/5 transition">
-                                  <td className="py-2 px-3 text-primary-dark truncate font-mono select-all max-w-[200px]" title={item.url}>
+                                <tr key={index} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition">
+                                  <td className="py-2 px-3 text-slate-800 dark:text-slate-200 truncate font-mono select-all max-w-[200px]" title={item.url}>
                                     {item.url}
                                   </td>
                                   <td className="py-2 px-3 text-right font-bold text-primary-teal">
@@ -1154,25 +1154,25 @@ function SiteDetail() {
                     </div>
 
                     {/* Top Referrers */}
-                    <div className="border border-primary-teal/15 rounded p-5">
-                      <h4 className="font-extrabold text-primary-dark text-sm border-b border-primary-teal/15 pb-2.5 mb-4">
+                    <div className="bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-lg p-5 shadow-sm">
+                      <h4 className="font-bold text-slate-900 dark:text-slate-100 text-sm border-b border-slate-100 dark:border-slate-800 pb-2.5 mb-4">
                         Top Traffic Sources (Referrers)
                       </h4>
                       {trafficStats.topReferrers.length === 0 ? (
-                        <p className="text-xs text-slate-444 italic py-4">No referrer data.</p>
+                        <p className="text-xs text-slate-400 italic py-4">No referrer data.</p>
                       ) : (
                         <div className="overflow-x-auto">
                           <table className="w-full text-left">
                             <thead>
-                              <tr className="bg-primary-bg/30 border-b border-primary-teal/10 text-[9px] font-extrabold text-primary-teal/70 uppercase">
+                              <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200/80 dark:border-slate-700/80 text-[10px] font-bold text-slate-500 uppercase">
                                 <th className="py-2 px-3">Referrer URL</th>
                                 <th className="py-2 px-3 text-right">Hits</th>
                               </tr>
                             </thead>
-                            <tbody className="divide-y divide-primary-teal/5 text-xs font-semibold">
+                            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs font-semibold">
                               {trafficStats.topReferrers.map((item, index) => (
-                                <tr key={index} className="hover:bg-primary-bg/5 transition">
-                                  <td className="py-2 px-3 text-slate-600 truncate max-w-[200px]" title={item.referer}>
+                                <tr key={index} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition">
+                                  <td className="py-2 px-3 text-slate-600 dark:text-slate-300 truncate max-w-[200px]" title={item.referer}>
                                     {item.referer}
                                   </td>
                                   <td className="py-2 px-3 text-right font-bold text-primary-teal">

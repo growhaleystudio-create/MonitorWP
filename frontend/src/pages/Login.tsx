@@ -29,12 +29,12 @@ function Login({ onLogin }: LoginProps) {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#f3f7f9] p-4 relative overflow-hidden font-sans">
-      <div className="w-full max-w-md bg-white border border-slate-100/80 rounded p-8 md:p-10 shadow-lg relative z-10">
+    <div className="min-h-screen w-full flex items-center justify-center bg-slate-50 dark:bg-[#090d16] text-slate-800 dark:text-slate-100 p-4 relative overflow-hidden font-sans">
+      <div className="w-full max-w-md bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 rounded-lg p-8 md:p-10 shadow-lg relative z-10">
         {/* Logo / Brand Header */}
         <div className="flex flex-col items-center gap-2 mb-8 text-center">
           <img src="/logo.svg" className="h-10 w-10 mb-2 shrink-0" alt="Growhaley Logo" />
-          <h1 className="font-bold text-[20px] tracking-tight text-slate-900 leading-none">
+          <h1 className="font-bold text-[20px] tracking-tight text-slate-900 dark:text-slate-100 leading-none">
             Growhaley
           </h1>
           <span className="text-[10px] font-semibold text-primary-teal uppercase tracking-widest mt-1.5 block">
