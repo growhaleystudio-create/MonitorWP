@@ -1,5 +1,7 @@
 <div align="center">
 
+  <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/logo.svg" width="90" height="90" alt="Growhaley Monitor Logo" />
+
   # 🛡️ Growhaley Monitor
 
   **An Open-Source Multi-Site (WordPress + Non-WP) Uptime & Security Monitoring Platform**
