@@ -236,7 +236,7 @@ function Sites() {
                     <div>
                       <span className="text-[9px] uppercase font-bold text-slate-400 block mb-0.5">CPU Load</span>
                       <span className="text-slate-800 font-mono font-bold">
-                        {site.cpuLoad !== null ? `${Math.round(site.cpuLoad * 100)}%` : 'N/A'}
+                        {site.cpuLoad !== null ? `${site.cpuLoad.toFixed(2)}` : 'N/A'}
                       </span>
                     </div>
                     <div>

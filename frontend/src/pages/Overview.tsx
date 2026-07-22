@@ -465,17 +465,17 @@ function Overview() {
                           <td className="py-4 px-4">
                             {site.cpuLoad !== null ? (
                               <div className="flex flex-col items-center gap-1 w-16 mx-auto">
-                                <span className="text-[10px] text-slate-500 font-mono">{Math.round(site.cpuLoad * 100)}%</span>
+                                <span className="text-[10px] text-slate-500 font-mono">{site.cpuLoad.toFixed(2)}</span>
                                 <div className="w-12 h-1 bg-slate-100 rounded-full overflow-hidden">
                                   <div 
                                     className={`h-full ${
-                                      site.cpuLoad > 0.8 
+                                      site.cpuLoad > 4.0 
                                         ? 'bg-coral' 
-                                        : site.cpuLoad > 0.5 
+                                        : site.cpuLoad > 1.0 
                                           ? 'bg-accent-gold' 
                                           : 'bg-primary-teal'
                                     }`}
-                                    style={{ width: `${Math.min(site.cpuLoad * 100, 100)}%` }} 
+                                    style={{ width: `${Math.min((site.cpuLoad / 4) * 100, 100)}%` }} 
                                   />
                                 </div>
                               </div>

@@ -267,7 +267,7 @@ function SiteDetail() {
               </div>
               <div className="flex justify-between border-b border-primary-teal/10 pb-2.5">
                 <span className="text-slate-500 uppercase">System CPU Load</span>
-                <span className="text-primary-dark">{site.cpuLoad !== null ? `${Math.round(site.cpuLoad * 100)}%` : 'N/A'}</span>
+                <span className="text-primary-dark">{site.cpuLoad !== null ? `${site.cpuLoad.toFixed(2)}` : 'N/A'}</span>
               </div>
             </div>
           </div>
