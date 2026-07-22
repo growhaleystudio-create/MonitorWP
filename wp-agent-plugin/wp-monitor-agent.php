@@ -3,7 +3,7 @@
  * Plugin Name: WordPress Multi-Site Monitor Agent
  * Plugin URI: https://github.com/growhaleystudio-create/MonitorWP
  * Description: Lightweight monitoring agent that sends site status, plugin info, error logs, and security events to the central dashboard.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Growhaley Studio
  * Author URI: https://github.com/growhaleystudio-create
  * License: GPLv3
@@ -15,17 +15,25 @@ if (!defined('ABSPATH')) {
 
 // Helper functions to get API key & Server URL from constants (wp-config) or WP options database
 function wp_monitor_get_api_key() {
+    $db_key = get_option('wp_monitor_api_key', '');
+    if (!empty($db_key)) {
+        return $db_key;
+    }
     if (defined('WP_MONITOR_API_KEY') && WP_MONITOR_API_KEY !== '') {
         return WP_MONITOR_API_KEY;
     }
-    return get_option('wp_monitor_api_key', '');
+    return '';
 }
 
 function wp_monitor_get_server_url() {
+    $db_url = get_option('wp_monitor_server_url', '');
+    if (!empty($db_url)) {
+        return $db_url;
+    }
     if (defined('WP_MONITOR_SERVER_URL') && WP_MONITOR_SERVER_URL !== '') {
         return WP_MONITOR_SERVER_URL;
     }
-    return get_option('wp_monitor_server_url', '');
+    return '';
 }
 
 /**
@@ -771,13 +779,8 @@ function wp_monitor_agent_render_admin_page() {
                                 class="regular-text"
                                 placeholder="https://monitor-wp.vercel.app"
                                 required
-                                <?php echo $is_url_hardcoded ? 'readonly' : ''; ?>
                             />
-                            <?php if ($is_url_hardcoded): ?>
-                                <p class="description" style="color: #0284c7;">🔒 Di-override melalui constant <code>WP_MONITOR_SERVER_URL</code> di <code>wp-config.php</code>.</p>
-                            <?php else: ?>
-                                <p class="description">Contoh: <code>https://monitor-wp.vercel.app</code> atau <code>http://192.168.1.100:3000</code></p>
-                            <?php endif; ?>
+                            <p class="description">Contoh: <code>https://monitor-wp.vercel.app</code> atau <code>http://192.168.1.100:3000</code></p>
                         </td>
                     </tr>
                     <tr>
@@ -792,13 +795,8 @@ function wp_monitor_agent_render_admin_page() {
                                 placeholder="Tempelkan API Key dari Dashboard"
                                 required
                                 style="font-family: monospace;"
-                                <?php echo $is_key_hardcoded ? 'readonly' : ''; ?>
                             />
-                            <?php if ($is_key_hardcoded): ?>
-                                <p class="description" style="color: #0284c7;">🔒 Di-override melalui constant <code>WP_MONITOR_API_KEY</code> di <code>wp-config.php</code>.</p>
-                            <?php else: ?>
-                                <p class="description">Dapatkan API Key saat menambah situs di menu <b>Sites > Add Website</b> pada Dashboard.</p>
-                            <?php endif; ?>
+                            <p class="description">Dapatkan API Key saat menambah situs di menu <b>Sites &gt; Add Website</b> pada Central Dashboard.</p>
                         </td>
                     </tr>
                     <tr>
