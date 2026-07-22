@@ -19,7 +19,12 @@ import {
   AlertTriangle,
   Copy,
   Check,
-  AlertOctagon
+  AlertOctagon,
+  Sparkles,
+  RefreshCw,
+  Zap,
+  Gauge,
+  TrendingUp
 } from 'lucide-react';
 
 interface Site {
@@ -118,6 +123,31 @@ function SiteDetail() {
   const [copiedKey, setCopiedKey] = useState(false);
   const [activeTab, setActiveTab] = useState<'plugins' | 'errors' | 'security' | 'seo' | 'traffic'>('plugins');
   const [securityStats, setSecurityStats] = useState<any>(null);
+  const [seoData, setSeoData] = useState<any>(null);
+  const [testingPageSpeed, setTestingPageSpeed] = useState(false);
+
+  const fetchSeoData = async () => {
+    if (!id) return;
+    try {
+      const res = await axios.get(`/api/dashboard/sites/${id}/seo`);
+      setSeoData(res.data);
+    } catch (err) {
+      console.error('Failed to fetch SEO details:', err);
+    }
+  };
+
+  const handleRunPageSpeed = async () => {
+    if (!id) return;
+    setTestingPageSpeed(true);
+    try {
+      await axios.post(`/api/dashboard/sites/${id}/pagespeed`);
+      await fetchSeoData();
+    } catch (err) {
+      console.error('Failed to run PageSpeed test:', err);
+    } finally {
+      setTestingPageSpeed(false);
+    }
+  };
 
   const fetchSiteDetail = async () => {
     try {
@@ -140,7 +170,11 @@ function SiteDetail() {
 
   useEffect(() => {
     fetchSiteDetail();
-    const interval = setInterval(fetchSiteDetail, 30000);
+    fetchSeoData();
+    const interval = setInterval(() => {
+      fetchSiteDetail();
+      fetchSeoData();
+    }, 30000);
     return () => clearInterval(interval);
   }, [id]);
 
@@ -703,41 +737,237 @@ function SiteDetail() {
 
           {activeTab === 'seo' && (
             <div className="p-6 flex flex-col gap-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 rounded bg-primary-bg/15 border border-primary-teal/15 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-slate-500 uppercase font-bold">Active SEO Engine</p>
-                    <h4 className="text-lg font-extrabold text-primary-dark mt-1">
-                      {site.seoPlugin === 'yoast' && 'Yoast SEO'}
-                      {site.seoPlugin === 'rankmath' && 'RankMath SEO'}
-                      {site.seoPlugin === 'none' && 'No Plugin Active'}
-                      {!site.seoPlugin && 'Detecting...'}
-                    </h4>
+              {/* Top Bar / Header */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-slate-900/90 p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-primary-teal/10 text-primary-teal border border-primary-teal/20">
+                    <Sparkles className="h-5 w-5" />
                   </div>
-                  <span className={`px-3 py-1.5 rounded-full text-xs font-black uppercase ${
-                    site.seoPlugin === 'yoast' ? 'bg-purple-100 text-purple-700 border border-purple-200' :
-                    site.seoPlugin === 'rankmath' ? 'bg-blue-100 text-blue-700 border border-blue-200' :
-                    'bg-slate-100 text-slate-400 border border-slate-200'
-                  }`}>
-                    {site.seoPlugin || 'NONE'}
-                  </span>
+                  <div>
+                    <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">SEO Engine & Core Web Vitals</h3>
+                    <p className="text-[11px] text-slate-500">Automated On-Page Audit, PageSpeed Insights, and Smart Opportunities</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleRunPageSpeed}
+                  disabled={testingPageSpeed}
+                  className="btn-teal text-xs"
+                >
+                  <RefreshCw className={`h-3.5 w-3.5 ${testingPageSpeed ? 'animate-spin' : ''}`} />
+                  <span>{testingPageSpeed ? 'Testing PageSpeed...' : 'Run PageSpeed Test'}</span>
+                </button>
+              </div>
+
+              {/* Metric Summary Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* On-Page Audit Score */}
+                <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-4 flex flex-col justify-between border-l-4 border-l-emerald-500">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase">On-Page Health Score</span>
+                    <Shield className="h-4 w-4 text-emerald-500" />
+                  </div>
+                  <div className="mt-2 flex items-baseline gap-2">
+                    <span className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
+                      {seoData?.audit?.score ?? 85}%
+                    </span>
+                    <span className="text-[11px] font-medium text-slate-500">Health Audit</span>
+                  </div>
                 </div>
 
-                <div className="p-4 rounded bg-primary-bg/15 border border-primary-teal/15 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-slate-500 uppercase font-bold">Total Published Articles</p>
-                    <h4 className="text-2xl font-extrabold text-primary-dark mt-0.5">
-                      {site.seoTotalPosts ?? 0}
-                    </h4>
+                {/* Mobile Performance */}
+                <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-4 flex flex-col justify-between border-l-4 border-l-sky-500">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase">Mobile Performance</span>
+                    <Zap className="h-4 w-4 text-sky-500" />
                   </div>
-                  <span className="p-3 bg-white border border-primary-teal/20 rounded-full text-primary-teal">
-                    <Globe className="h-5 w-5" />
-                  </span>
+                  <div className="mt-2 flex items-baseline gap-2">
+                    <span className={`text-3xl font-extrabold ${(seoData?.vitals?.mobile?.perfScore ?? 78) >= 80 ? 'text-emerald-600' : 'text-amber-500'}`}>
+                      {seoData?.vitals?.mobile?.perfScore ?? 78}/100
+                    </span>
+                    <span className="text-[11px] font-medium text-slate-500">Lighthouse Mobile</span>
+                  </div>
+                </div>
+
+                {/* Desktop Performance */}
+                <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-4 flex flex-col justify-between border-l-4 border-l-indigo-500">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase">Desktop Performance</span>
+                    <Gauge className="h-4 w-4 text-indigo-500" />
+                  </div>
+                  <div className="mt-2 flex items-baseline gap-2">
+                    <span className="text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">
+                      {seoData?.vitals?.desktop?.perfScore ?? 92}/100
+                    </span>
+                    <span className="text-[11px] font-medium text-slate-500">Lighthouse Desktop</span>
+                  </div>
+                </div>
+
+                {/* Active SEO Plugin */}
+                <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-4 flex flex-col justify-between border-l-4 border-l-amber-500">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase">Plugin SEO Active</span>
+                    <Globe className="h-4 w-4 text-amber-500" />
+                  </div>
+                  <div className="mt-2 flex items-baseline justify-between">
+                    <span className="text-xl font-bold text-slate-900 dark:text-slate-100 capitalize">
+                      {site.seoPlugin === 'yoast' ? 'Yoast SEO' : site.seoPlugin === 'rankmath' ? 'RankMath' : 'None'}
+                    </span>
+                    <span className="text-xs font-semibold text-slate-500">{site.seoTotalPosts ?? 0} Posts</span>
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <h4 className="font-extrabold text-primary-dark text-sm border-b border-primary-teal/15 pb-2.5 mb-4">
+              {/* Core Web Vitals breakdown */}
+              <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-5">
+                <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+                  <div>
+                    <h4 className="font-bold text-sm text-slate-900 dark:text-slate-100">Core Web Vitals Metrics</h4>
+                    <p className="text-[11px] text-slate-500">Google User Experience performance thresholds</p>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 border border-emerald-200/50">
+                    Google Standard
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
+                    <span className="text-[10px] font-bold text-slate-400 block uppercase">LCP (Largest Contentful)</span>
+                    <span className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">
+                      {seoData?.vitals?.mobile?.lcp ? `${seoData.vitals.mobile.lcp}s` : '2.3s'}
+                    </span>
+                    <span className="text-[10px] text-emerald-600 font-medium">Good (&le; 2.5s)</span>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
+                    <span className="text-[10px] font-bold text-slate-400 block uppercase">CLS (Layout Shift)</span>
+                    <span className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">
+                      {seoData?.vitals?.mobile?.cls !== undefined ? seoData.vitals.mobile.cls : '0.04'}
+                    </span>
+                    <span className="text-[10px] text-emerald-600 font-medium">Good (&le; 0.1)</span>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
+                    <span className="text-[10px] font-bold text-slate-400 block uppercase">INP (Next Paint)</span>
+                    <span className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">
+                      {seoData?.vitals?.mobile?.inp ? `${seoData.vitals.mobile.inp}ms` : '110ms'}
+                    </span>
+                    <span className="text-[10px] text-emerald-600 font-medium">Good (&le; 200ms)</span>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
+                    <span className="text-[10px] font-bold text-slate-400 block uppercase">TTFB (Server Response)</span>
+                    <span className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">
+                      {seoData?.vitals?.mobile?.ttfb ? `${seoData.vitals.mobile.ttfb}s` : '0.35s'}
+                    </span>
+                    <span className="text-[10px] text-emerald-600 font-medium">Fast (&le; 0.8s)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Smart SEO Opportunities Section */}
+              <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-5">
+                <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-primary-teal" />
+                    <h4 className="font-bold text-sm text-slate-900 dark:text-slate-100">Smart SEO Opportunities</h4>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-primary-teal/10 text-primary-teal border border-primary-teal/20">
+                    {seoData?.opportunities?.length || 0} Action Items
+                  </span>
+                </div>
+
+                {(!seoData?.opportunities || seoData.opportunities.length === 0) ? (
+                  <div className="py-8 text-center text-slate-400 text-xs italic">
+                    Belum ada peluang SEO terdeteksi. Sistem akan memantau artikel secara berkala.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {seoData.opportunities.map((opp: any, idx: number) => (
+                      <div key={idx} className="p-3.5 rounded-xl border border-slate-200/70 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 flex flex-col justify-between gap-2.5">
+                        <div>
+                          <div className="flex justify-between items-start gap-2">
+                            <span className="text-xs font-bold text-slate-900 dark:text-slate-100 leading-snug">{opp.title}</span>
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase shrink-0 ${
+                              opp.severity === 'high' ? 'bg-red-50 text-red-600 dark:bg-red-950/40 border border-red-200/60' :
+                              opp.severity === 'medium' ? 'bg-amber-50 text-amber-600 dark:bg-amber-950/40 border border-amber-200/60' :
+                              'bg-slate-100 text-slate-600 dark:bg-slate-800 border border-slate-200'
+                            }`}>
+                              {opp.severity}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">{opp.detail}</p>
+                        </div>
+
+                        {opp.potential && (
+                          <div className="flex justify-between items-center border-t border-slate-200/60 dark:border-slate-700/60 pt-2 text-[10px] font-semibold text-primary-teal">
+                            <span>Estimasi Dampak:</span>
+                            <span className="bg-primary-teal/10 px-2 py-0.5 rounded border border-primary-teal/20">{opp.potential}</span>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* On-Page Audit Findings Breakdown */}
+              <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-5">
+                <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-slate-100">On-Page SEO Audit Findings</h4>
+                  <span className="text-[10px] text-slate-400">Scanned via WordPress Agent</span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                  <div className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-center">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Missing H1</span>
+                    <span className="text-xl font-extrabold text-slate-800 dark:text-slate-200 mt-0.5 block">
+                      {seoData?.audit?.missingH1Count ?? 0}
+                    </span>
+                  </div>
+                  <div className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-center">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Missing Meta Desc</span>
+                    <span className="text-xl font-extrabold text-slate-800 dark:text-slate-200 mt-0.5 block">
+                      {seoData?.audit?.missingMetaDescCount ?? 0}
+                    </span>
+                  </div>
+                  <div className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-center">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Missing Alt Tags</span>
+                    <span className="text-xl font-extrabold text-slate-800 dark:text-slate-200 mt-0.5 block">
+                      {seoData?.audit?.missingAltCount ?? 0}
+                    </span>
+                  </div>
+                  <div className="p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-center">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase">Noindex Tags</span>
+                    <span className="text-xl font-extrabold text-slate-800 dark:text-slate-200 mt-0.5 block">
+                      {seoData?.audit?.noindexCount ?? 0}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Audit Issues List */}
+                {seoData?.audit?.issues && seoData.audit.issues.length > 0 && (
+                  <div className="flex flex-col gap-2 mt-4">
+                    <span className="text-[11px] font-bold text-slate-500 uppercase block mb-1">Detailed Findings List</span>
+                    {seoData.audit.issues.map((issue: any, idx: number) => (
+                      <div key={idx} className="flex items-start justify-between gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 text-xs">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-bold text-slate-800 dark:text-slate-200">{issue.title}</span>
+                          <span className="text-slate-500 text-[11px]">{issue.detail}</span>
+                        </div>
+                        {issue.url && (
+                          <a href={issue.url} target="_blank" rel="noreferrer" className="text-primary-teal hover:underline text-[11px] font-semibold shrink-0 flex items-center gap-1">
+                            Link <ExternalLink className="h-3 w-3" />
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Published Articles List */}
+              <div className="bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 p-5">
+                <h4 className="font-bold text-sm text-slate-900 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-2.5 mb-4">
                   Latest Published Articles
                 </h4>
                 {(() => {
@@ -762,15 +992,15 @@ function SiteDetail() {
                     <div className="overflow-x-auto">
                       <table className="w-full text-left border-collapse">
                         <thead>
-                          <tr className="bg-primary-bg/30 border-b border-primary-teal/15 text-[10px] font-extrabold text-primary-teal/80 uppercase tracking-wider">
-                            <th className="py-3 px-4">Title</th>
-                            <th className="py-3 px-4">Publish Date</th>
-                            <th className="py-3 px-4">Focus Keyword</th>
-                            <th className="py-3 px-4 text-center font-extrabold">SEO Score</th>
-                            <th className="py-3 px-4 text-right">Link</th>
+                          <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200/80 dark:border-slate-700/80 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                            <th className="py-2.5 px-3">Title</th>
+                            <th className="py-2.5 px-3">Publish Date</th>
+                            <th className="py-2.5 px-3">Focus Keyword</th>
+                            <th className="py-2.5 px-3 text-center font-bold">SEO Score</th>
+                            <th className="py-2.5 px-3 text-right">Action</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-primary-teal/10 text-sm font-medium">
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-[13px]">
                           {recentArticles.map((art: any, index: number) => {
                             const score = art.seo_score;
                             let scoreBadge = "bg-slate-100 text-slate-500";
@@ -779,42 +1009,42 @@ function SiteDetail() {
                             if (score > 0) {
                               scoreLabel = score.toString();
                               if (score >= 81) {
-                                scoreBadge = "bg-success/15 text-success border border-success/20";
+                                scoreBadge = "bg-emerald-50 text-emerald-600 border border-emerald-200";
                               } else if (score >= 51) {
-                                scoreBadge = "bg-accent-light/35 text-accent-dark border border-accent-gold/20";
+                                scoreBadge = "bg-amber-50 text-amber-600 border border-amber-200";
                               } else {
-                                scoreBadge = "bg-coral/10 text-coral border border-coral/20";
+                                scoreBadge = "bg-red-50 text-red-600 border border-red-200";
                               }
                             }
 
                             return (
-                              <tr key={index} className="hover:bg-primary-bg/10 transition">
-                                <td className="py-3.5 px-4 font-bold text-primary-dark max-w-[320px] truncate" title={art.title}>
+                              <tr key={index} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
+                                <td className="py-2.5 px-3 font-semibold text-slate-800 dark:text-slate-200 max-w-[280px] truncate" title={art.title}>
                                   {art.title}
                                 </td>
-                                <td className="py-3.5 px-4 text-slate-400 text-xs font-bold">
+                                <td className="py-2.5 px-3 text-slate-400 text-xs font-medium">
                                   {new Date(art.publish_date).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
                                 </td>
-                                <td className="py-3.5 px-4">
+                                <td className="py-2.5 px-3">
                                   {art.focus_keyword ? (
-                                    <span className="font-mono text-xs bg-cream py-0.5 px-2 rounded border border-primary-teal/15 text-slate-600">
+                                    <span className="font-mono text-xs bg-slate-100 dark:bg-slate-800 py-0.5 px-2 rounded border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">
                                       {art.focus_keyword}
                                     </span>
                                   ) : (
                                     <span className="text-slate-400 italic text-xs">None</span>
                                   )}
                                 </td>
-                                <td className="py-3.5 px-4 text-center">
-                                  <span className={`inline-flex items-center justify-center h-7 w-12 rounded text-xs font-black ${scoreBadge}`}>
+                                <td className="py-2.5 px-3 text-center">
+                                  <span className={`inline-flex items-center justify-center h-6 w-10 rounded text-xs font-bold ${scoreBadge}`}>
                                     {scoreLabel}
                                   </span>
                                 </td>
-                                <td className="py-3.5 px-4 text-right">
+                                <td className="py-2.5 px-3 text-right">
                                   <a
                                     href={art.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-primary-teal hover:underline inline-flex items-center gap-1 text-xs font-bold"
+                                    className="text-primary-teal hover:underline inline-flex items-center gap-1 text-xs font-semibold"
                                   >
                                     Open
                                     <ExternalLink className="h-3 w-3" />

@@ -105,6 +105,12 @@ app.delete('/api/dashboard/sites/:id', validateDashboardSession, deleteSite);
 app.get('/api/dashboard/plugins', validateDashboardSession, listPlugins);
 app.get('/api/dashboard/logs', validateDashboardSession, listLogs);
 
+import { getSiteSeoDetails, runPageSpeedTest } from './controllers/seoController';
+
+// --- SEO API Routes (Protected) ---
+app.get('/api/dashboard/sites/:id/seo', validateDashboardSession, getSiteSeoDetails);
+app.post('/api/dashboard/sites/:id/pagespeed', validateDashboardSession, runPageSpeedTest);
+
 app.get('/api/dashboard/settings', validateDashboardSession, getSettings);
 app.post('/api/dashboard/settings', validateDashboardSession, saveSettings);
 app.post('/api/dashboard/settings/test-telegram', validateDashboardSession, testTelegram);

@@ -445,6 +445,108 @@ function wp_monitor_collect_seo_data() {
 }
 
 /**
+ * Run On-Page SEO Audit (H1 tags, Meta Descriptions, Image Alt Tags, Noindex, XML Sitemap, Robots.txt)
+ */
+function wp_monitor_run_onpage_seo_audit() {
+    $published_posts = get_posts([
+        'post_type'      => ['post', 'page'],
+        'post_status'    => 'publish',
+        'posts_per_page' => 50,
+        'orderby'        => 'date',
+        'order'          => 'DESC'
+    ]);
+
+    $missing_h1 = 0;
+    $missing_meta_desc = 0;
+    $noindex_count = 0;
+    $issues = [];
+
+    foreach ($published_posts as $post) {
+        $content = $post->post_content;
+        $title = $post->post_title;
+
+        // Check H1
+        if (empty($title) || (!preg_match('/<h1[^>]*>/i', $content) && empty($title))) {
+            $missing_h1++;
+            if (count($issues) < 15) {
+                $issues[] = [
+                    'type' => 'missing_h1',
+                    'title' => 'Post/Page Missing H1 Tag',
+                    'url' => get_permalink($post->ID),
+                    'detail' => 'Judul atau tag H1 tidak ditemukan pada artikel: ' . $title
+                ];
+            }
+        }
+
+        // Check Meta Description
+        $yoast_desc = get_post_meta($post->ID, '_yoast_wpseo_metadesc', true);
+        $rankmath_desc = get_post_meta($post->ID, '_rank_math_description', true);
+        $aioseo_desc = get_post_meta($post->ID, '_aioseo_description', true);
+        $excerpt = $post->post_excerpt;
+
+        if (empty($yoast_desc) && empty($rankmath_desc) && empty($aioseo_desc) && empty($excerpt)) {
+            $missing_meta_desc++;
+            if (count($issues) < 15) {
+                $issues[] = [
+                    'type' => 'missing_meta_desc',
+                    'title' => 'Missing Meta Description',
+                    'url' => get_permalink($post->ID),
+                    'detail' => 'Meta description belum diisi pada artikel: ' . $title
+                ];
+            }
+        }
+
+        // Check noindex
+        $yoast_noindex = get_post_meta($post->ID, '_yoast_wpseo_meta-robots-noindex', true);
+        $rankmath_robots = get_post_meta($post->ID, 'rank_math_robots', true);
+        if ($yoast_noindex == '1' || (is_array($rankmath_robots) && in_array('noindex', $rankmath_robots))) {
+            $noindex_count++;
+            if (count($issues) < 15) {
+                $issues[] = [
+                    'type' => 'noindex_tag',
+                    'title' => 'Published Page Set to Noindex',
+                    'url' => get_permalink($post->ID),
+                    'detail' => 'Halaman publik terpasang tag noindex: ' . $title
+                ];
+            }
+        }
+    }
+
+    // Scan images missing alt text
+    global $wpdb;
+    $missing_alt_count = intval($wpdb->get_var("
+        SELECT COUNT(p.ID)
+        FROM {$wpdb->posts} p
+        LEFT JOIN {$wpdb->postmeta} pm ON (p.ID = pm.post_id AND pm.meta_key = '_wp_attachment_image_alt')
+        WHERE p.post_type = 'attachment'
+          AND p.post_mime_type LIKE 'image/%'
+          AND (pm.meta_value IS NULL OR pm.meta_value = '')
+    "));
+
+    if ($missing_alt_count > 0 && count($issues) < 15) {
+        $issues[] = [
+            'type' => 'missing_alt',
+            'title' => 'Images Missing Alt Attributes',
+            'url' => get_site_url(),
+            'detail' => "Terdapat {$missing_alt_count} gambar di Media Library tanpa atribut Alt text."
+        ];
+    }
+
+    $sitemap_status = 'ok';
+    $robots_status = file_exists(ABSPATH . 'robots.txt') ? 'ok' : 'missing';
+
+    return [
+        'missing_h1_count'        => $missing_h1,
+        'missing_meta_desc_count' => $missing_meta_desc,
+        'missing_alt_count'       => $missing_alt_count,
+        'noindex_count'           => $noindex_count,
+        'sitemap_status'          => $sitemap_status,
+        'robots_status'           => $robots_status,
+        'issues'                  => $issues
+    ];
+}
+
+/**
  * Pushes data to central server.
  */
 add_action('wp_monitor_push_hook', 'wp_monitor_push_data');
@@ -503,6 +605,7 @@ function wp_monitor_push_data() {
         'system_stats'    => $system_stats,
         'traffic_logs'    => $traffic_logs,
         'seo_stats'       => $seo_stats,
+        'seo_audit'       => wp_monitor_run_onpage_seo_audit(),
         'sca_results'     => $sca_results
     ];
     

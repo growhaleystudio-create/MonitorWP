@@ -26,7 +26,7 @@
 
 /* Compact, neat cards */
 .saas-card {
-  @apply bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/70 dark:border-slate-800/80 shadow-xs p-4 border-l-4 border-l-primary-teal transition-all duration-200 relative;
+  @apply bg-white dark:bg-slate-900/90 rounded-xl border border-slate-200/70 dark:border-slate-800/80 shadow-sm p-4 border-l-4 border-l-primary-teal transition-all duration-200 relative;
 }
 
 .saas-card-gold {
@@ -43,7 +43,7 @@
 
 /* Compact buttons */
 .btn-pill {
-  @apply rounded-lg px-3.5 py-1.5 text-[12px] font-semibold tracking-tight transition-all duration-150 active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs select-none;
+  @apply rounded-lg px-3.5 py-1.5 text-[12px] font-semibold tracking-tight transition-all duration-150 active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer shadow-sm select-none;
 }
 
 .btn-gold {
@@ -59,7 +59,7 @@
 }
 
 .clean-input {
-  @apply bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-primary-teal focus:ring-2 focus:ring-primary-teal/20 outline-none rounded-lg px-3 py-1.5 text-slate-800 dark:text-slate-100 text-[13px] shadow-2xs transition-all duration-150;
+  @apply bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-primary-teal focus:ring-2 focus:ring-primary-teal/20 outline-none rounded-lg px-3 py-1.5 text-slate-800 dark:text-slate-100 text-[13px] shadow-sm transition-all duration-150;
 }
 
 .saas-badge {

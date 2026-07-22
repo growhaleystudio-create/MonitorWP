@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { prisma } from '../db';
 import { triggerAlert } from '../services/alerts';
+import { generateSeoOpportunities } from '../services/seoOpportunitiesService';
 
 /**
  * Handles payload POSTed by the WordPress Agent plugin.
@@ -306,6 +307,34 @@ export async function handleAgentPush(req: Request, res: Response) {
           scaScore: scaScore,
         },
       });
+    }
+
+    // 8. Process On-Page SEO Audit & Opportunities
+    const { seo_audit } = req.body;
+    if (seo_audit) {
+      const missingH1 = seo_audit.missing_h1_count || 0;
+      const missingDesc = seo_audit.missing_meta_desc_count || 0;
+      const missingAlt = seo_audit.missing_alt_count || 0;
+      const noindex = seo_audit.noindex_count || 0;
+
+      const penalty = (missingH1 * 10) + (missingDesc * 5) + (missingAlt * 2) + (noindex * 15);
+      const score = Math.max(0, 100 - penalty);
+
+      await prisma.seoAuditResult.create({
+        data: {
+          siteId: site.id,
+          score,
+          missingH1Count: missingH1,
+          missingMetaDescCount: missingDesc,
+          missingAltCount: missingAlt,
+          noindexCount: noindex,
+          sitemapStatus: seo_audit.sitemap_status || 'ok',
+          robotsStatus: seo_audit.robots_status || 'ok',
+          issuesJson: Array.isArray(seo_audit.issues) ? JSON.stringify(seo_audit.issues) : null,
+        },
+      });
+
+      await generateSeoOpportunities(site.id);
     }
 
     res.json({ success: true, message: 'Data synced successfully' });

@@ -35,7 +35,7 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
   return (
     <>
       {/* Mobile Header */}
-      <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 fixed top-0 left-0 right-0 z-40 shadow-xs">
+      <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 fixed top-0 left-0 right-0 z-40 shadow-sm">
         <div className="flex items-center gap-2">
           <img src="/logo.svg" className="h-6 w-6 shrink-0" alt="Growhaley Logo" />
           <span className="font-bold text-[13px] tracking-tight text-slate-800 dark:text-slate-100 uppercase">Growhaley WP</span>
@@ -91,7 +91,7 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
                       : 'w-full gap-2.5 px-3 py-2'
                   } rounded-lg text-[13px] ${
                     isActive
-                      ? 'bg-primary-teal text-white shadow-xs font-semibold'
+                      ? 'bg-primary-teal text-white shadow-sm font-semibold'
                       : 'text-slate-600 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-800/60'
                   }`
                 }

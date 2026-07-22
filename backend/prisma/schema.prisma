@@ -9,36 +9,39 @@ generator client {
 }
 
 model Site {
-  id             Int             @id @default(autoincrement())
-  name           String
-  url            String
-  apiKey         String          @unique // X-API-Key for Agent auth
-  isActive       Boolean         @default(true)
-  lastSeenAt     DateTime?
-  status         String          @default("unknown") // online, offline, unknown
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  wpMemoryUsage  Float?
-  diskTotal      Float?
-  diskFree       Float?
-  cpuLoad        Float?
-  plugins        Plugin[]
-  uptimeLogs     UptimeLog[]
-  errorLogs      ErrorLog[]
-  securityEvents SecurityEvent[]
-  alerts         Alert[]
-  seoPlugin      String?         @default("none")
-  seoTotalPosts  Int?            @default(0)
-  seoRecentPosts String?         // JSON string: recent articles
-  scaResults     String?         // JSON string: SCA policies check
-  scaScore       Int?            @default(0)
-  trafficLogs    TrafficLog[]
-  siteType       String          @default("wordpress") // "wordpress" | "non-wp"
-  sslValid       Boolean?
-  sslExpiresAt   DateTime?
+  id               Int                @id @default(autoincrement())
+  name             String
+  url              String
+  apiKey           String             @unique // X-API-Key for Agent auth
+  isActive         Boolean            @default(true)
+  lastSeenAt       DateTime?
+  status           String             @default("unknown") // online, offline, unknown
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  wpMemoryUsage    Float?
+  diskTotal        Float?
+  diskFree         Float?
+  cpuLoad          Float?
+  plugins          Plugin[]
+  uptimeLogs       UptimeLog[]
+  errorLogs        ErrorLog[]
+  securityEvents   SecurityEvent[]
+  alerts           Alert[]
+  seoPlugin        String?            @default("none")
+  seoTotalPosts    Int?               @default(0)
+  seoRecentPosts   String?            // JSON string: recent articles
+  scaResults       String?            // JSON string: SCA policies check
+  scaScore         Int?               @default(0)
+  trafficLogs      TrafficLog[]
+  siteType         String             @default("wordpress") // "wordpress" | "non-wp"
+  sslValid         Boolean?
+  sslExpiresAt     DateTime?
   sslDaysRemaining Int?
-  sslIssuer      String?
-  checkKeyword   String?
+  sslIssuer        String?
+  checkKeyword     String?
+  pageSpeedMetrics PageSpeedMetric[]
+  seoAuditResults  SeoAuditResult[]
+  seoOpportunities SeoOpportunity[]
 }
 
 model Plugin {
@@ -70,26 +73,26 @@ model UptimeLog {
 }
 
 model ErrorLog {
-  id          Int      @id @default(autoincrement())
-  siteId      Int
-  site        Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  errorCode   Int      // 404, 500, etc.
-  url         String
-  message     String?
-  userAgent   String?
-  ipAddress   String?
-  referer     String?
-  count       Int      @default(1)
-  firstSeen   DateTime @default(now())
-  lastSeen    DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  siteId    Int
+  site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  errorCode Int // 404, 500, etc.
+  url       String
+  message   String?
+  userAgent String?
+  ipAddress String?
+  referer   String?
+  count     Int      @default(1)
+  firstSeen DateTime @default(now())
+  lastSeen  DateTime @default(now())
 }
 
 model SecurityEvent {
   id        Int      @id @default(autoincrement())
   siteId    Int
   site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  eventType String   // login_success, login_failed, file_change, injection_sqli, etc.
-  detail    String   // JSON string
+  eventType String // login_success, login_failed, file_change, injection_sqli, etc.
+  detail    String // JSON string
   ipAddress String?
   username  String?
   createdAt DateTime @default(now())
@@ -99,9 +102,9 @@ model Alert {
   id           Int       @id @default(autoincrement())
   siteId       Int
   site         Site      @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  alertType    String    // site_down, plugin_expired, etc.
+  alertType    String // site_down, plugin_expired, etc.
   message      String
-  severity     String    // info, warning, critical
+  severity     String // info, warning, critical
   telegramSent Boolean   @default(false)
   readAt       DateTime?
   createdAt    DateTime  @default(now())
@@ -115,14 +118,58 @@ model Setting {
 }
 
 model TrafficLog {
-  id         Int      @id @default(autoincrement())
-  siteId     Int
-  site       Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  url        String
-  ipAddress  String?
-  userAgent  String?
-  referer    String?
-  visitedAt  DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  siteId    Int
+  site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  url       String
+  ipAddress String?
+  userAgent String?
+  referer   String?
+  visitedAt DateTime @default(now())
 
   @@index([siteId, visitedAt])
+}
+
+model PageSpeedMetric {
+  id          Int      @id @default(autoincrement())
+  siteId      Int
+  site        Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  strategy    String   // "MOBILE" | "DESKTOP"
+  perfScore   Int      // 0 - 100
+  lcp         Float?   // Largest Contentful Paint (seconds)
+  cls         Float?   // Cumulative Layout Shift (score)
+  inp         Float?   // Interaction to Next Paint (ms)
+  ttfb        Float?   // Time to First Byte (seconds)
+  fcp         Float?   // First Contentful Paint (seconds)
+  speedIndex  Float?   // Speed Index (seconds)
+  checkedAt   DateTime @default(now())
+}
+
+model SeoAuditResult {
+  id                   Int      @id @default(autoincrement())
+  siteId               Int
+  site                 Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  score                Int      @default(0) // 0-100
+  missingH1Count       Int      @default(0)
+  missingMetaDescCount Int      @default(0)
+  missingAltCount      Int      @default(0)
+  noindexCount         Int      @default(0)
+  sitemapStatus        String   @default("ok") // ok, missing, error
+  robotsStatus         String   @default("ok") // ok, blocking, missing
+  issuesJson           String?  // JSON string breakdown
+  auditedAt            DateTime @default(now())
+}
+
+model SeoOpportunity {
+  id        Int      @id @default(autoincrement())
+  siteId    Int
+  site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  type      String   // striking_distance, low_ctr, content_decay, cannibalization
+  title     String
+  detail    String
+  query     String?
+  url       String?
+  severity  String   @default("medium") // high, medium, low
+  potential String?
+  createdAt DateTime @default(now())
 }
