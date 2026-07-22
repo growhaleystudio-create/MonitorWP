@@ -10,8 +10,10 @@ import {
   X,
   PanelLeftClose,
   PanelLeftOpen,
+  Sun,
+  Moon,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface SidebarProps {
   onLogout: () => void;
@@ -21,6 +23,21 @@ interface SidebarProps {
 
 function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDark]);
 
   const navigation = [
     { name: 'Dashboard', to: '/', icon: LayoutDashboard },
@@ -31,22 +48,32 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);
+  const toggleTheme = () => setIsDark(!isDark);
 
   return (
     <>
       {/* Mobile Header */}
-      <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 fixed top-0 left-0 right-0 z-40 shadow-sm">
+      <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 fixed top-0 left-0 right-0 z-40 shadow-sm">
         <div className="flex items-center gap-2">
           <img src="/logo.svg" className="h-6 w-6 shrink-0" alt="Growhaley Logo" />
           <span className="font-bold text-[13px] tracking-tight text-slate-800 dark:text-slate-100 uppercase">Growhaley WP</span>
         </div>
-        <button
-          onClick={toggleSidebar}
-          className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition active:scale-95"
-          aria-label={isOpen ? "Close Menu" : "Open Menu"}
-        >
-          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
+            {isDark ? <Sun className="h-4.5 w-4.5 text-amber-400" /> : <Moon className="h-4.5 w-4.5" />}
+          </button>
+          <button
+            onClick={toggleSidebar}
+            className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition active:scale-95"
+            aria-label={isOpen ? "Close Menu" : "Open Menu"}
+          >
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </header>
 
       {/* Overlay for Mobile */}
@@ -110,13 +137,31 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
           </nav>
         </div>
 
-        {/* User / Collapse / Logout */}
-        <div className="border-t border-slate-200/80 dark:border-slate-800/80 pt-3 flex flex-col gap-2">
+        {/* User / Theme / Collapse / Logout */}
+        <div className="border-t border-slate-200/80 dark:border-slate-800/80 pt-3 flex flex-col gap-1.5">
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className={`flex items-center gap-2.5 rounded-lg text-[12px] font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-800/60 transition ${
+              isCollapsed ? 'md:w-10 md:h-10 md:justify-center md:mx-auto py-2' : 'w-full px-3 py-1.5'
+            }`}
+            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
+            {isDark ? (
+              <Sun className="h-4 w-4 shrink-0 text-amber-400" />
+            ) : (
+              <Moon className="h-4 w-4 shrink-0 text-slate-600 dark:text-slate-400" />
+            )}
+            <span className={isCollapsed ? 'md:hidden' : ''}>
+              {isDark ? 'Light Mode' : 'Dark Mode'}
+            </span>
+          </button>
+
           {/* Desktop Collapse Toggle Button */}
           <button
             onClick={onToggleCollapse}
-            className={`hidden md:flex items-center justify-center gap-2 rounded-lg text-[12px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-800/60 transition ${
-              isCollapsed ? 'w-10 h-10 mx-auto py-2' : 'w-full px-3 py-1.5'
+            className={`hidden md:flex items-center gap-2.5 rounded-lg text-[12px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-800/60 transition ${
+              isCollapsed ? 'md:w-10 md:h-10 md:justify-center md:mx-auto py-2' : 'w-full px-3 py-1.5'
             }`}
             title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
           >

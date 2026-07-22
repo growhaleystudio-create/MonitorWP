@@ -156,10 +156,10 @@ function Overview() {
   ];
 
   return (
-    <div className="flex flex-col gap-7 text-slate-800 font-sans">
+    <div className="flex flex-col gap-6 font-sans">
       {/* Update Available Banner */}
       {versionInfo?.updateAvailable && (
-        <div className="bg-gradient-to-r from-teal-700 to-teal-900 text-white rounded border-2 border-teal-500 p-4 flex flex-col md:flex-row items-center justify-between gap-3 shadow-md">
+        <div className="bg-gradient-to-r from-teal-700 to-teal-900 text-white rounded-xl border border-teal-500 p-4 flex flex-col md:flex-row items-center justify-between gap-3 shadow-sm">
           <div className="flex items-center gap-3">
             <span className="bg-teal-400/20 text-teal-200 p-2 rounded-full font-bold text-xs">🚀 UPDATE</span>
             <div>
@@ -175,7 +175,7 @@ function Overview() {
             href={versionInfo.releaseUrl}
             target="_blank"
             rel="noreferrer"
-            className="px-4 py-2 bg-white text-teal-900 hover:bg-teal-100 rounded font-black text-xs uppercase tracking-wider transition shrink-0"
+            className="px-4 py-2 bg-white text-teal-900 hover:bg-teal-100 rounded-lg font-bold text-xs uppercase tracking-wider transition shrink-0"
           >
             Release Notes
           </a>
@@ -186,21 +186,21 @@ function Overview() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="page-subtitle">Performance Overview</span>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
             Analytics Dashboard
           </h2>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={fetchOverviewData}
-            className="btn-outline px-4 py-2.5 flex items-center gap-1.5"
+            className="btn-outline px-4 py-2 flex items-center gap-1.5 text-xs font-semibold"
           >
             <Activity className="h-4 w-4" />
             Refresh
           </button>
           <Link
             to="/sites"
-            className="btn-teal px-5 py-2.5"
+            className="btn-teal px-4 py-2 text-xs font-semibold"
           >
             Manage Sites
           </Link>
@@ -208,45 +208,45 @@ function Overview() {
       </div>
 
       {error && (
-        <div className="p-4 rounded bg-coral/10 border border-coral/20 text-coral-dark text-xs font-bold shadow-sm">
+        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 text-xs font-semibold shadow-xs">
           {error}
         </div>
       )}
 
       {/* KPI Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Sites Card */}
         <div className="saas-card">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-primary-bg rounded border border-primary-teal/15 text-primary-teal">
+            <div className="p-2 bg-primary-teal/10 rounded-lg border border-primary-teal/20 text-primary-teal">
               <Globe className="h-5 w-5" />
             </div>
-            <span className="saas-badge bg-emerald-500/10 text-emerald-600">
+            <span className="saas-badge bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 border border-emerald-200/60">
               {stats?.onlineSites || 0} active
             </span>
           </div>
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
             Total Websites
           </span>
-          <span className="text-3xl font-bold text-slate-900 leading-none">{stats?.totalSites || 0}</span>
+          <span className="text-3xl font-bold text-slate-900 dark:text-slate-100 leading-none">{stats?.totalSites || 0}</span>
         </div>
 
         {/* Offline Card */}
         <div className="saas-card saas-card-coral">
           <div className="flex items-center justify-between mb-4">
-            <div className={`p-2 rounded border ${
+            <div className={`p-2 rounded-lg border ${
               stats?.offlineSites && stats.offlineSites > 0
-                ? 'bg-coral/10 border-coral/20 text-coral'
-                : 'bg-slate-55 border-slate-200 text-slate-400'
+                ? 'bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-950/40'
+                : 'bg-slate-100 dark:bg-slate-800 border-slate-200 text-slate-400'
             }`}>
               <AlertOctagon className="h-5 w-5" />
             </div>
             {stats?.offlineSites && stats.offlineSites > 0 ? (
-              <span className="saas-badge bg-rose-500/10 text-rose-600 animate-pulse uppercase">
+              <span className="saas-badge bg-rose-50 text-rose-600 dark:bg-rose-950/40 border border-rose-200 animate-pulse uppercase">
                 Offline
               </span>
             ) : (
-              <span className="saas-badge bg-slate-105 text-slate-500">
+              <span className="saas-badge bg-slate-100 text-slate-500 dark:bg-slate-800 border border-slate-200">
                 Optimal
               </span>
             )}
@@ -254,23 +254,23 @@ function Overview() {
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
             Sites Offline
           </span>
-          <span className="text-3xl font-bold text-slate-900 leading-none">{stats?.offlineSites || 0}</span>
+          <span className="text-3xl font-bold text-slate-900 dark:text-slate-100 leading-none">{stats?.offlineSites || 0}</span>
         </div>
 
         {/* Plugin Warnings Card */}
         <div className="saas-card saas-card-gold">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-accent-light/20 rounded border border-accent-gold/25 text-accent-dark">
+            <div className="p-2 bg-amber-50 dark:bg-amber-950/40 rounded-lg border border-amber-200 text-amber-600">
               <AlertTriangle className="h-5 w-5" />
             </div>
-            <span className="saas-badge bg-amber-500/10 text-amber-700">
+            <span className="saas-badge bg-amber-50 text-amber-600 dark:bg-amber-950/40 border border-amber-200">
               {stats?.pluginsExpired || 0} expired
             </span>
           </div>
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
             Plugin Updates Pending
           </span>
-          <span className="text-3xl font-bold text-slate-900 leading-none">
+          <span className="text-3xl font-bold text-slate-900 dark:text-slate-100 leading-none">
             {(stats?.pluginsNeedingUpdate || 0) + (stats?.pluginsExpired || 0)}
           </span>
         </div>
@@ -278,17 +278,17 @@ function Overview() {
         {/* Errors 24h Card */}
         <div className="saas-card saas-card-sky">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-2 bg-sky/10 rounded border border-sky/15 text-sky">
+            <div className="p-2 bg-sky-50 dark:bg-sky-950/40 rounded-lg border border-sky-200 text-sky-600">
               <Terminal className="h-5 w-5" />
             </div>
-            <span className="saas-badge bg-sky/10 text-sky-700">
+            <span className="saas-badge bg-sky-50 text-sky-600 dark:bg-sky-950/40 border border-sky-200">
               24h track
             </span>
           </div>
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
             Errors Logged
           </span>
-          <span className="text-3xl font-bold text-slate-900 leading-none">{stats?.recentErrors || 0}</span>
+          <span className="text-3xl font-bold text-slate-900 dark:text-slate-100 leading-none">{stats?.recentErrors || 0}</span>
         </div>
       </div>
 

@@ -1,16 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import PetLoader from '../components/PetLoader';
 import {
-  Terminal,
   Search,
   Filter,
   ShieldAlert,
   CheckCircle,
-  ExternalLink,
-  ChevronDown,
-  ChevronUp
 } from 'lucide-react';
 
 interface LogEntry {
@@ -34,7 +29,6 @@ function Logs() {
   const [searchTerm, setSearchTerm] = useState('');
   const [siteFilter, setSiteFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
-  const [expandedLogId, setExpandedLogId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -52,10 +46,6 @@ function Logs() {
     fetchLogs();
   }, []);
 
-  const toggleExpandLog = (id: string) => {
-    setExpandedLogId(expandedLogId === id ? null : id);
-  };
-
   if (loading) {
     return (
       <div className="flex h-96 items-center justify-center">
@@ -72,7 +62,8 @@ function Logs() {
     const matchesSearch =
       log.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
       log.detail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      log.logType.toLowerCase().includes(searchTerm.toLowerCase());
+      log.siteName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (log.ipAddress && log.ipAddress.includes(searchTerm));
 
     const matchesSite = siteFilter === '' || log.siteName === siteFilter;
 
@@ -92,7 +83,7 @@ function Logs() {
 
     if (isInjection) {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-coral/15 text-coral border border-coral/30">
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-600 dark:bg-rose-950/40 border border-rose-200">
           <ShieldAlert className="h-3 w-3" />
           {log.logType.replace('injection_', '').toUpperCase()} ATTACK
         </span>
@@ -101,7 +92,7 @@ function Logs() {
 
     if (isError) {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-coral/10 text-coral border border-coral/15">
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-600 dark:bg-rose-950/40 border border-rose-200">
           {log.logType}
         </span>
       );
@@ -109,14 +100,14 @@ function Logs() {
 
     if (isFail) {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-accent-light/40 text-accent-dark border border-accent-gold/40">
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-600 dark:bg-amber-950/40 border border-amber-200">
           LOGIN FAILURE
         </span>
       );
     }
 
     return (
-      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-success/15 text-success border border-success/30">
+      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 border border-emerald-200">
         <CheckCircle className="h-3 w-3" />
         {log.logType.replace('_', ' ').toUpperCase()}
       </span>
@@ -124,49 +115,49 @@ function Logs() {
   };
 
   return (
-    <div className="flex flex-col gap-8 text-primary-dark font-sans">
+    <div className="flex flex-col gap-6 font-sans">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="page-subtitle">Telemetry Streams</span>
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Central Activity Logs</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Central Activity Logs</h2>
         </div>
       </div>
 
       {error && (
-        <div className="p-4 rounded-md bg-coral/10 border-2 border-coral text-coral-dark text-xs font-bold shadow-sm">
+        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 text-xs font-semibold shadow-xs">
           {error}
         </div>
       )}
 
       {/* Filter Toolbar */}
-      <div className="bg-white border-2 border-primary-teal/15 rounded p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-card">
+      <div className="bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
         {/* Search */}
         <div className="relative w-full md:max-w-xs">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-primary-teal/70">
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
             <Search className="h-4 w-4" />
           </span>
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 bg-cream border-2 border-primary-teal/20 focus:border-primary-teal outline-none rounded-md text-xs font-bold text-primary-dark shadow-sm"
+            className="clean-input w-full pl-9"
             placeholder="Search logs..."
           />
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-4 w-full md:w-auto justify-end">
-          <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
+          <div className="flex items-center gap-1.5 shrink-0">
             <Filter className="h-4 w-4 text-primary-teal" />
-            <span className="text-xs text-primary-dark/85 font-extrabold uppercase tracking-wider">Filter:</span>
+            <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Filter:</span>
           </div>
 
           {/* Site Filter */}
           <select
             value={siteFilter}
             onChange={(e) => setSiteFilter(e.target.value)}
-            className="px-3 py-2.5 bg-cream border-2 border-primary-teal/25 focus:border-primary-teal text-xs font-bold text-primary-dark rounded-md w-full md:w-44 shadow-sm"
+            className="clean-input w-full md:w-44"
           >
             <option value="">All Websites</option>
             {uniqueSites.map((siteName) => (
@@ -180,88 +171,64 @@ function Logs() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="px-3 py-2.5 bg-cream border-2 border-primary-teal/25 focus:border-primary-teal text-xs font-bold text-primary-dark rounded-md w-full md:w-44 shadow-sm"
+            className="clean-input w-full md:w-44"
           >
             <option value="">All Event Types</option>
-            <option value="error">Errors only</option>
-            <option value="security">Security events only</option>
-            <option value="injection">Injections only</option>
-            <option value="login">Logins only</option>
+            <option value="security">Security Events</option>
+            <option value="error">PHP & System Errors</option>
+            <option value="injection">Malware & Injection</option>
+            <option value="login">Login Failures</option>
           </select>
         </div>
       </div>
 
       {/* Logs Table */}
-      <div className="bg-white border-2 border-primary-teal/15 rounded shadow-card overflow-hidden">
+      <div className="bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 rounded-xl shadow-xs overflow-hidden">
         {filteredLogs.length === 0 ? (
-          <div className="p-16 text-center text-slate-500 flex flex-col items-center gap-3 font-medium">
-            <Terminal className="h-10 w-10 text-primary-teal" />
-            <p className="font-extrabold text-primary-dark">No logs found matching search criteria.</p>
+          <div className="p-16 text-center text-slate-400 text-xs font-medium">
+            No activity logs match your filter criteria.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-primary-bg/30 border-b border-primary-teal/15 text-[10px] font-extrabold text-primary-teal/80 uppercase tracking-wider">
-                  <th className="py-4 px-6 w-12"></th>
-                  <th className="py-4 px-6">Timestamp</th>
-                  <th className="py-4 px-6">Website</th>
-                  <th className="py-4 px-6">Event Type</th>
-                  <th className="py-4 px-6">Endpoint / Detail</th>
-                  <th className="py-4 px-6">Source IP</th>
+                <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200/80 dark:border-slate-800 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                  <th className="py-3 px-5">Timestamp</th>
+                  <th className="py-3 px-5">Website</th>
+                  <th className="py-3 px-5">Event Category</th>
+                  <th className="py-3 px-5">Log Summary</th>
+                  <th className="py-3 px-5 text-right">Source IP</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-primary-teal/10 text-sm font-medium">
-                {filteredLogs.map((log) => {
-                  const isExpanded = expandedLogId === log.id;
-                  return (
-                    <React.Fragment key={log.id}>
-                      <tr
-                        onClick={() => toggleExpandLog(log.id)}
-                        className="hover:bg-primary-bg/15 transition cursor-pointer"
-                      >
-                        <td className="py-4 px-6 text-primary-teal">
-                          {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                        </td>
-                        <td className="py-4 px-6 font-bold text-slate-400 text-xs whitespace-nowrap">
-                          {new Date(log.createdAt).toLocaleString('id-ID')}
-                        </td>
-                        <td className="py-4 px-6">
-                          <Link
-                            to={`/sites/${log.siteId}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="font-extrabold text-primary-teal hover:text-primary-light flex items-center gap-1"
-                          >
-                            {log.siteName}
-                            <ExternalLink className="h-3 w-3" />
-                          </Link>
-                        </td>
-                        <td className="py-4 px-6">{getLogTypeBadge(log)}</td>
-                        <td className="py-4 px-6 text-primary-dark font-mono text-xs select-all truncate max-w-[280px]" title={log.detail}>
-                          {log.detail}
-                        </td>
-                        <td className="py-4 px-6 text-slate-400 font-mono text-xs font-bold">
-                          {log.ipAddress || 'N/A'}
-                        </td>
-                      </tr>
-                      {/* Expanded View */}
-                      {isExpanded && (
-                        <tr className="bg-primary-bg/10 border-y border-primary-teal/10">
-                          <td colSpan={6} className="py-4 px-12 text-primary-dark">
-                            <div className="flex flex-col gap-2">
-                              <p className="text-[10px] font-extrabold text-primary-teal/80 uppercase tracking-widest">
-                                Raw Log Event Payload
-                              </p>
-                              <div className="bg-cream border-2 border-primary-teal/15 p-4 rounded-md font-mono text-xs leading-relaxed max-w-4xl overflow-x-auto text-coral font-bold select-all whitespace-pre-wrap">
-                                {log.message || JSON.stringify(log, null, 2)}
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-[13px]">
+                {filteredLogs.map((log) => (
+                  <tr key={log.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
+                    <td className="py-3 px-5 text-slate-400 text-xs font-mono whitespace-nowrap">
+                      {new Date(log.createdAt).toLocaleString('id-ID', {
+                        day: '2-digit',
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                      })}
+                    </td>
+                    <td className="py-3 px-5 font-semibold text-slate-900 dark:text-slate-100">
+                      {log.siteName}
+                    </td>
+                    <td className="py-3 px-5">
+                      {getLogTypeBadge(log)}
+                    </td>
+                    <td className="py-3 px-5 max-w-md">
+                      <p className="font-semibold text-slate-800 dark:text-slate-200 leading-snug">{log.message}</p>
+                      {log.detail && (
+                        <p className="text-[11px] text-slate-400 font-mono mt-0.5 truncate max-w-sm">{log.detail}</p>
                       )}
-                    </React.Fragment>
-                  );
-                })}
+                    </td>
+                    <td className="py-3 px-5 text-right font-mono text-xs text-slate-500">
+                      {log.ipAddress || '—'}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
