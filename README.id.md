@@ -7,7 +7,7 @@
 
   **Platform Pemantauan Uptime & Keamanan Multi-Situs (WordPress + Non-WP) Berbasis Open-Source**
 
-  [![License: MIT](https://img.shields.io/badge/Lisensi-MIT-teal.svg)](https://opensource.org/licenses/MIT)
+  [![License: GPL v3](https://img.shields.io/badge/Lisensi-GPL--3.0-blue.svg)](LICENSE)
   [![Docker Ready](https://img.shields.io/badge/Docker-Ready-099ce5.svg?logo=docker&logoColor=white)](docker-compose.yml)
   [![Version](https://img.shields.io/badge/Versi-v1.0.0-gold.svg)](#)
   [![Built By](https://img.shields.io/badge/Dibuat%20Oleh-Growhaley%20Studio-darkgreen.svg)](https://github.com/growhaleystudio)
@@ -114,6 +114,6 @@ define('WP_MONITOR_SERVER_URL', 'http://IP_SERVER_ANDA:3000');
 
 ## 📜 Lisensi
 
-Didistribusikan di bawah **Lisensi MIT**. Lihat file `LICENSE` untuk informasi lebih lanjut.
+Didistribusikan di bawah **GNU General Public License v3.0 (GPL-3.0)**. Lihat file `LICENSE` untuk informasi lebih lanjut.
 
-Dikelola dengan ❤️ oleh **[Growhaley Studio](https://github.com/growhaleystudio)**.
+Dikelola dengan ❤️ oleh **[Growhaley Studio](https://github.com/growhaleystudio-create)**.

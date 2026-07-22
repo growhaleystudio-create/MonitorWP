@@ -6,7 +6,7 @@
 
   **An Open-Source Multi-Site (WordPress + Non-WP) Uptime & Security Monitoring Platform**
 
-  [![License: MIT](https://img.shields.io/badge/License-MIT-teal.svg)](https://opensource.org/licenses/MIT)
+  [![License: GPL v3](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
   [![Docker Ready](https://img.shields.io/badge/Docker-Ready-099ce5.svg?logo=docker&logoColor=white)](docker-compose.yml)
   [![Version](https://img.shields.io/badge/Version-v1.0.0-gold.svg)](#)
   [![Built By](https://img.shields.io/badge/Maintained%20By-Growhaley%20Studio-darkgreen.svg)](https://github.com/growhaleystudio)
@@ -113,6 +113,6 @@ define('WP_MONITOR_SERVER_URL', 'http://your-server-ip:3000');
 
 ## 📜 License
 
-Distributed under the **MIT License**. See `LICENSE` for more information.
+Distributed under the **GNU General Public License v3.0 (GPL-3.0)**. See `LICENSE` for more information.
 
-Maintained with ❤️ by **[Growhaley Studio](https://github.com/growhaleystudio)**.
+Maintained with ❤️ by **[Growhaley Studio](https://github.com/growhaleystudio-create)**.
