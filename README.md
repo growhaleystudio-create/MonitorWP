@@ -109,6 +109,10 @@ define('WP_MONITOR_SERVER_URL', 'http://your-server-ip:3000');
 
 6. Activate the **WordPress Multi-Site Monitor Agent** plugin in your WordPress Admin panel.
 
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting a Pull Request.
+
 ---
 
 ## 📜 License

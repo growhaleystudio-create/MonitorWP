@@ -110,6 +110,10 @@ define('WP_MONITOR_SERVER_URL', 'http://IP_SERVER_ANDA:3000');
 
 6. Aktifkan plugin **WordPress Multi-Site Monitor Agent** di panel admin WordPress Anda.
 
+## 🤝 Kontribusi
+
+Kontribusi dari siapa saja sangat dialu-alukan! Silakan baca [Panduan Kontribusi](CONTRIBUTING.md) sebelum mengirimkan Pull Request.
+
 ---
 
 ## 📜 Lisensi
