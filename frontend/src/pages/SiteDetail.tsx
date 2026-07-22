@@ -350,20 +350,24 @@ function SiteDetail() {
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Sleek Pill Tabs Menu */}
       <div className="flex flex-col gap-6">
-        <div className="border-b border-slate-200 dark:border-slate-800 flex flex-wrap gap-2">
+        <div className="bg-slate-200/60 dark:bg-slate-800/60 p-1.5 rounded-lg flex flex-wrap gap-1.5 max-w-fit border border-slate-200/80 dark:border-slate-700/80 shadow-xs">
           {(['plugins', 'errors', 'security', 'seo', 'traffic'] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2.5 border-b-2 font-bold text-xs tracking-wider uppercase transition-all ${
+              className={`px-4 py-2 rounded-md text-xs font-semibold tracking-tight transition-all duration-150 cursor-pointer ${
                 activeTab === tab
-                  ? 'border-primary-teal text-primary-teal font-extrabold'
-                  : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                  ? 'bg-primary-teal text-white shadow-sm font-bold'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-300/50 dark:hover:bg-slate-700/50'
               }`}
             >
-              {tab.toUpperCase()}
+              {tab === 'plugins' && 'Plugins'}
+              {tab === 'errors' && 'Errors'}
+              {tab === 'security' && 'Security'}
+              {tab === 'seo' && 'SEO & Vitals'}
+              {tab === 'traffic' && 'Traffic Analytics'}
             </button>
           ))}
         </div>
