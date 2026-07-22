@@ -78,6 +78,18 @@ app.get('/api/auth/me', validateDashboardSession, (req, res) => {
 // --- WordPress Agent Route ---
 app.post('/api/agent/push', validateAgentKey, handleAgentPush);
 
+import { checkSystemUpdate } from './services/updateChecker';
+
+// --- System Info Route ---
+app.get('/api/system/version', async (req, res) => {
+  try {
+    const versionInfo = await checkSystemUpdate();
+    res.json(versionInfo);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // --- Dashboard API Routes (Protected) ---
 app.get('/api/dashboard/overview', validateDashboardSession, getOverview);
 app.get('/api/dashboard/sites', validateDashboardSession, listSites);

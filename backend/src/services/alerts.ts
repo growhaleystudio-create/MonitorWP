@@ -8,7 +8,8 @@ type AlertType =
   | 'plugin_update'
   | 'error_spike'
   | 'security_event'
-  | 'injection_detected';
+  | 'injection_detected'
+  | 'ssl_expiring_soon';
 
 interface AlertParams {
   siteId: number;

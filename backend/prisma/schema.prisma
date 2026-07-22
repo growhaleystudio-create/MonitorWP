@@ -33,6 +33,12 @@ model Site {
   scaResults     String?         // JSON string: SCA policies check
   scaScore       Int?            @default(0)
   trafficLogs    TrafficLog[]
+  siteType       String          @default("wordpress") // "wordpress" | "non-wp"
+  sslValid       Boolean?
+  sslExpiresAt   DateTime?
+  sslDaysRemaining Int?
+  sslIssuer      String?
+  checkKeyword   String?
 }
 
 model Plugin {

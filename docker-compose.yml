@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  growhaley-monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: growhaley-monitor
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - ADMIN_USER=admin
+      - ADMIN_PASS=admin
+      - JWT_SECRET=growhaley-secure-random-jwt-key-2026
+      - DATABASE_URL=file:/app/backend/prisma/dev.db
+    volumes:
+      - monitor-data:/app/backend/prisma
+
+volumes:
+  monitor-data:

@@ -68,11 +68,11 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
           <div className={`flex items-center ${isCollapsed ? 'md:justify-center' : 'gap-2.5 px-2'}`}>
             <img src="/logo.svg" className="h-9 w-9 shrink-0" alt="Growhaley Logo" />
             <div className={isCollapsed ? 'md:hidden' : ''}>
-              <h1 className="font-bold text-[17px] tracking-tight text-slate-900 leading-none">
+              <h1 className="font-bold text-[16px] tracking-tight text-slate-900 leading-none">
                 Growhaley
               </h1>
-              <span className="text-[9px] font-semibold text-primary-teal uppercase tracking-widest mt-1.5 block">
-                WP Monitoring
+              <span className="text-[9px] font-bold text-primary-teal uppercase tracking-wider mt-1 block">
+                Monitor v1.0.0
               </span>
             </div>
           </div>

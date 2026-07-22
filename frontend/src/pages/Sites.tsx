@@ -22,6 +22,10 @@ interface Site {
   apiKey: string;
   isActive: boolean;
   status: string;
+  siteType?: string;
+  sslValid?: boolean | null;
+  sslDaysRemaining?: number | null;
+  checkKeyword?: string | null;
   uptime7d: number;
   issuesCount: {
     updates: number;
@@ -43,6 +47,8 @@ function Sites() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newSiteName, setNewSiteName] = useState('');
   const [newSiteUrl, setNewSiteUrl] = useState('');
+  const [newSiteType, setNewSiteType] = useState<'wordpress' | 'non-wp'>('wordpress');
+  const [newCheckKeyword, setNewCheckKeyword] = useState('');
   const [createdSite, setCreatedSite] = useState<Site | null>(null);
   const [copiedKey, setCopiedKey] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -54,7 +60,7 @@ function Sites() {
       setError(null);
     } catch (err) {
       console.error('Error fetching sites:', err);
-      setError('Failed to fetch WordPress sites.');
+      setError('Failed to fetch monitored websites.');
     } finally {
       setLoading(false);
     }
@@ -78,10 +84,14 @@ function Sites() {
       const response = await axios.post('/api/dashboard/sites', {
         name: newSiteName,
         url: formattedUrl,
+        siteType: newSiteType,
+        checkKeyword: newCheckKeyword.trim() || undefined,
       });
       setCreatedSite(response.data);
       setNewSiteName('');
       setNewSiteUrl('');
+      setNewCheckKeyword('');
+      setNewSiteType('wordpress');
       fetchSites();
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to register new site');
@@ -150,7 +160,7 @@ function Sites() {
         <div className="bg-white border-2 border-primary-teal/15 rounded p-16 text-center text-slate-500 shadow-card">
           <Globe className="h-12 w-12 text-primary-teal mx-auto mb-4" />
           <p className="font-extrabold text-primary-dark text-lg">No Websites Registered</p>
-          <p className="text-xs mt-1 mb-6 font-medium">Add your first WordPress node to start tracking scoreboards.</p>
+          <p className="text-xs mt-1 mb-6 font-medium">Add your first website or WordPress node to start tracking.</p>
           <button
             onClick={() => setIsAddModalOpen(true)}
             className="btn-teal px-6 py-3 mx-auto"
@@ -163,6 +173,7 @@ function Sites() {
           {sites.map((site) => {
             const isOffline = site.status === 'offline';
             const cardClass = isOffline ? 'flip7-card-boom' : 'flip7-card';
+            const isNonWp = site.siteType === 'non-wp';
 
             return (
               <div
@@ -173,6 +184,24 @@ function Sites() {
                   {/* Site Header */}
                   <div className="flex items-start justify-between gap-3">
                     <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`px-2 py-0.5 rounded text-[8px] font-black tracking-wider uppercase border ${
+                          isNonWp
+                            ? 'bg-purple-100 text-purple-700 border-purple-200'
+                            : 'bg-teal-100 text-teal-800 border-teal-200'
+                        }`}>
+                          {isNonWp ? 'Non-WP / App' : 'WordPress'}
+                        </span>
+                        {site.sslDaysRemaining !== undefined && site.sslDaysRemaining !== null && (
+                          <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold border ${
+                            site.sslDaysRemaining <= 7
+                              ? 'bg-rose-100 text-rose-700 border-rose-200'
+                              : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          }`}>
+                            🔒 SSL {site.sslDaysRemaining}d
+                          </span>
+                        )}
+                      </div>
                       <h3 className="font-extrabold text-primary-dark text-base leading-tight hover:text-primary-teal transition">
                         <Link to={`/sites/${site.id}`}>{site.name}</Link>
                       </h3>
@@ -212,15 +241,15 @@ function Sites() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-slate-500 text-[10px] uppercase">Plugins</p>
+                      <p className="text-slate-500 text-[10px] uppercase">{isNonWp ? 'Type' : 'Plugins'}</p>
                       <p className={`text-base font-black mt-1 ${
-                        site.issuesCount.expired > 0
+                        !isNonWp && site.issuesCount.expired > 0
                           ? 'text-coral'
-                          : site.issuesCount.updates > 0
+                          : !isNonWp && site.issuesCount.updates > 0
                             ? 'text-accent-dark'
                             : 'text-primary-teal'
                       }`}>
-                        {site.issuesCount.expired + site.issuesCount.updates}
+                        {isNonWp ? 'HTTP' : (site.issuesCount.expired + site.issuesCount.updates)}
                       </p>
                     </div>
                     <div>
@@ -263,12 +292,12 @@ function Sites() {
                         Website is offline (Timeout)
                       </span>
                     )}
-                    {site.issuesCount.expired > 0 && (
+                    {!isNonWp && site.issuesCount.expired > 0 && (
                       <span className="text-coral pl-1">
                         ⚠️ {site.issuesCount.expired} plugin licenses expired
                       </span>
                     )}
-                    {site.issuesCount.updates > 0 && (
+                    {!isNonWp && site.issuesCount.updates > 0 && (
                       <span className="text-accent-dark pl-1">
                         ⚡ {site.issuesCount.updates} updates pending
                       </span>
@@ -316,13 +345,46 @@ function Sites() {
             {!createdSite ? (
               <>
                 <div className="border-b-2 border-dashed border-primary-teal/20 pb-2">
-                  <h3 className="text-xl font-black text-primary-dark">Add WordPress Node</h3>
+                  <h3 className="text-xl font-black text-primary-dark">Add New Website</h3>
                   <p className="text-xs text-primary-teal/70 font-semibold uppercase tracking-wider mt-1">
-                    Connect a new scoreboard agent
+                    Register a site for Uptime, SSL & Security Monitoring
                   </p>
                 </div>
 
                 <form onSubmit={handleAddSite} className="flex flex-col gap-4">
+                  {/* Site Type Toggle */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-extrabold text-primary-dark uppercase tracking-wider pl-1">
+                      Website Platform / Type
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setNewSiteType('wordpress')}
+                        className={`p-3 rounded border-2 text-left transition font-bold text-xs ${
+                          newSiteType === 'wordpress'
+                            ? 'border-primary-teal bg-primary-teal/10 text-primary-teal'
+                            : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                        }`}
+                      >
+                        <span className="block text-sm">🌐 WordPress</span>
+                        <span className="text-[10px] font-normal text-slate-400">Includes Plugin & Security Agent</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setNewSiteType('non-wp')}
+                        className={`p-3 rounded border-2 text-left transition font-bold text-xs ${
+                          newSiteType === 'non-wp'
+                            ? 'border-purple-600 bg-purple-50 text-purple-700'
+                            : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                        }`}
+                      >
+                        <span className="block text-sm">⚡ Non-WP / App</span>
+                        <span className="text-[10px] font-normal text-slate-400">HTTP, SSL & Keyword Health Check</span>
+                      </button>
+                    </div>
+                  </div>
+
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-extrabold text-primary-dark uppercase tracking-wider pl-1">
                       Site Label Name
@@ -333,13 +395,13 @@ function Sites() {
                       value={newSiteName}
                       onChange={(e) => setNewSiteName(e.target.value)}
                       className="w-full cream-input"
-                      placeholder="e.g. Corporate Blog"
+                      placeholder="e.g. Landing Page / Main App"
                     />
                   </div>
 
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-extrabold text-primary-dark uppercase tracking-wider pl-1">
-                      WordPress Site URL
+                      Website URL
                     </label>
                     <input
                       type="text"
@@ -347,9 +409,27 @@ function Sites() {
                       value={newSiteUrl}
                       onChange={(e) => setNewSiteUrl(e.target.value)}
                       className="w-full cream-input"
-                      placeholder="e.g. http://mywebsite.local"
+                      placeholder="e.g. https://mywebsite.com"
                     />
                   </div>
+
+                  {newSiteType === 'non-wp' && (
+                    <div className="flex flex-col gap-1.5 bg-purple-50/60 p-3 rounded border border-purple-200">
+                      <label className="text-xs font-extrabold text-purple-900 uppercase tracking-wider">
+                        Keyword Check (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={newCheckKeyword}
+                        onChange={(e) => setNewCheckKeyword(e.target.value)}
+                        className="w-full cream-input"
+                        placeholder="e.g. Welcome to Our Site"
+                      />
+                      <span className="text-[10px] text-purple-700 font-medium">
+                        Alert if this text is missing from HTML body (useful for defacement detection).
+                      </span>
+                    </div>
+                  )}
 
                   <button
                     type="submit"

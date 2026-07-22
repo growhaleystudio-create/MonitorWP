@@ -66,10 +66,18 @@ interface QuickSite {
   };
 }
 
+interface VersionInfo {
+  currentVersion: string;
+  latestVersion: string;
+  updateAvailable: boolean;
+  releaseUrl: string;
+}
+
 function Overview() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [timeline, setTimeline] = useState<TimelineEvent[]>([]);
   const [quickSites, setQuickSites] = useState<QuickSite[]>([]);
+  const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'performance' | 'seo' | 'security'>('performance');
@@ -89,8 +97,18 @@ function Overview() {
     }
   };
 
+  const fetchVersionInfo = async () => {
+    try {
+      const res = await axios.get('/api/system/version');
+      setVersionInfo(res.data);
+    } catch (err) {
+      // Ignore version fetch errors silently
+    }
+  };
+
   useEffect(() => {
     fetchOverviewData();
+    fetchVersionInfo();
     const timer = setInterval(fetchOverviewData, 30000);
     return () => clearInterval(timer);
   }, []);
@@ -139,6 +157,31 @@ function Overview() {
 
   return (
     <div className="flex flex-col gap-7 text-slate-800 font-sans">
+      {/* Update Available Banner */}
+      {versionInfo?.updateAvailable && (
+        <div className="bg-gradient-to-r from-teal-700 to-teal-900 text-white rounded border-2 border-teal-500 p-4 flex flex-col md:flex-row items-center justify-between gap-3 shadow-md">
+          <div className="flex items-center gap-3">
+            <span className="bg-teal-400/20 text-teal-200 p-2 rounded-full font-bold text-xs">🚀 UPDATE</span>
+            <div>
+              <p className="font-extrabold text-sm text-white">
+                Growhaley Monitor v{versionInfo.latestVersion} is now available!
+              </p>
+              <p className="text-xs text-teal-200 font-medium">
+                You are running v{versionInfo.currentVersion}. Check out the release notes to upgrade your instance.
+              </p>
+            </div>
+          </div>
+          <a
+            href={versionInfo.releaseUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="px-4 py-2 bg-white text-teal-900 hover:bg-teal-100 rounded font-black text-xs uppercase tracking-wider transition shrink-0"
+          >
+            Release Notes
+          </a>
+        </div>
+      )}
+
       {/* Title Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

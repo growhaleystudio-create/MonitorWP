@@ -1,73 +1,89 @@
-# WordPress Multi-Site Monitoring Dashboard
+<div align="center">
 
-Dashboard pemantauan terpusat untuk memantau status keamanan, uptime, dan update plugin untuk 10-50 website WordPress dari satu panel.
+  # 🛡️ Growhaley Monitor
 
-Sistem ini terdiri dari dua bagian utama:
-1.  **Central Server Dashboard (Node.js + Express + React + SQLite)**: Berjalan di WSL server internal.
-2.  **WordPress Agent Plugin (PHP)**: Diinstal pada masing-masing website WordPress yang ingin dipantau.
+  **An Open-Source Multi-Site (WordPress + Non-WP) Uptime & Security Monitoring Platform**
+
+  [![License: MIT](https://img.shields.io/badge/License-MIT-teal.svg)](https://opensource.org/licenses/MIT)
+  [![Docker Ready](https://img.shields.io/badge/Docker-Ready-099ce5.svg?logo=docker&logoColor=white)](docker-compose.yml)
+  [![Version](https://img.shields.io/badge/Version-v1.0.0-gold.svg)](#)
+  [![Built By](https://img.shields.io/badge/Maintained%20By-Growhaley%20Studio-darkgreen.svg)](https://github.com/growhaleystudio)
+
+  ---
+
+  ### 🌐 Select Language / Pilih Bahasa
+  [ **🇬🇧 English** ](README.md) | [ **🇮🇩 Bahasa Indonesia** ](README.id.md)
+
+  ---
+
+</div>
+
+## 📌 Overview
+
+**Growhaley Monitor** is a lightweight, self-hosted monitoring dashboard designed to track **WordPress** and **Non-WordPress** (Node.js, Laravel, React, Static HTML, etc.) websites from a centralized panel.
+
+It provides real-time Uptime monitoring, SSL Certificate Expiry tracking, Security event auditing, Plugin vulnerability checks, and instant **Telegram Bot Alerts**.
 
 ---
 
-## Fitur MVP
-*   **Pemantauan Uptime & Respon**: Secara otomatis mengecek ketersediaan situs (HTTP status & response latency) setiap X menit.
-*   **Notifikasi Telegram Bot**: Push notifikasi real-time untuk kejadian penting (situs down/up, deteksi serangan injection, plugin expired).
-*   **Audit Keamanan Terpusat**: Mencatat login sukses, login gagal beruntun (potensi brute force), dan deteksi upaya SQLi/XSS/Path Traversal.
-*   **Pemantauan Plugin & Lisensi**: Mendeteksi plugin yang kedaluwarsa (expired) atau membutuhkan pembaruan.
-*   **Log Error Agregat**: Menangkap log HTTP error 404, 500, dll dari masing-masing WordPress.
+## ✨ Key Features
+
+- **⚡ Dual Site Monitoring**:
+  - **WordPress Nodes**: Plugin updates, license expiration check, memory/CPU telemetry, security audit logs (SQLi, XSS, Brute Force).
+  - **Non-WP Websites & Apps**: Synthetic HTTP pings, SSL Certificate Expiry countdown, Keyword matching (Defacement detection).
+- **🔒 SSL / TLS Certificate Tracker**: Automatic warning alerts when SSL certificates expire within 7 or 14 days.
+- **🚀 1-Command Installation**: Deploy in seconds using Docker or curl installation script.
+- **📲 Instant Telegram Notifications**: Get notified on Telegram when a site goes down, comes back online, or SSL is about to expire.
+- **🔄 Auto Update Checker**: Built-in GitHub release notification engine to notify you of new software versions.
 
 ---
 
-## Struktur Direktori
-*   `backend/`: Server API gateway, database SQLite + Prisma, alert engine, dan scheduler uptime.
-*   `frontend/`: Antarmuka panel admin berbasis React, Vite, dan Tailwind CSS.
-*   `wp-agent-plugin/`: Plugin WordPress PHP native untuk mengumpulkan data status situs.
+## 🚀 Quick Start (Installation)
 
----
+### Option 1: One-Line Installer Script (Recommended)
 
-## Persiapan & Jalankan Lokal (WSL / Windows)
-
-### 1. Instalasi Dependensi & Build Produksi
-Jalankan perintah ini di root direktori untuk menginstal semua dependensi backend, frontend, dan melakukan build:
+Run this command on your Linux/macOS server terminal:
 
 ```bash
-npm run install:all
-npm run build
+curl -fsSL https://raw.githubusercontent.com/growhaleystudio/monitor-wp/main/install.sh | bash
 ```
 
-### 2. Konfigurasi Environment (`.env`)
-Salin file `.env` di dalam folder `backend/` dan sesuaikan nilainya:
-```ini
-PORT=3000
-ADMIN_USER=admin
-ADMIN_PASS=admin
-JWT_SECRET=ubah-ke-kunci-rahasia-apa-saja
-```
+### Option 2: Docker Compose
 
-### 3. Jalankan Aplikasi
-
-#### Mode Produksi (Rekomendasi untuk WSL Server):
-Menjalankan backend Express yang melayani UI frontend yang telah dicompile pada port `3000`:
 ```bash
-npm start
+# 1. Clone the repository
+git clone https://github.com/growhaleystudio/monitor-wp.git
+cd monitor-wp
+
+# 2. Start the container
+docker compose up -d
 ```
 
-#### Mode Pengembangan (Development):
-Menjalankan frontend Vite dev server (port `5173`) dan backend Express (port `3000`) secara bersamaan dengan hot-reload:
-```bash
-npm run dev
-```
+Open your browser and navigate to: **`http://localhost:3000`**
+- **Default Username**: `admin`
+- **Default Password**: `admin`
 
 ---
 
-## Panduan Pemasangan WordPress Agent
+## 🛠️ WordPress Agent Plugin Setup
 
-1.  Buka menu **Sites** di Dashboard utama, lalu klik **Add New Site** untuk mendaftarkan website WordPress baru.
-2.  Dashboard akan menampilkan **API Key** unik (misal: `7cfa...`) beserta instruksi pemasangannya.
-3.  Salin folder `wp-agent-plugin` ke direktori plugin WordPress Anda (`wp-content/plugins/`).
-4.  Tambahkan baris berikut pada file `wp-config.php` di WordPress Anda untuk menghubungkan agent ke Central Server:
-    ```php
-    define('WP_MONITOR_API_KEY', 'API_KEY_YANG_DIGENERATE');
-    define('WP_MONITOR_SERVER_URL', 'http://IP_WSL_SERVER:3000');
-    ```
-5.  Aktifkan plugin **WordPress Multi-Site Monitor Agent** melalui dashboard WordPress admin Anda.
-6.  Agent akan mulai mengirimkan data status situs secara otomatis setiap 15 menit melalui WP-Cron.
+1. In the Dashboard, go to **Sites** and click **Add Website**.
+2. Select **WordPress** as the platform.
+3. Copy the generated **API Key**.
+4. Download the `wp-agent-plugin.zip` from the dashboard or release section.
+5. Add the following constants to your WordPress `wp-config.php`:
+
+```php
+define('WP_MONITOR_API_KEY', 'YOUR_GENERATED_API_KEY');
+define('WP_MONITOR_SERVER_URL', 'http://your-server-ip:3000');
+```
+
+6. Activate the **WordPress Multi-Site Monitor Agent** plugin in your WordPress Admin panel.
+
+---
+
+## 📜 License
+
+Distributed under the **MIT License**. See `LICENSE` for more information.
+
+Maintained with ❤️ by **[Growhaley Studio](https://github.com/growhaleystudio)**.

@@ -400,7 +400,7 @@ export async function getSiteDetail(req: Request, res: Response) {
  * Create new site.
  */
 export async function createSite(req: Request, res: Response) {
-  const { name, url } = req.body;
+  const { name, url, siteType = 'wordpress', checkKeyword } = req.body;
 
   if (!name || !url) {
     return res.status(400).json({ error: 'Name and URL are required' });
@@ -413,6 +413,8 @@ export async function createSite(req: Request, res: Response) {
         name,
         url,
         apiKey,
+        siteType: siteType === 'non-wp' ? 'non-wp' : 'wordpress',
+        checkKeyword: checkKeyword || null,
         status: 'unknown',
       },
     });
@@ -433,7 +435,7 @@ export async function createSite(req: Request, res: Response) {
  */
 export async function updateSite(req: Request, res: Response) {
   const { id } = req.params;
-  const { name, url, isActive } = req.body;
+  const { name, url, isActive, siteType, checkKeyword } = req.body;
 
   try {
     const siteId = parseInt(id, 10);
@@ -443,6 +445,8 @@ export async function updateSite(req: Request, res: Response) {
         name,
         url,
         isActive: isActive !== undefined ? !!isActive : undefined,
+        siteType: siteType !== undefined ? siteType : undefined,
+        checkKeyword: checkKeyword !== undefined ? checkKeyword : undefined,
       },
     });
 
