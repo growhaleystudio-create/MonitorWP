@@ -7,6 +7,8 @@ import PetLoader from './components/PetLoader';
 import Overview from './pages/Overview';
 import Sites from './pages/Sites';
 import SiteDetail from './pages/SiteDetail';
+import SeoOverview from './pages/SeoOverview';
+import SecurityOverview from './pages/SecurityOverview';
 import Plugins from './pages/Plugins';
 import Logs from './pages/Logs';
 import Settings from './pages/Settings';
@@ -79,6 +81,8 @@ function App() {
               <Route path="/" element={<Overview />} />
               <Route path="/sites" element={<Sites />} />
               <Route path="/sites/:id" element={<SiteDetail />} />
+              <Route path="/seo" element={<SeoOverview />} />
+              <Route path="/security" element={<SecurityOverview />} />
               <Route path="/plugins" element={<Plugins />} />
               <Route path="/logs" element={<Logs />} />
               <Route path="/settings" element={<Settings />} />

@@ -2,8 +2,8 @@ import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
   Globe,
-  Plug,
-  Terminal,
+  Sparkles,
+  ShieldAlert,
   Settings,
   LogOut,
   Menu,
@@ -42,8 +42,8 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
   const navigation = [
     { name: 'Dashboard', to: '/', icon: LayoutDashboard },
     { name: 'Sites', to: '/sites', icon: Globe },
-    { name: 'Plugins', to: '/plugins', icon: Plug },
-    { name: 'Logs', to: '/logs', icon: Terminal },
+    { name: 'SEO & Vitals', to: '/seo', icon: Sparkles },
+    { name: 'Security & WAF', to: '/security', icon: ShieldAlert },
     { name: 'Settings', to: '/settings', icon: Settings },
   ];
 
