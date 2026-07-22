@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # Growhaley Monitor - 1-Line Installer Script
-# Usage: curl -fsSL https://raw.githubusercontent.com/growhaleystudio/monitor-wp/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/install.sh | bash
 # ==============================================================================
 
 set -e
@@ -41,7 +41,7 @@ mkdir -p "$INSTALL_DIR"
 cd "$INSTALL_DIR"
 
 echo -e "${TEAL}📥 Downloading docker-compose.yml...${NC}"
-curl -fsSL https://raw.githubusercontent.com/growhaleystudio/monitor-wp/main/docker-compose.yml -o docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docker-compose.yml -o docker-compose.yml
 
 echo -e "${GREEN}⚡ Starting Growhaley Monitor containers...${NC}"
 docker compose up -d

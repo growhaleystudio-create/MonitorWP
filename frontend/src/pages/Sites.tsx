@@ -12,7 +12,8 @@ import {
   Copy,
   Check,
   AlertOctagon,
-  X
+  X,
+  Download
 } from 'lucide-react';
 
 interface Site {
@@ -124,6 +125,24 @@ function Sites() {
     setIsAddModalOpen(false);
   };
 
+  const handleDownloadAgent = async () => {
+    try {
+      const response = await axios.get('/api/dashboard/download-plugin', {
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'wp-monitor-agent.zip');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error('Failed to download plugin zip:', err);
+      alert('Gagal mengunduh file plugin ZIP.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex h-96 items-center justify-center">
@@ -140,13 +159,23 @@ function Sites() {
           <span className="page-subtitle">Websites Network</span>
           <h2 className="text-2xl font-bold tracking-tight text-slate-900">Monitored Websites</h2>
         </div>
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="btn-gold px-6 py-3 flex items-center gap-2 self-start"
-        >
-          <Plus className="h-4.5 w-4.5" />
-          Add Website
-        </button>
+        <div className="flex items-center gap-3 self-start md:self-auto flex-wrap">
+          <button
+            onClick={handleDownloadAgent}
+            className="btn-teal px-4 py-3 flex items-center gap-2 text-xs font-extrabold"
+            title="Download WordPress Agent Plugin ZIP"
+          >
+            <Download className="h-4.5 w-4.5" />
+            Download WP Agent ZIP
+          </button>
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="btn-gold px-6 py-3 flex items-center gap-2"
+          >
+            <Plus className="h-4.5 w-4.5" />
+            Add Website
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -440,7 +469,7 @@ function Sites() {
                   </button>
                 </form>
               </>
-            ) : (
+) : (
               // Success Screen
               <div className="flex flex-col gap-5 text-center">
                 <div className="p-3 bg-success/10 text-success border-2 border-success rounded w-14 h-14 flex items-center justify-center mx-auto shadow-sm">
@@ -449,11 +478,36 @@ function Sites() {
                 <div>
                   <h3 className="text-xl font-black text-primary-dark">Node Registered Successfully!</h3>
                   <p className="text-xs font-bold text-slate-500 mt-1 max-w-sm mx-auto">
-                    Setup your <b>wp-config.php</b> parameters with the generated key.
+                    Unduh plugin agent di bawah ini dan konfigurasikan <b>wp-config.php</b>.
                   </p>
                 </div>
 
-                <div className="flex flex-col gap-3 text-left bg-cream border-2 border-primary-teal/20 rounded p-4 text-xs mt-2 font-medium">
+                {/* Download Plugin Step Card */}
+                <div className="bg-primary-teal/10 border-2 border-primary-teal/30 rounded p-4 text-left flex flex-col gap-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-extrabold text-primary-dark text-xs uppercase tracking-wider flex items-center gap-1.5">
+                      ⚡ Langkah 1: Plugin WordPress Agent
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-snug">
+                    Unduh file <b>wp-monitor-agent.zip</b> lalu upload melalui WordPress Admin (<b>Plugins &gt; Add New &gt; Upload Plugin</b>).
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleDownloadAgent}
+                    className="btn-teal py-2.5 px-4 text-xs font-black flex items-center justify-center gap-2 mt-1 shadow-sm"
+                  >
+                    <Download className="h-4 w-4" />
+                    Download Plugin Agent (ZIP)
+                  </button>
+                </div>
+
+                <div className="flex flex-col gap-3 text-left bg-cream border-2 border-primary-teal/20 rounded p-4 text-xs font-medium">
+                  <div className="flex items-center justify-between border-b border-primary-teal/15 pb-2 mb-1">
+                    <span className="font-extrabold text-primary-dark text-xs uppercase tracking-wider">
+                      🔑 Langkah 2: Kunci Konfigurasi
+                    </span>
+                  </div>
                   <div className="flex flex-col gap-1">
                     <span className="text-primary-teal/80 font-bold uppercase tracking-wider text-[10px]">
                       API KEY (X-API-KEY)

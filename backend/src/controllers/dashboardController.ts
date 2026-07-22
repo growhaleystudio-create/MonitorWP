@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import crypto from 'crypto';
+import path from 'path';
+import fs from 'fs';
 import { prisma } from '../db';
 import { sendTelegramNotification } from '../services/telegram';
 import { runUptimeCycleImmediate } from '../services/uptime';
@@ -623,3 +625,32 @@ export async function testTelegram(req: Request, res: Response) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
+/**
+ * GET /api/dashboard/download-plugin
+ * Serve the wp-monitor-agent.zip file for download.
+ */
+export async function downloadAgentPlugin(req: Request, res: Response) {
+  try {
+    const possiblePaths = [
+      path.join(__dirname, '../../wp-monitor-agent.zip'),
+      path.join(__dirname, '../../wp-agent-plugin.zip'),
+      path.join(__dirname, '../../../wp-monitor-agent.zip'),
+      path.join(__dirname, '../../../wp-agent-plugin.zip'),
+      path.join(process.cwd(), 'wp-monitor-agent.zip'),
+      path.join(process.cwd(), 'wp-agent-plugin.zip'),
+    ];
+
+    const targetPath = possiblePaths.find((p) => fs.existsSync(p));
+
+    if (!targetPath) {
+      return res.status(404).json({ error: 'Plugin ZIP file not found on server' });
+    }
+
+    res.download(targetPath, 'wp-monitor-agent.zip');
+  } catch (error) {
+    console.error('Error downloading agent plugin:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+

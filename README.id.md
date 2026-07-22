@@ -48,15 +48,15 @@ Platform ini menyediakan pemantauan Uptime real-time, pelacakan masa aktif serti
 Jalankan perintah ini di terminal server Linux/macOS Anda:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/growhaleystudio/monitor-wp/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/install.sh | bash
 ```
 
 ### Opsi 2: Menggunakan Docker Compose
 
 ```bash
 # 1. Clone repositori
-git clone https://github.com/growhaleystudio/monitor-wp.git
-cd monitor-wp
+git clone https://github.com/growhaleystudio-create/MonitorWP.git
+cd MonitorWP
 
 # 2. Jalankan container
 docker compose up -d

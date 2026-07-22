@@ -47,15 +47,15 @@ It provides real-time Uptime monitoring, SSL Certificate Expiry tracking, Securi
 Run this command on your Linux/macOS server terminal:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/growhaleystudio/monitor-wp/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/install.sh | bash
 ```
 
 ### Option 2: Docker Compose
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/growhaleystudio/monitor-wp.git
-cd monitor-wp
+git clone https://github.com/growhaleystudio-create/MonitorWP.git
+cd MonitorWP
 
 # 2. Start the container
 docker compose up -d

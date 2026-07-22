@@ -7,7 +7,8 @@ import {
   Search,
   Filter,
   AlertTriangle,
-  ExternalLink
+  ExternalLink,
+  Download
 } from 'lucide-react';
 
 interface Plugin {
@@ -83,6 +84,24 @@ function Plugins() {
     return matchesSearch && matchesSite && matchesStatus;
   });
 
+  const handleDownloadAgent = async () => {
+    try {
+      const response = await axios.get('/api/dashboard/download-plugin', {
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'wp-monitor-agent.zip');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error('Failed to download plugin zip:', err);
+      alert('Gagal mengunduh file plugin ZIP.');
+    }
+  };
+
   return (
     <div className="flex flex-col gap-8 text-primary-dark">
       {/* Header */}
@@ -91,6 +110,14 @@ function Plugins() {
           <span className="page-subtitle">Global Scoreboard</span>
           <h2 className="text-2xl font-bold tracking-tight text-slate-900">Aggregated Plugins</h2>
         </div>
+        <button
+          onClick={handleDownloadAgent}
+          className="btn-teal px-4 py-3 flex items-center gap-2 text-xs font-extrabold self-start md:self-auto"
+          title="Download WordPress Agent Plugin ZIP"
+        >
+          <Download className="h-4.5 w-4.5" />
+          Download WP Agent ZIP
+        </button>
       </div>
 
       {error && (

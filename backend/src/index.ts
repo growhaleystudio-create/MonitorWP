@@ -18,6 +18,7 @@ import {
   getSettings,
   saveSettings,
   testTelegram,
+  downloadAgentPlugin,
 } from './controllers/dashboardController';
 import { startUptimeScheduler, runUptimeCycleImmediateAwaited } from './services/uptime';
 
@@ -78,6 +79,9 @@ app.get('/api/auth/me', validateDashboardSession, (req, res) => {
 // --- WordPress Agent Route ---
 app.post('/api/agent/push', validateAgentKey, handleAgentPush);
 
+// --- Agent Download Route (Public) ---
+app.get('/download/wp-monitor-agent.zip', downloadAgentPlugin);
+
 import { checkSystemUpdate } from './services/updateChecker';
 
 // --- System Info Route ---
@@ -104,6 +108,7 @@ app.get('/api/dashboard/logs', validateDashboardSession, listLogs);
 app.get('/api/dashboard/settings', validateDashboardSession, getSettings);
 app.post('/api/dashboard/settings', validateDashboardSession, saveSettings);
 app.post('/api/dashboard/settings/test-telegram', validateDashboardSession, testTelegram);
+app.get('/api/dashboard/download-plugin', validateDashboardSession, downloadAgentPlugin);
 
 // --- Cron Route for Serverless (Vercel) ---
 app.get('/api/cron/check-uptime', async (req, res) => {

@@ -13,7 +13,7 @@ let cachedVersionInfo: SystemVersionInfo | null = null;
 let lastCheckTime = 0;
 
 const CURRENT_VERSION = '1.0.0';
-const GITHUB_REPO = 'growhaleystudio/monitor-wp';
+const GITHUB_REPO = 'growhaleystudio-create/MonitorWP';
 
 /**
  * Checks GitHub Releases API for the latest release of Growhaley Monitor.
