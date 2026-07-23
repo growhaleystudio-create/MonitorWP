@@ -129,7 +129,19 @@ define('WP_MONITOR_API_KEY', 'API_KEY_YANG_DIGENERATE');
 define('WP_MONITOR_SERVER_URL', 'http://IP_SERVER_ANDA:3000');
 ```
 
-6. Aktifkan plugin **WordPress Multi-Site Monitor Agent** di panel admin WordPress Anda.
+6. Aktifkan plugin **WordPress Multi-Site Monitor Agent** di panel Admin WordPress Anda.
+
+---
+
+## 🐛 Troubleshooting & Dokumentasi Bug
+
+Untuk histori lengkap perbaikan bug dan catatan rilis versi, lihat [CHANGELOG.md](CHANGELOG.md).
+
+- **Kendala Docker di macOS**: Jika `install.sh` menemui kendala di Mac, pastikan aplikasi Docker Desktop sudah terpasang dan aktif (`brew install --cask docker` atau buka aplikasi Docker Desktop).
+- **Koneksi Database Vercel**: Jika menggunakan deployment Vercel Serverless, pastikan environment variable `DATABASE_URL` dan `DIRECT_URL` sudah terkonfigurasi dengan benar di settings Vercel.
+- **Melaporkan Bug Baru**: Menemukan kendala atau bug baru? Silakan buat laporan di [GitHub Issues](https://github.com/growhaleystudio-create/MonitorWP/issues).
+
+---
 
 ## 🤝 Kontribusi
 

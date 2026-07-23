@@ -131,6 +131,18 @@ define('WP_MONITOR_SERVER_URL', 'http://your-server-ip:3000');
 
 6. Activate the **WordPress Multi-Site Monitor Agent** plugin in your WordPress Admin panel.
 
+---
+
+## 🐛 Troubleshooting & Bug Reports
+
+For a complete history of bug fixes and version updates, see [CHANGELOG.md](CHANGELOG.md).
+
+- **macOS Docker Issues**: If `install.sh` fails on macOS, ensure Docker Desktop is installed and running (`brew install --cask docker` or open Docker Desktop app).
+- **Vercel Database Timeout**: If deploying on Vercel Serverless, verify your `DATABASE_URL` and `DIRECT_URL` in Vercel Environment Variables.
+- **Reporting New Bugs**: Found a bug or issue? Please open a report on [GitHub Issues](https://github.com/growhaleystudio-create/MonitorWP/issues).
+
+---
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting a Pull Request.
