@@ -205,9 +205,21 @@ export async function listSites(req: Request, res: Response) {
           where: { siteId: site.id, isExpired: true },
         });
 
+        const latestPageSpeed = await prisma.pageSpeedMetric.findFirst({
+          where: { siteId: site.id, strategy: 'MOBILE' },
+          orderBy: { checkedAt: 'desc' },
+        });
+
+        const latestAudit = await prisma.seoAuditResult.findFirst({
+          where: { siteId: site.id },
+          orderBy: { auditedAt: 'desc' },
+        });
+
         return {
           ...site,
           uptime7d: uptimePercentage,
+          lighthouseScore: latestPageSpeed?.perfScore ?? null,
+          seoHealthScore: latestAudit?.score ?? null,
           issuesCount: {
             updates: updateCount,
             expired: expiredCount,

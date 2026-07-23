@@ -23,6 +23,8 @@ interface SiteSEOInfo {
   seoRecentPosts: string | null;
   scaScore: number | null;
   lastSeenAt: string | null;
+  lighthouseScore?: number | null;
+  seoHealthScore?: number | null;
 }
 
 export default function SeoOverview() {
@@ -65,6 +67,11 @@ export default function SeoOverview() {
   const yoastSites = sites.filter(s => s.seoPlugin === 'yoast').length;
   const rankmathSites = sites.filter(s => s.seoPlugin === 'rankmath').length;
   const activeSeoSites = sites.filter(s => s.seoPlugin && s.seoPlugin !== 'none').length;
+
+  const scoresWithData = sites.map(s => s.lighthouseScore).filter((s): s is number => typeof s === 'number' && s > 0);
+  const avgLighthouse = scoresWithData.length > 0
+    ? Math.round(scoresWithData.reduce((sum, s) => sum + s, 0) / scoresWithData.length)
+    : null;
 
   const filteredSites = sites.filter(s =>
     s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -134,7 +141,7 @@ export default function SeoOverview() {
           </div>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">
-              82 / 100
+              {avgLighthouse ? `${avgLighthouse} / 100` : 'Testing...'}
             </span>
             <span className="text-[11px] font-medium text-slate-500">Google Score</span>
           </div>
@@ -257,9 +264,17 @@ export default function SeoOverview() {
                     </td>
 
                     <td className="py-3 px-4 text-center">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-extrabold bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 border border-emerald-200/50">
-                        85 / 100
-                      </span>
+                      {site.lighthouseScore ? (
+                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-extrabold ${
+                          site.lighthouseScore >= 80 ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 border border-emerald-200/50' :
+                          site.lighthouseScore >= 50 ? 'bg-amber-50 text-amber-600 dark:bg-amber-950/40 border border-amber-200/50' :
+                          'bg-rose-50 text-rose-600 dark:bg-rose-950/40 border border-rose-200/50'
+                        }`}>
+                          {site.lighthouseScore} / 100
+                        </span>
+                      ) : (
+                        <span className="text-[11px] text-slate-400 italic font-normal">Pending Audit</span>
+                      )}
                     </td>
 
                     <td className="py-3 px-4 text-right">

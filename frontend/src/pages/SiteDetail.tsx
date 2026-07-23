@@ -772,7 +772,7 @@ function SiteDetail() {
                   </div>
                   <div className="mt-2 flex items-baseline gap-2">
                     <span className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
-                      {seoData?.audit?.score ?? 85}%
+                      {seoData?.audit?.score !== undefined ? `${seoData.audit.score}%` : '--'}
                     </span>
                     <span className="text-[11px] font-medium text-slate-500">Health Audit</span>
                   </div>
@@ -785,8 +785,8 @@ function SiteDetail() {
                     <Zap className="h-4 w-4 text-sky-500" />
                   </div>
                   <div className="mt-2 flex items-baseline gap-2">
-                    <span className={`text-3xl font-extrabold ${(seoData?.vitals?.mobile?.perfScore ?? 78) >= 80 ? 'text-emerald-600' : 'text-amber-500'}`}>
-                      {seoData?.vitals?.mobile?.perfScore ?? 78}/100
+                    <span className={`text-3xl font-extrabold ${(seoData?.vitals?.mobile?.perfScore ?? 0) >= 80 ? 'text-emerald-600' : (seoData?.vitals?.mobile?.perfScore ?? 0) >= 50 ? 'text-amber-500' : 'text-rose-600'}`}>
+                      {seoData?.vitals?.mobile?.perfScore !== undefined ? `${seoData.vitals.mobile.perfScore}/100` : '--'}
                     </span>
                     <span className="text-[11px] font-medium text-slate-500">Lighthouse Mobile</span>
                   </div>
@@ -800,7 +800,7 @@ function SiteDetail() {
                   </div>
                   <div className="mt-2 flex items-baseline gap-2">
                     <span className="text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">
-                      {seoData?.vitals?.desktop?.perfScore ?? 92}/100
+                      {seoData?.vitals?.desktop?.perfScore !== undefined ? `${seoData.vitals.desktop.perfScore}/100` : '--'}
                     </span>
                     <span className="text-[11px] font-medium text-slate-500">Lighthouse Desktop</span>
                   </div>
@@ -837,7 +837,7 @@ function SiteDetail() {
                   <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
                     <span className="text-[10px] font-bold text-slate-400 block uppercase">LCP (Largest Contentful)</span>
                     <span className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">
-                      {seoData?.vitals?.mobile?.lcp ? `${seoData.vitals.mobile.lcp}s` : '2.3s'}
+                      {seoData?.vitals?.mobile?.lcp ? `${seoData.vitals.mobile.lcp}s` : '--'}
                     </span>
                     <span className="text-[10px] text-emerald-600 font-medium">Good (&le; 2.5s)</span>
                   </div>
@@ -845,7 +845,7 @@ function SiteDetail() {
                   <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
                     <span className="text-[10px] font-bold text-slate-400 block uppercase">CLS (Layout Shift)</span>
                     <span className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">
-                      {seoData?.vitals?.mobile?.cls !== undefined ? seoData.vitals.mobile.cls : '0.04'}
+                      {seoData?.vitals?.mobile?.cls !== undefined ? seoData.vitals.mobile.cls : '--'}
                     </span>
                     <span className="text-[10px] text-emerald-600 font-medium">Good (&le; 0.1)</span>
                   </div>
@@ -853,7 +853,7 @@ function SiteDetail() {
                   <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
                     <span className="text-[10px] font-bold text-slate-400 block uppercase">INP (Next Paint)</span>
                     <span className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">
-                      {seoData?.vitals?.mobile?.inp ? `${seoData.vitals.mobile.inp}ms` : '110ms'}
+                      {seoData?.vitals?.mobile?.inp ? `${seoData.vitals.mobile.inp}ms` : '--'}
                     </span>
                     <span className="text-[10px] text-emerald-600 font-medium">Good (&le; 200ms)</span>
                   </div>
@@ -861,7 +861,7 @@ function SiteDetail() {
                   <div className="p-3 rounded-md bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
                     <span className="text-[10px] font-bold text-slate-400 block uppercase">TTFB (Server Response)</span>
                     <span className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">
-                      {seoData?.vitals?.mobile?.ttfb ? `${seoData.vitals.mobile.ttfb}s` : '0.35s'}
+                      {seoData?.vitals?.mobile?.ttfb ? `${seoData.vitals.mobile.ttfb}s` : '--'}
                     </span>
                     <span className="text-[10px] text-emerald-600 font-medium">Fast (&le; 0.8s)</span>
                   </div>
