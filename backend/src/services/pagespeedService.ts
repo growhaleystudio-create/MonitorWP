@@ -39,7 +39,7 @@ export async function runPageSpeedCheck(
       params.key = apiKey;
     }
 
-    const response = await axios.get(PAGESPEED_API_BASE, { params, timeout: 25000 });
+    const response = await axios.get(PAGESPEED_API_BASE, { params, timeout: 4500 });
     const lighthouse = response.data?.lighthouseResult;
     const audits = lighthouse?.audits || {};
     const rawScore = lighthouse?.categories?.performance?.score;
