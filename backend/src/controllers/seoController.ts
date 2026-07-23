@@ -189,16 +189,18 @@ export async function getSiteSeoDetails(req: Request, res: Response) {
     let mobileVitals = pageSpeedMetrics.find((m) => m.strategy === 'MOBILE') || null;
     let desktopVitals = pageSpeedMetrics.find((m) => m.strategy === 'DESKTOP') || null;
 
-    if (!mobileVitals && site.url) {
+    if ((!mobileVitals || !desktopVitals) && site.url) {
       try {
-        mobileVitals = await runPageSpeedCheck(siteId, site.url, 'MOBILE');
-      } catch (e) {
-        // ignore
-      }
-    }
-    if (!desktopVitals && site.url) {
-      try {
-        desktopVitals = await runPageSpeedCheck(siteId, site.url, 'DESKTOP');
+        if (!mobileVitals) await runPageSpeedCheck(siteId, site.url, 'MOBILE');
+        if (!desktopVitals) await runPageSpeedCheck(siteId, site.url, 'DESKTOP');
+
+        const freshMetrics = await prisma.pageSpeedMetric.findMany({
+          where: { siteId },
+          orderBy: { checkedAt: 'desc' },
+          take: 4,
+        });
+        mobileVitals = freshMetrics.find((m) => m.strategy === 'MOBILE') || null;
+        desktopVitals = freshMetrics.find((m) => m.strategy === 'DESKTOP') || null;
       } catch (e) {
         // ignore
       }
