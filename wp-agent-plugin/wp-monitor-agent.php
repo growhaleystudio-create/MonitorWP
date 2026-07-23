@@ -757,6 +757,14 @@ function wp_monitor_agent_render_admin_page() {
         <?php elseif (is_wp_error($sync_result)): ?>
             <div class="notice notice-error is-dismissible">
                 <p>❌ <strong>Sync Gagal:</strong> <?php echo esc_html($sync_result->get_error_message()); ?></p>
+                <?php
+                $err_msg = $sync_result->get_error_message();
+                if (strpos($err_msg, 'localhost') !== false || strpos($err_msg, '127.0.0.1') !== false) {
+                    echo '<p style="color: #b91c1c; font-size: 12px; margin-top: 4px; font-weight: 600;">💡 Tips Solusi: Website online tidak bisa terhubung ke <code>localhost</code>. Ganti Server URL dengan URL MonitorWP publik Anda (misal: <code>https://monitor-wp.vercel.app</code> atau <code>http://IP_SERVER_PUBLIC:3000</code>).</p>';
+                } elseif (strpos($err_msg, '5173') !== false) {
+                    echo '<p style="color: #b91c1c; font-size: 12px; margin-top: 4px; font-weight: 600;">💡 Tips Solusi: Port <code>5173</code> adalah port UI frontend Vite. Ganti dengan URL Server API (misal: <code>https://monitor-wp.vercel.app</code> atau port <code>3000</code>).</p>';
+                }
+                ?>
             </div>
         <?php endif; ?>
 
@@ -780,7 +788,10 @@ function wp_monitor_agent_render_admin_page() {
                                 placeholder="https://monitor-wp.vercel.app"
                                 required
                             />
-                            <p class="description">Contoh: <code>https://monitor-wp.vercel.app</code> atau <code>http://192.168.1.100:3000</code></p>
+                            <p class="description">
+                                Contoh: <code>https://monitor-wp.vercel.app</code> atau <code>http://192.168.1.100:3000</code>
+                                <br/><span style="color:#e11d48; font-weight:600;">⚠️ Jangan gunakan localhost atau port 5173 pada website WordPress online.</span>
+                            </p>
                         </td>
                     </tr>
                     <tr>
