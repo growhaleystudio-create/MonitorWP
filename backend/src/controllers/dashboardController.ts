@@ -180,40 +180,55 @@ export async function listSites(req: Request, res: Response) {
       orderBy: { name: 'asc' },
     });
 
-    // Enhance site objects with calculated values (e.g. issues count, uptime %)
     const enhancedSites = await Promise.all(
       sites.map(async (site) => {
-        // Calculate Uptime % in last 7 days
-        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        let uptimePercentage = 100;
+        let updateCount = 0;
+        let expiredCount = 0;
+        let latestPageSpeed: any = null;
+        let latestAudit: any = null;
 
+        try {
+          const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+          const totalChecks = await prisma.uptimeLog.count({
+            where: { siteId: site.id, checkedAt: { gte: sevenDaysAgo } },
+          });
+          const upChecks = await prisma.uptimeLog.count({
+            where: { siteId: site.id, isUp: true, checkedAt: { gte: sevenDaysAgo } },
+          });
+          uptimePercentage = totalChecks > 0 ? Math.round((upChecks / totalChecks) * 100) : 100;
+        } catch (e) {
+          console.error('Error calculating uptime %:', e);
+        }
 
-        // Let's manually fetch counts since SQLite/Prisma boolean aggregation is tricky
-        const totalChecks = await prisma.uptimeLog.count({
-          where: { siteId: site.id, checkedAt: { gte: sevenDaysAgo } },
-        });
-        const upChecks = await prisma.uptimeLog.count({
-          where: { siteId: site.id, isUp: true, checkedAt: { gte: sevenDaysAgo } },
-        });
+        try {
+          updateCount = await prisma.plugin.count({
+            where: { siteId: site.id, requiresUpdate: true },
+          });
+          expiredCount = await prisma.plugin.count({
+            where: { siteId: site.id, isExpired: true },
+          });
+        } catch (e) {
+          console.error('Error counting plugins:', e);
+        }
 
-        const uptimePercentage = totalChecks > 0 ? Math.round((upChecks / totalChecks) * 100) : 100;
+        try {
+          latestPageSpeed = await prisma.pageSpeedMetric.findFirst({
+            where: { siteId: site.id, strategy: 'MOBILE' },
+            orderBy: { checkedAt: 'desc' },
+          });
+        } catch (e) {
+          console.error('Error fetching pageSpeedMetric:', e);
+        }
 
-        const updateCount = await prisma.plugin.count({
-          where: { siteId: site.id, requiresUpdate: true },
-        });
-
-        const expiredCount = await prisma.plugin.count({
-          where: { siteId: site.id, isExpired: true },
-        });
-
-        const latestPageSpeed = await prisma.pageSpeedMetric.findFirst({
-          where: { siteId: site.id, strategy: 'MOBILE' },
-          orderBy: { checkedAt: 'desc' },
-        });
-
-        const latestAudit = await prisma.seoAuditResult.findFirst({
-          where: { siteId: site.id },
-          orderBy: { auditedAt: 'desc' },
-        });
+        try {
+          latestAudit = await prisma.seoAuditResult.findFirst({
+            where: { siteId: site.id },
+            orderBy: { auditedAt: 'desc' },
+          });
+        } catch (e) {
+          console.error('Error fetching seoAuditResult:', e);
+        }
 
         return {
           ...site,
@@ -231,7 +246,7 @@ export async function listSites(req: Request, res: Response) {
     res.json(enhancedSites);
   } catch (error) {
     console.error('Error listing sites:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: (error as Error).message || 'Internal Server Error' });
   }
 }
 
