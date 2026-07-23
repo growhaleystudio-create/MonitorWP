@@ -120,16 +120,30 @@ Open your browser and navigate to: **`http://localhost:3000`**
 
 1. In the Dashboard, go to **Sites** and click **Add Website**.
 2. Select **WordPress** as the platform.
-3. Copy the generated **API Key**.
-4. Download the `wp-monitor-agent.zip` from the dashboard.
-5. Add the following constants to your WordPress `wp-config.php`:
+3. Download the `wp-monitor-agent.zip` plugin from the dashboard modal.
+4. Upload & activate the plugin in your WordPress Admin panel (**Plugins > Add New > Upload Plugin**).
+5. Open **Settings > WP Monitor Agent** in WP Admin and enter your **Dashboard Server URL** and **API Key**.
 
+### 📡 Choosing the Correct Dashboard Server URL
+
+- **Local WP + Local MonitorWP (Same Computer)**:
+  Use `http://localhost:3000` (*Note: Use Port 3000 for backend API, not 5173*).
+- **Local WP on LAN / Local Network**:
+  Use your local IP address (e.g., `http://192.168.1.100:3000`).
+- **Live Online WP Site (cPanel/Cloud) → Local MonitorWP Dashboard**:
+  Expose your local port 3000 to the internet via localtunnel/ngrok:
+  ```bash
+  npx localtunnel --port 3000
+  ```
+  Paste the generated public HTTPS URL into **Dashboard Server URL**.
+- **Live Online WP Site → Production / Cloud MonitorWP**:
+  Use your public domain or VPS IP (e.g., `https://monitor-wp.vercel.app` or `http://YOUR_SERVER_IP:3000`).
+
+Alternatively, you can hardcode credentials into `wp-config.php`:
 ```php
 define('WP_MONITOR_API_KEY', 'YOUR_GENERATED_API_KEY');
 define('WP_MONITOR_SERVER_URL', 'http://your-server-ip:3000');
 ```
-
-6. Activate the **WordPress Multi-Site Monitor Agent** plugin in your WordPress Admin panel.
 
 ---
 

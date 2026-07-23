@@ -116,20 +116,34 @@ Buka browser Anda dan akses: **`http://localhost:3000`**
 
 ---
 
-## 🛠️ Pemasangan Plugin Agent WordPress
+## 🛠️ Panduan Setup Plugin WordPress Agent
 
 1. Di Dashboard, buka menu **Sites** dan klik **Add Website**.
 2. Pilih platform **WordPress**.
-3. Salin **API Key** yang dihasilkan.
-4. Unduh file `wp-monitor-agent.zip` dari dashboard.
-5. Tambahkan baris berikut pada file `wp-config.php` di WordPress Anda:
+3. Unduh file plugin `wp-monitor-agent.zip` dari modal dashboard.
+4. Upload & aktifkan plugin di WP Admin Anda (**Plugins > Add New > Upload Plugin**).
+5. Buka **Settings > WP Monitor Agent** di WP Admin, lalu isi **Dashboard Server URL** dan **API Key**.
 
+### 📡 Menentukan Dashboard Server URL yang Tepat
+
+- **WP Lokal + MonitorWP Lokal (Komputer yang Sama)**:
+  Gunakan `http://localhost:3000` (*Catatan: Gunakan Port 3000 untuk Server API backend, bukan 5173*).
+- **WP Lokal pada Jaringan LAN / Wifi Lokal**:
+  Gunakan IP lokal komputer Anda (contoh: `http://192.168.1.100:3000`).
+- **Website WP Online (cPanel/Cloud) → Dashboard MonitorWP di Laptop Lokal**:
+  Buka akses port 3000 lokal Anda ke internet via localtunnel/ngrok:
+  ```bash
+  npx localtunnel --port 3000
+  ```
+  Tempelkan URL publik HTTPS yang dihasilkan ke kolom **Dashboard Server URL**.
+- **Website WP Online → Server Production / Cloud MonitorWP**:
+  Gunakan domain publik atau IP VPS Anda (contoh: `https://monitor-wp.vercel.app` atau `http://IP_SERVER_VPS:3000`).
+
+Sebagai alternatif, Anda juga bisa memasukkan kredensial secara permanen melalui file `wp-config.php`:
 ```php
-define('WP_MONITOR_API_KEY', 'API_KEY_YANG_DIGENERATE');
+define('WP_MONITOR_API_KEY', 'API_KEY_HASIL_GENERATE');
 define('WP_MONITOR_SERVER_URL', 'http://IP_SERVER_ANDA:3000');
 ```
-
-6. Aktifkan plugin **WordPress Multi-Site Monitor Agent** di panel Admin WordPress Anda.
 
 ---
 
