@@ -91,6 +91,25 @@ docker compose up -d
 
 ---
 
+### 🔄 Updating to the Latest Version
+
+To update an existing installation to the latest version with all recent features & fixes:
+
+**Docker / 1-Line Installer:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/install.sh | bash
+```
+
+**Native / Git Installation:**
+```bash
+cd growhaley-monitor # or your project directory
+git pull origin main
+npm run build
+npm start
+```
+
+---
+
 Open your browser and navigate to: **`http://localhost:3000`**
 - **Default Username**: `admin`
 - **Default Password**: `admin`
