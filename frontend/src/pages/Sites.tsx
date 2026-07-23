@@ -52,7 +52,24 @@ function Sites() {
   const [newCheckKeyword, setNewCheckKeyword] = useState('');
   const [createdSite, setCreatedSite] = useState<Site | null>(null);
   const [copiedKey, setCopiedKey] = useState(false);
+  const [copiedUrl, setCopiedUrl] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  const getApiServerUrl = () => {
+    if (typeof window !== 'undefined') {
+      if (window.location.port === '5173') {
+        return `${window.location.protocol}//${window.location.hostname}:3000`;
+      }
+      return window.location.origin;
+    }
+    return 'http://localhost:3000';
+  };
+
+  const copyUrlToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedUrl(true);
+    setTimeout(() => setCopiedUrl(false), 2000);
+  };
 
   const fetchSites = async () => {
     try {
@@ -506,12 +523,31 @@ function Sites() {
                 <div className="flex flex-col gap-3 text-left bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg p-4 text-xs font-medium">
                   <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-2 mb-1">
                     <span className="font-bold text-slate-900 dark:text-slate-100 text-xs uppercase tracking-wider">
-                      🔑 Langkah 2: Tempel API Key di WP Admin
+                      🔑 Langkah 2: Tempel Server URL & API Key di WP Admin
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-500">
-                    Buka <b>Settings &gt; WP Monitor Agent</b> di WordPress, lalu tempelkan Server URL (<code>{window.location.origin}</code>) dan API Key:
+                    Buka <b>Settings &gt; WP Monitor Agent</b> di WordPress, lalu tempelkan Server URL dan API Key di bawah ini:
                   </p>
+
+                  {/* Server URL Box */}
+                  <div className="flex flex-col gap-1">
+                    <span className="text-primary-teal font-bold uppercase tracking-wider text-[10px]">
+                      DASHBOARD SERVER URL
+                    </span>
+                    <div className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md py-2 px-3 justify-between">
+                      <code className="text-slate-800 dark:text-slate-200 font-mono font-bold select-all truncate">{getApiServerUrl()}</code>
+                      <button
+                        onClick={() => copyUrlToClipboard(getApiServerUrl())}
+                        className="text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 p-1 transition"
+                        title="Copy Server URL"
+                      >
+                        {copiedUrl ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* API Key Box */}
                   <div className="flex flex-col gap-1">
                     <span className="text-primary-teal font-bold uppercase tracking-wider text-[10px]">
                       API KEY (X-API-KEY)
