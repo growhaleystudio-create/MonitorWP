@@ -436,7 +436,7 @@ export async function getSiteDetail(req: Request, res: Response) {
     const isOffline = site.status === 'offline' ? 1 : 0;
     const criticalCount = injectionCount + criticalFimCount + isOffline;
 
-    const expiredPluginsCount = site.plugins.filter((p) => p.isExpired).length;
+    const expiredPluginsCount = (site.plugins || []).filter((p: any) => p.isExpired).length;
     const bruteForceCount = await prisma.securityEvent.count({
       where: {
         siteId,
@@ -447,7 +447,7 @@ export async function getSiteDetail(req: Request, res: Response) {
     const bruteForceHigh = bruteForceCount >= 5 ? 1 : 0;
     const highCount = expiredPluginsCount + bruteForceHigh;
 
-    const pendingUpdatesCount = site.plugins.filter((p) => p.requiresUpdate && !p.isExpired).length;
+    const pendingUpdatesCount = (site.plugins || []).filter((p: any) => p.requiresUpdate && !p.isExpired).length;
     const mediumCount = pendingUpdatesCount;
 
     let scaFailedCount = 0;
@@ -508,7 +508,8 @@ export async function getSiteDetail(req: Request, res: Response) {
       orderBy: { createdAt: 'desc' },
     });
 
-    const urlSeed = Array.from(site.url || site.name).reduce((acc, c) => acc + c.charCodeAt(0), 0);
+    const siteStr = String(site.url || site.name || 'site');
+    const urlSeed: number = Array.from(siteStr).reduce((acc: number, c: string) => acc + c.charCodeAt(0), 0);
     const auditScore = 82 + (urlSeed % 14);
 
     const finalAudit = latestAudit
