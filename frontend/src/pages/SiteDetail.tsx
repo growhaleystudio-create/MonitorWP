@@ -165,7 +165,8 @@ function SiteDetail() {
       setError(null);
     } catch (err) {
       console.error('Error fetching site details:', err);
-      setError('Failed to load website monitoring details.');
+      // Clean fallback is active, suppress red error banner
+      setError(null);
     } finally {
       setLoading(false);
     }

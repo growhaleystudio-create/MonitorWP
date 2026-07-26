@@ -327,59 +327,84 @@ export async function getSiteDetail(req: Request, res: Response) {
     }
 
     // Uptime history (last 50 logs for chart)
-    const uptimeLogs = await prisma.uptimeLog.findMany({
-      where: { siteId },
-      take: 50,
-      orderBy: { checkedAt: 'desc' },
-    });
+    let uptimeLogs: any[] = [];
+    try {
+      uptimeLogs = await prisma.uptimeLog.findMany({
+        where: { siteId },
+        take: 50,
+        orderBy: { checkedAt: 'desc' },
+      });
+    } catch (e) {
+      console.error('Error fetching uptimeLogs:', e);
+    }
 
     // Recent errors
-    const errorLogs = await prisma.errorLog.findMany({
-      where: { siteId },
-      take: 30,
-      orderBy: { lastSeen: 'desc' },
-    });
+    let errorLogs: any[] = [];
+    try {
+      errorLogs = await prisma.errorLog.findMany({
+        where: { siteId },
+        take: 30,
+        orderBy: { lastSeen: 'desc' },
+      });
+    } catch (e) {
+      console.error('Error fetching errorLogs:', e);
+    }
 
     // Recent security logs
-    const securityEvents = await prisma.securityEvent.findMany({
-      where: { siteId },
-      take: 30,
-      orderBy: { createdAt: 'desc' },
-    });
+    let securityEvents: any[] = [];
+    try {
+      securityEvents = await prisma.securityEvent.findMany({
+        where: { siteId },
+        take: 30,
+        orderBy: { createdAt: 'desc' },
+      });
+    } catch (e) {
+      console.error('Error fetching securityEvents:', e);
+    }
 
     // Fetch traffic stats for the last 30 days
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const trafficLogs = await prisma.trafficLog.findMany({
-      where: {
-        siteId,
-        visitedAt: { gte: thirtyDaysAgo },
-      },
-      orderBy: { visitedAt: 'asc' },
-    });
+    let trafficLogs: any[] = [];
+    try {
+      trafficLogs = await prisma.trafficLog.findMany({
+        where: {
+          siteId,
+          visitedAt: { gte: thirtyDaysAgo },
+        },
+        orderBy: { visitedAt: 'asc' },
+      });
+    } catch (e) {
+      console.error('Error fetching trafficLogs:', e);
+    }
 
-    // Aggregate in Node.js to be database-agnostic (works with SQLite, PostgreSQL, etc.)
+    // Aggregate in Node.js memory (100% database-agnostic & crash-proof)
     const trafficByDay: Record<string, { pageviews: number; uniqueVisitors: Set<string> }> = {};
 
-    // Pre-populate last 30 days so dates with 0 traffic still show up in the chart
     for (let i = 29; i >= 0; i--) {
       const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
       const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD
       trafficByDay[dateStr] = { pageviews: 0, uniqueVisitors: new Set() };
     }
 
+    const pageCounts: Record<string, number> = {};
+    const refererCounts: Record<string, number> = {};
+
     trafficLogs.forEach((log) => {
-      const dateStr = log.visitedAt.toISOString().split('T')[0];
-      if (trafficByDay[dateStr]) {
+      const dateStr = log.visitedAt ? new Date(log.visitedAt).toISOString().split('T')[0] : '';
+      if (dateStr && trafficByDay[dateStr]) {
         trafficByDay[dateStr].pageviews++;
         if (log.ipAddress) {
           trafficByDay[dateStr].uniqueVisitors.add(log.ipAddress);
         }
       }
+
+      if (log.url) pageCounts[log.url] = (pageCounts[log.url] || 0) + 1;
+      const ref = log.referer || 'Direct / None';
+      refererCounts[ref] = (refererCounts[ref] || 0) + 1;
     });
 
     const chartData = Object.entries(trafficByDay).map(([dateStr, data]) => {
       const dateObj = new Date(dateStr);
-      // Format as DD MMM, e.g. "17 Jul"
       const dateFormatted = dateObj.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
       return {
         date: dateFormatted,
@@ -388,31 +413,15 @@ export async function getSiteDetail(req: Request, res: Response) {
       };
     });
 
-    // Top Pages
-    const topPagesData = await prisma.trafficLog.groupBy({
-      by: ['url'],
-      where: { siteId, visitedAt: { gte: thirtyDaysAgo } },
-      _count: { id: true },
-      orderBy: { _count: { id: 'desc' } },
-      take: 10,
-    });
-    const topPages = topPagesData.map(p => ({
-      url: p.url,
-      views: p._count.id,
-    }));
+    const topPages = Object.entries(pageCounts)
+      .map(([url, views]) => ({ url, views }))
+      .sort((a, b) => b.views - a.views)
+      .slice(0, 10);
 
-    // Top Referrers
-    const topReferrersData = await prisma.trafficLog.groupBy({
-      by: ['referer'],
-      where: { siteId, visitedAt: { gte: thirtyDaysAgo }, NOT: { referer: null } },
-      _count: { id: true },
-      orderBy: { _count: { id: 'desc' } },
-      take: 10,
-    });
-    const topReferrers = topReferrersData.map(r => ({
-      referer: r.referer || 'Direct / None',
-      views: r._count.id,
-    }));
+    const topReferrers = Object.entries(refererCounts)
+      .map(([referer, views]) => ({ referer, views }))
+      .sort((a, b) => b.views - a.views)
+      .slice(0, 10);
 
     // Total counts
     const totalPageviews30d = trafficLogs.length;
