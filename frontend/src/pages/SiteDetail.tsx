@@ -159,6 +159,9 @@ function SiteDetail() {
       setSecurityEvents(response.data.securityEvents || []);
       setTrafficStats(response.data.trafficStats || null);
       setSecurityStats(response.data.securityStats || null);
+      if (response.data.seoData) {
+        setSeoData(response.data.seoData);
+      }
       setError(null);
     } catch (err) {
       console.error('Error fetching site details:', err);
