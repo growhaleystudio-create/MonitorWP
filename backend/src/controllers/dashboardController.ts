@@ -187,7 +187,8 @@ export async function listSites(req: Request, res: Response) {
             id: 6,
             name: 'blower',
             url: 'https://blog.blowercentrifugal.com/',
-            platform: 'wordpress',
+            apiKey: 'auto-demo-key-6',
+            siteType: 'wordpress',
             status: 'online',
             seoPlugin: 'yoast',
             seoTotalPosts: 3,
@@ -305,12 +306,13 @@ export async function getSiteDetail(req: Request, res: Response) {
 
     if (!site) {
       try {
-        site = await prisma.site.create({
+        site = (await prisma.site.create({
           data: {
             id: siteId,
             name: siteId === 6 ? 'blower' : `Web Node ${siteId}`,
             url: siteId === 6 ? 'https://blog.blowercentrifugal.com/' : `https://node${siteId}.example.com`,
-            platform: 'wordpress',
+            apiKey: `auto-demo-key-${siteId}`,
+            siteType: 'wordpress',
             status: 'online',
             seoPlugin: 'yoast',
             seoTotalPosts: 3,
@@ -320,7 +322,7 @@ export async function getSiteDetail(req: Request, res: Response) {
               orderBy: [{ isExpired: 'desc' }, { requiresUpdate: 'desc' }, { name: 'asc' }],
             },
           },
-        });
+        })) as any;
       } catch (e) {
         console.error('Error auto-creating site in getSiteDetail:', e);
       }
