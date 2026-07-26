@@ -53,9 +53,21 @@ Combining Uptime checks, SSL Expiry tracking, SIEM-like Web Application Firewall
 
 ---
 
-## 🚀 Quick Start (Installation)
+## 🚀 Quick Start (Installation & Deployment)
 
-### 🪟 Windows Installation
+### ☁️ Option 1: 1-Click Free Cloud Deployment (Zero Technical Skills Needed)
+
+Deploy MonitorWP to the cloud in seconds without managing servers or Linux CLI:
+
+- **Deploy on Render.com** (Free Node.js Web Service with 24/7 background process):  
+  [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/growhaleystudio-create/MonitorWP)
+
+- **Deploy on Railway / Koyeb / Zeabur**:  
+  Connect your GitHub account to [Railway.app](https://railway.app) or [Koyeb.com](https://koyeb.com) and select the `growhaleystudio-create/MonitorWP` repository to launch a 24/7 containerized dashboard.
+
+---
+
+### 🪟 Option 2: Windows Installation
 
 #### Option A: Windows PowerShell 1-Line Installer (Docker Desktop)
 Run this command in PowerShell (Admin):

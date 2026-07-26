@@ -53,9 +53,21 @@ Menggabungkan pemantauan Uptime real-time, pelacakan SSL Expiry, audit event kea
 
 ---
 
-## 🚀 Panduan Instalasi Cepat
+## 🚀 Panduan Instalasi & Deployment
 
-### 🪟 Instalasi di Windows
+### ☁️ Pilihan 1: Deployment Cloud 1-Klik (Gratis & Tanpa Perlu Skill Linux/Coding)
+
+Deploy MonitorWP ke cloud secara instan tanpa perlu mengelola server VPS atau perintah Linux:
+
+- **Deploy di Render.com** (Layanan Web Node.js Gratis dengan background process 24 jam):  
+  [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/growhaleystudio-create/MonitorWP)
+
+- **Deploy di Railway / Koyeb / Zeabur**:  
+  Hubungkan akun GitHub Anda ke [Railway.app](https://railway.app) atau [Koyeb.com](https://koyeb.com) dan pilih repositori `growhaleystudio-create/MonitorWP` untuk menjalankan container dashboard 24/7.
+
+---
+
+### 🪟 Pilihan 2: Instalasi Windows
 
 #### Opsi A: PowerShell 1-Line Installer (Dengan Docker Desktop)
 Jalankan perintah ini di PowerShell Windows Anda:
