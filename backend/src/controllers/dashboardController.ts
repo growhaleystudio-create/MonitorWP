@@ -295,7 +295,7 @@ export async function getSiteDetail(req: Request, res: Response) {
 
   try {
     const siteId = parseInt(id, 10);
-    let site = await prisma.site.findUnique({
+    let site: any = await prisma.site.findUnique({
       where: { id: siteId },
       include: {
         plugins: {
