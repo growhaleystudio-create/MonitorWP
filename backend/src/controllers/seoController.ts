@@ -177,7 +177,7 @@ export async function getSiteSeoDetails(req: Request, res: Response) {
     }
 
     // Run real On-Page audit if no audit results exist
-    let latestAudit = site.seoAuditResults[0] || null;
+    let latestAudit: any = site.seoAuditResults[0] || null;
     if (!latestAudit && site.url) {
       try {
         latestAudit = await runServerSideOnPageAudit(siteId, site.url);
