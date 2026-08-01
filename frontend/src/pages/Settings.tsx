@@ -11,7 +11,11 @@ import {
   Bell,
   Clock,
   Mail,
-  HelpCircle
+  HelpCircle,
+  Key,
+  Globe,
+  ExternalLink,
+  Sparkles
 } from 'lucide-react';
 
 interface SettingsData {
@@ -21,6 +25,9 @@ interface SettingsData {
   telegram_notifications_enabled: string;
   email_notifications_enabled: string;
   email_recipient: string;
+  google_pagespeed_key: string;
+  gsc_client_email: string;
+  gsc_private_key: string;
 }
 
 function Settings() {
@@ -31,12 +38,16 @@ function Settings() {
     telegram_notifications_enabled: 'true',
     email_notifications_enabled: 'false',
     email_recipient: '',
+    google_pagespeed_key: '',
+    gsc_client_email: '',
+    gsc_private_key: '',
   });
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [testLoading, setTestLoading] = useState(false);
   const [showToken, setShowToken] = useState(false);
+  const [showGoogleKey, setShowGoogleKey] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
@@ -50,6 +61,9 @@ function Settings() {
           telegram_notifications_enabled: response.data.telegram_notifications_enabled ?? 'true',
           email_notifications_enabled: response.data.email_notifications_enabled ?? 'false',
           email_recipient: response.data.email_recipient || '',
+          google_pagespeed_key: response.data.google_pagespeed_key || '',
+          gsc_client_email: response.data.gsc_client_email || '',
+          gsc_private_key: response.data.gsc_private_key || '',
         });
       } catch (err) {
         console.error('Error fetching settings:', err);
@@ -140,6 +154,102 @@ function Settings() {
       <form onSubmit={handleSave} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Form (Inputs) */}
         <div className="lg:col-span-2 flex flex-col gap-6">
+          {/* Google Credentials Card */}
+          <div className="bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 rounded-xl shadow-xs p-6 flex flex-col gap-5 border-l-4 border-l-amber-500">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm flex items-center gap-2">
+                <Globe className="h-4.5 w-4.5 text-amber-500" />
+                Google API Credentials (PageSpeed Insights)
+              </h3>
+              {settings.google_pagespeed_key ? (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 flex items-center gap-1">
+                  <CheckCircle className="h-3 w-3" /> API Key Active (25k/day)
+                </span>
+              ) : (
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
+                  Free Limit (~25/day)
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center justify-between">
+                <span>Google PageSpeed Insights API Key</span>
+                <a
+                  href="https://console.cloud.google.com/apis/credentials"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="normal-case text-[11px] font-medium text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1"
+                >
+                  Dapatkan Key Gratis <ExternalLink className="h-3 w-3" />
+                </a>
+              </label>
+              <div className="relative">
+                <input
+                  type={showGoogleKey ? 'text' : 'password'}
+                  value={settings.google_pagespeed_key}
+                  onChange={(e) => handleInputChange('google_pagespeed_key', e.target.value)}
+                  className="clean-input w-full pr-12 font-mono"
+                  placeholder="Paste your Google API Key (AIzaSy...)"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowGoogleKey(!showGoogleKey)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                >
+                  {showGoogleKey ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                </button>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                Digunakan oleh <strong>CrawlSEO Engine & Core Web Vitals</strong> untuk menganalisis performa website.
+                Menggunakan API key milik sendiri gratis dan meningkatkan kuota dari ~25 test/hari menjadi <strong>25.000 test/hari</strong>.
+              </p>
+            </div>
+
+            {/* Google Search Console (GSC) Credentials */}
+            <div className="flex flex-col gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                  Google Search Console (GSC) Integration
+                </span>
+                {settings.gsc_client_email ? (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300">
+                    GSC Connected
+                  </span>
+                ) : (
+                  <span className="text-[10px] font-medium text-slate-400">Optional</span>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-bold text-slate-500 uppercase">
+                  Service Account Client Email
+                </label>
+                <input
+                  type="text"
+                  value={settings.gsc_client_email}
+                  onChange={(e) => handleInputChange('gsc_client_email', e.target.value)}
+                  className="clean-input font-mono text-xs"
+                  placeholder="gsc-monitor@your-project.iam.gserviceaccount.com"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-bold text-slate-500 uppercase">
+                  Service Account Private Key / API Token
+                </label>
+                <textarea
+                  value={settings.gsc_private_key}
+                  onChange={(e) => handleInputChange('gsc_private_key', e.target.value)}
+                  className="clean-input font-mono text-xs h-20 resize-none"
+                  placeholder="Paste -----BEGIN PRIVATE KEY----- or OAuth Token"
+                />
+                <p className="text-[10px] text-slate-400">
+                  Diperlukan untuk menarik data Clicks, Impressions, & Keyword Position langsung dari Google Search Console API.
+                </p>
+              </div>
+            </div>
+          </div>
           {/* Telegram Credentials Card */}
           <div className="bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 rounded-xl shadow-xs p-6 flex flex-col gap-5 border-l-4 border-l-primary-teal">
             <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
@@ -292,6 +402,34 @@ function Settings() {
 
         {/* Right Info Sidebar */}
         <div className="flex flex-col gap-6">
+          {/* Google PageSpeed Setup Guide */}
+          <div className="bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 rounded-xl shadow-xs p-5 flex flex-col gap-4 border-t-4 border-t-amber-500">
+            <h4 className="font-bold text-xs text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="h-4 w-4 text-amber-500" />
+              Google API Key Setup Guide
+            </h4>
+            <ol className="text-xs text-slate-600 dark:text-slate-400 flex flex-col gap-2.5 list-decimal pl-4 leading-relaxed">
+              <li>
+                Buka <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" className="text-amber-600 dark:text-amber-400 font-semibold underline inline-flex items-center gap-0.5">Google Cloud Console <ExternalLink className="h-3 w-3" /></a>
+              </li>
+              <li>
+                Buat project baru atau pilih project yang sudah ada.
+              </li>
+              <li>
+                Buka menu <b>Library</b> dan aktifkan <b>PageSpeed Insights API</b>.
+              </li>
+              <li>
+                Masuk ke <b>Credentials</b> → Klik <b>+ Create Credentials</b> → Pilih <b>API key</b>.
+              </li>
+              <li>
+                Salin API key tersebut dan tempelkan di kolom <b>Google PageSpeed Insights API Key</b> di sebelah kiri.
+              </li>
+              <li>
+                Klik <b>Save All Settings</b> untuk mengaktifkan quota 25.000 test/hari.
+              </li>
+            </ol>
+          </div>
+
           <div className="bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 rounded-xl shadow-xs p-5 flex flex-col gap-4">
             <h4 className="font-bold text-xs text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-1.5">
               <HelpCircle className="h-4 w-4 text-primary-teal" />

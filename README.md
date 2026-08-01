@@ -8,7 +8,7 @@
 
   [![License: GPL v3](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
   [![Docker Ready](https://img.shields.io/badge/Docker-Ready-099ce5.svg?logo=docker&logoColor=white)](docker-compose.yml)
-  [![Version](https://img.shields.io/badge/Version-v1.0.0-gold.svg)](#)
+  [![Version](https://img.shields.io/badge/Version-v1.2.0-gold.svg)](#)
   [![Maintained By](https://img.shields.io/badge/Maintained%20By-Growhaley%20Studio-darkgreen.svg)](https://github.com/growhaleystudio-create)
 
   ---
@@ -27,7 +27,7 @@
   <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docs/dashboard-preview-light.png" alt="Growhaley Monitor Light Mode Preview" width="49%" />
 </p>
 
-**Growhaley Monitor** is a lightweight **"WAZUH Lite"** & self-hosted monitoring dashboard designed to track **WordPress** and **Non-WordPress** (Node.js, Laravel, React, Static HTML, etc.) websites from a single, centralized panel.
+**Growhaley Monitor** is a lightweight & self-hosted monitoring dashboard designed to track **WordPress** and **Non-WordPress** (Node.js, Laravel, React, Static HTML, etc.) websites from a single, centralized panel.
 
 Combining Uptime checks, SSL Expiry tracking, SIEM-like Web Application Firewall auditing, **CrawlSEO-inspired SEO & Core Web Vitals Optimization Engine**, and **Telegram Bot Alerts**, it keeps your web infrastructure secure, performant, and search-engine optimized.
 
@@ -39,7 +39,7 @@ Combining Uptime checks, SSL Expiry tracking, SIEM-like Web Application Firewall
   - **On-Page Audit Scanner**: Automated local scanning for missing H1 tags, missing Meta Descriptions (Yoast, RankMath, AIOSEO support), missing image `alt` attributes, and accidental `noindex` directives.
   - **Google Core Web Vitals**: Measures LCP, CLS, INP, TTFB, and Lighthouse Performance Scores for Mobile & Desktop.
   - **Smart SEO Opportunities Engine**: Algorithmic detection for *Striking Distance* keywords (ranks 4-20), *Low CTR* articles, *Content Decay* (>6 months old), and *Keyword Cannibalization*.
-- **🛡️ WAZUH Lite Web Security Engine**:
+- **🛡️ Integrated Web Security Engine**:
   - **Attack Detection**: Real-time detection of SQL Injection (SQLi), Cross-Site Scripting (XSS), Path Traversal, & Brute Force login attempts.
   - **File Integrity & Security Audit**: Audit login activity, failed logins, and suspicious file modifications without heavy server overhead.
 - **⚡ Dual Site Monitoring (WP + Non-WP)**:

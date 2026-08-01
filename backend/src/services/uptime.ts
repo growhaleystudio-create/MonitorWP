@@ -6,6 +6,21 @@ import { triggerAlert } from './alerts';
 
 let isChecking = false;
 
+export function getDowntimeRootCause(statusCode: number, errorMsg: string = ''): string {
+  if (statusCode === 502) return '502 Bad Gateway (Nginx / Upstream Server Crash)';
+  if (statusCode === 500) return '500 Internal Server Error (PHP Out of Memory / DB Failure)';
+  if (statusCode === 504) return '504 Gateway Timeout (PHP Handler Hanging)';
+  if (statusCode === 503) return '503 Service Unavailable (Server Overload)';
+  if (statusCode === 403) return '403 Forbidden (Firewall / WAF Access Blocked)';
+  if (statusCode === 404) return '404 Not Found (Missing Route / File)';
+  if (errorMsg.includes('ENOTFOUND') || errorMsg.includes('getaddrinfo')) return 'DNS Failure (Domain Unresolved)';
+  if (errorMsg.includes('ECONNREFUSED')) return 'Connection Refused (Server Down / Port Closed)';
+  if (errorMsg.includes('ETIMEDOUT') || errorMsg.includes('timeout')) return 'Connection Timeout (Server Unresponsive)';
+  if (errorMsg.includes('CERT_') || errorMsg.includes('DEPTH_ZERO_SELF_SIGNED')) return 'SSL Handshake Error (Expired / Invalid Cert)';
+
+  return `HTTP Status ${statusCode || 0} (Network / Server Disruption)`;
+}
+
 export async function checkSslCertificate(siteUrl: string): Promise<{
   sslValid: boolean;
   sslExpiresAt: Date | null;

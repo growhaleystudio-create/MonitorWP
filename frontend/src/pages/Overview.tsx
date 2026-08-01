@@ -741,26 +741,27 @@ function Overview() {
                 No recent incidents logged.
               </div>
             ) : (
-              <div className="relative border-l border-slate-200 dark:border-slate-800 pl-4 flex flex-col gap-6">
+              <div className="relative pl-8 pr-3 py-2 flex flex-col gap-6 max-h-[500px] overflow-y-auto">
+                {/* Continuous Vertical Timeline Line */}
+                <div className="absolute left-[19px] top-2 bottom-2 w-0.5 bg-slate-200 dark:bg-slate-800" />
+
                 {timeline.map((event) => (
-                  <div key={event.id} className="relative">
+                  <div key={event.id} className="relative flex flex-col gap-1">
                     {/* Circle Node */}
-                    <span className="absolute -left-[27px] top-0.5 p-0.5 bg-white dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 z-10 shadow-sm">
+                    <span className="absolute -left-[26px] top-0.5 p-1 bg-white dark:bg-slate-900 rounded-full border border-slate-200 dark:border-slate-700 z-10 shadow-sm flex items-center justify-center">
                       {getEventIcon(event)}
                     </span>
-                    <div className="flex flex-col gap-1 pl-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase">
-                          {event.siteName}
-                        </span>
-                        <span className="text-[9px] font-semibold text-slate-400">
-                          {new Date(event.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-                        </span>
-                      </div>
-                      <p className="font-bold text-xs text-slate-800 dark:text-slate-200 leading-snug">
-                        {event.message}
-                      </p>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        {event.siteName}
+                      </span>
+                      <span className="text-[9px] font-semibold text-slate-400">
+                        {new Date(event.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                      </span>
                     </div>
+                    <p className="font-bold text-xs text-slate-800 dark:text-slate-200 leading-snug">
+                      {event.message}
+                    </p>
                   </div>
                 ))}
               </div>

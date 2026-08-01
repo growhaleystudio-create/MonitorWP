@@ -19,6 +19,11 @@ import {
   saveSettings,
   testTelegram,
   downloadAgentPlugin,
+  exportPdfReport,
+  listBannedIps,
+  addBannedIp,
+  removeBannedIp,
+  cleanSiteDatabase,
 } from './controllers/dashboardController';
 import { startUptimeScheduler, runUptimeCycleImmediateAwaited } from './services/uptime';
 
@@ -42,6 +47,9 @@ async function seedDefaultSettings() {
     { key: 'alert_on_error_spike_threshold', value: '10' },
     { key: 'alert_on_injection', value: 'true' },
     { key: 'alert_on_login_failed', value: 'true' },
+    { key: 'google_pagespeed_key', value: '' },
+    { key: 'gsc_client_email', value: '' },
+    { key: 'gsc_private_key', value: '' },
   ];
 
   try {
@@ -105,16 +113,24 @@ app.delete('/api/dashboard/sites/:id', validateDashboardSession, deleteSite);
 app.get('/api/dashboard/plugins', validateDashboardSession, listPlugins);
 app.get('/api/dashboard/logs', validateDashboardSession, listLogs);
 
-import { getSiteSeoDetails, runPageSpeedTest } from './controllers/seoController';
+import { getSiteSeoDetails, runPageSpeedTest, runBrokenLinkTest } from './controllers/seoController';
 
 // --- SEO API Routes (Protected) ---
 app.get('/api/dashboard/sites/:id/seo', validateDashboardSession, getSiteSeoDetails);
 app.post('/api/dashboard/sites/:id/pagespeed', validateDashboardSession, runPageSpeedTest);
+app.post('/api/dashboard/sites/:id/broken-links', validateDashboardSession, runBrokenLinkTest);
 
 app.get('/api/dashboard/settings', validateDashboardSession, getSettings);
 app.post('/api/dashboard/settings', validateDashboardSession, saveSettings);
 app.post('/api/dashboard/settings/test-telegram', validateDashboardSession, testTelegram);
 app.get('/api/dashboard/download-plugin', validateDashboardSession, downloadAgentPlugin);
+app.get('/api/dashboard/sites/:id/export-pdf', validateDashboardSession, exportPdfReport);
+app.post('/api/dashboard/sites/:id/clean-db', validateDashboardSession, cleanSiteDatabase);
+
+// --- Central WAF Routes ---
+app.get('/api/dashboard/security/banned-ips', validateDashboardSession, listBannedIps);
+app.post('/api/dashboard/security/banned-ips', validateDashboardSession, addBannedIp);
+app.delete('/api/dashboard/security/banned-ips/:ip', validateDashboardSession, removeBannedIp);
 
 // --- Cron Route for Serverless (Vercel) ---
 app.get('/api/cron/check-uptime', async (req, res) => {

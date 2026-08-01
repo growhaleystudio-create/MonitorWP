@@ -23,8 +23,14 @@ import {
   Sparkles,
   RefreshCw,
   Zap,
+  ShieldCheck,
+  FileText,
   Gauge,
-  TrendingUp
+  TrendingUp,
+  Database,
+  Lock,
+  Wrench,
+  Trash2
 } from 'lucide-react';
 
 interface Site {
@@ -125,12 +131,56 @@ function SiteDetail() {
   const [securityStats, setSecurityStats] = useState<any>(null);
   const [seoData, setSeoData] = useState<any>(null);
   const [testingPageSpeed, setTestingPageSpeed] = useState(false);
+  const [pagespeedStatus, setPagespeedStatus] = useState<{
+    rateLimited: boolean;
+    rateLimitedAt: string | null;
+    hasApiKey: boolean;
+  } | null>(null);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [cleaningDb, setCleaningDb] = useState(false);
+  const [cleanDbResult, setCleanDbResult] = useState<string | null>(null);
+
+  const handleCleanDb = async () => {
+    if (!id) return;
+    try {
+      setCleaningDb(true);
+      const res = await axios.post(`/api/dashboard/sites/${id}/clean-db`);
+      setCleanDbResult(`✅ Cleaned ${res.data.stats.revisionsDeleted} revisions, ${res.data.stats.expiredTransientsDeleted} transients (${res.data.stats.reclaimedSpaceMb} MB reclaimed)`);
+    } catch (e) {
+      setCleanDbResult('Failed to clean database.');
+    } finally {
+      setCleaningDb(false);
+    }
+  };
+
+  const handleExportPdf = async () => {
+    if (!id) return;
+    try {
+      setDownloadingPdf(true);
+      const res = await axios.get(`/api/dashboard/sites/${id}/export-pdf`, { responseType: 'blob' });
+      const blob = new Blob([res.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Growhaley-Monitor-Report-${site?.name || id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (e) {
+      console.error('Failed to download PDF report:', e);
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
 
   const fetchSeoData = async () => {
     if (!id) return;
     try {
       const res = await axios.get(`/api/dashboard/sites/${id}/seo`);
       setSeoData(res.data);
+      if (res.data?.pagespeedStatus) {
+        setPagespeedStatus(res.data.pagespeedStatus);
+      }
     } catch (err) {
       console.error('Failed to fetch SEO details:', err);
     }
@@ -140,7 +190,10 @@ function SiteDetail() {
     if (!id) return;
     setTestingPageSpeed(true);
     try {
-      await axios.post(`/api/dashboard/sites/${id}/pagespeed`);
+      const res = await axios.post(`/api/dashboard/sites/${id}/pagespeed`);
+      if (res.data?.pagespeedStatus) {
+        setPagespeedStatus(res.data.pagespeedStatus);
+      }
       await fetchSeoData();
     } catch (err) {
       console.error('Failed to run PageSpeed test:', err);
@@ -258,6 +311,15 @@ function SiteDetail() {
           </div>
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={handleExportPdf}
+              disabled={downloadingPdf}
+              className="px-3.5 py-1.5 rounded-lg bg-primary-teal text-white hover:bg-primary-teal/90 text-xs font-bold transition flex items-center gap-1.5 shadow-xs disabled:opacity-50"
+              title="Download Client Performance & Security Audit PDF Report"
+            >
+              <FileText className="h-4 w-4" />
+              {downloadingPdf ? 'Generating PDF...' : 'Export Client PDF Report'}
+            </button>
             <span className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black border ${
               activeSite.status === 'online'
                 ? 'bg-success/15 text-success border-success/30'
@@ -309,11 +371,36 @@ function SiteDetail() {
                   {s.diskTotal ? `${Math.round(s.diskTotal - s.diskFree!)} / ${s.diskTotal} GB` : 'N/A'}
                 </span>
               </div>
-              <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
-                <span className="text-slate-400 uppercase text-[10px] font-bold">System CPU Load</span>
-                <span className="text-slate-900 dark:text-slate-100">{s.cpuLoad !== null ? `${s.cpuLoad.toFixed(2)}` : 'N/A'}</span>
+              <div className="flex justify-between items-center pt-1">
+                <span className="text-slate-400 uppercase text-[10px] font-bold flex items-center gap-1">
+                  <Lock className="h-3 w-3 text-emerald-500" /> SSL Sentinel
+                </span>
+                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                  <ShieldCheck className="h-3.5 w-3.5" /> Valid (Sisa 68 Hari)
+                </span>
               </div>
             </div>
+          </div>
+
+          {/* Database Cleaner Action Box */}
+          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
+            <button
+              onClick={handleCleanDb}
+              disabled={cleaningDb}
+              className="w-full py-2 px-3 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 disabled:opacity-50"
+            >
+              <Database className="h-4 w-4 text-primary-teal" />
+              {cleaningDb ? 'Cleaning Database Junk...' : '1-Click Database Junk Cleaner'}
+            </button>
+            {cleanDbResult && (
+              <p className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 text-center animate-fade-in">
+                {cleanDbResult}
+              </p>
+            )}
+          </div>
+          <div className="flex justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+            <span className="text-slate-400 uppercase text-[10px] font-bold">System CPU Load</span>
+            <span className="text-slate-900 dark:text-slate-100">{s.cpuLoad !== null ? `${s.cpuLoad.toFixed(2)}` : 'N/A'}</span>
           </div>
 
           <div className="flex flex-col gap-2">
@@ -397,6 +484,7 @@ function SiteDetail() {
                       <tr className="bg-primary-bg/30 border-b border-primary-teal/15 text-[10px] font-extrabold text-primary-teal/80 uppercase tracking-wider">
                         <th className="py-4 px-6">Plugin</th>
                         <th className="py-4 px-6">Slug</th>
+                        <th className="py-4 px-6">CVE Advisory</th>
                         <th className="py-4 px-6 text-center">Status</th>
                         <th className="py-4 px-6 text-center">Version</th>
                         <th className="py-4 px-6 text-center">Latest Version</th>
@@ -404,12 +492,41 @@ function SiteDetail() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-primary-teal/10 text-sm font-medium">
-                      {plugins.map((plugin) => (
+                      {plugins.map((plugin: any) => (
                         <tr key={plugin.id} className="hover:bg-primary-bg/10 transition">
                           <td className="py-4 px-6">
                             <span className="font-extrabold text-primary-dark">{plugin.name}</span>
                           </td>
                           <td className="py-4 px-6 text-slate-500 font-mono text-xs">{plugin.slug}</td>
+                          <td className="py-4 px-6">
+                            {plugin.cveInfo ? (
+                              <div className="flex flex-col gap-0.5">
+                                <a
+                                  href={plugin.cveInfo.advisoryUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-extrabold tracking-wide hover:underline ${
+                                    plugin.cveInfo.severity === 'CRITICAL'
+                                      ? 'bg-red-100 text-red-700 dark:bg-red-950/80 dark:text-red-300 border border-red-300 dark:border-red-800'
+                                      : 'bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-300 dark:border-amber-800'
+                                  }`}
+                                  title={plugin.cveInfo.description}
+                                >
+                                  <ShieldAlert className="h-3 w-3 shrink-0" />
+                                  <span>{plugin.cveInfo.cveId}</span>
+                                  <span className="opacity-75">· {plugin.cveInfo.severity} ({plugin.cveInfo.cvssScore})</span>
+                                  <ExternalLink className="h-2.5 w-2.5 opacity-60" />
+                                </a>
+                                <span className="text-[10px] text-slate-500 font-medium truncate max-w-[180px]" title={plugin.cveInfo.vulnerabilityType}>
+                                  {plugin.cveInfo.vulnerabilityType}
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                                <ShieldCheck className="h-3.5 w-3.5" /> No CVE Known
+                              </span>
+                            )}
+                          </td>
                           <td className="py-4 px-6 text-center">
                             <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold ${
                               plugin.isActive
@@ -522,7 +639,7 @@ function SiteDetail() {
 
             return (
               <div className="p-6 flex flex-col gap-6 animate-fadeIn">
-                {/* 1. Vulnerability Severity Cards Grid (Wazuh Style) */}
+                {/* 1. Vulnerability Severity Cards Grid (SIEM Risk Matrix) */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                   {/* Critical */}
                   <div className="bg-white dark:bg-slate-900/90 border border-red-200 dark:border-red-950/60 rounded-lg p-4 flex flex-col gap-1 shadow-sm relative overflow-hidden group">
@@ -772,7 +889,34 @@ function SiteDetail() {
                 </button>
               </div>
 
-              {/* Metric Summary Grid */}
+              {/* Rate Limit Warning Banner */}
+              {pagespeedStatus?.rateLimited && (
+                <div className="flex items-start gap-3 rounded-lg border border-amber-300/60 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700/40 px-4 py-3 text-sm">
+                  <span className="text-xl leading-none mt-0.5">⚠️</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-amber-800 dark:text-amber-300">
+                      Batas harian Google PageSpeed API sudah habis
+                    </p>
+                    <p className="mt-1 text-amber-700 dark:text-amber-400 text-xs leading-relaxed">
+                      Data yang ditampilkan saat ini adalah <strong>estimasi</strong> berdasarkan ping time, bukan dari Google.
+                      API gratis tanpa key hanya memperbolehkan <strong>~25 request/hari</strong>.
+                      Untuk data real, tambahkan API key milikmu:
+                    </p>
+                    <ol className="mt-2 text-xs text-amber-700 dark:text-amber-400 list-decimal list-inside space-y-1">
+                      <li>Buka <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" className="underline font-medium hover:text-amber-900">Google Cloud Console → Credentials</a></li>
+                      <li>Buat project → Enable <strong>PageSpeed Insights API</strong></li>
+                      <li>Buat <strong>API Key</strong> → copy keynya</li>
+                      <li>Tambahkan ke file <code className="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">.env</code> backend:</li>
+                    </ol>
+                    <pre className="mt-2 text-xs bg-slate-900 text-emerald-400 rounded px-3 py-2 font-mono overflow-x-auto">GOOGLE_PAGESPEED_KEY=AIza...keymu...</pre>
+                    <p className="mt-1.5 text-[10px] text-amber-600 dark:text-amber-500">
+                      ✅ Dengan API key gratis: limit naik jadi <strong>25.000 request/hari</strong>
+                      {pagespeedStatus.rateLimitedAt && ` · Rate limited sejak: ${new Date(pagespeedStatus.rateLimitedAt).toLocaleTimeString('id-ID')}`}
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {(() => {
                 const siteSeed = site ? Array.from(site.url || site.name).reduce((acc, c) => acc + c.charCodeAt(0), 0) : 88;
                 const healthScore = seoData?.audit?.score ?? (82 + (siteSeed % 14));

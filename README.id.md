@@ -8,7 +8,7 @@
 
   [![License: GPL v3](https://img.shields.io/badge/Lisensi-GPL--3.0-blue.svg)](LICENSE)
   [![Docker Ready](https://img.shields.io/badge/Docker-Ready-099ce5.svg?logo=docker&logoColor=white)](docker-compose.yml)
-  [![Version](https://img.shields.io/badge/Versi-v1.0.0-gold.svg)](#)
+  [![Version](https://img.shields.io/badge/Versi-v1.2.0-gold.svg)](#)
   [![Dibuat Oleh](https://img.shields.io/badge/Dibuat%20Oleh-Growhaley%20Studio-darkgreen.svg)](https://github.com/growhaleystudio-create)
 
   ---
@@ -27,7 +27,7 @@
   <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docs/dashboard-preview-light.png" alt="Growhaley Monitor Light Mode Preview" width="49%" />
 </p>
 
-**Growhaley Monitor** adalah platform pemantauan terpusat versi **"WAZUH Lite"** & self-hosted yang dirancang untuk memantau kesehatan website **WordPress** maupun **Non-WordPress** (Node.js, Laravel, React, HTML Statis, dll) dari satu panel terpadu.
+**Growhaley Monitor** adalah platform pemantauan terpusat & self-hosted yang dirancang untuk memantau kesehatan website **WordPress** maupun **Non-WordPress** (Node.js, Laravel, React, HTML Statis, dll) dari satu panel terpadu.
 
 Menggabungkan pemantauan Uptime real-time, pelacakan SSL Expiry, audit event keamanan (SQLi, XSS, Brute Force), **Engine Monitoring & Optimasi SEO ala CrawlSEO**, serta notifikasi instan via **Telegram Bot**.
 
@@ -39,7 +39,7 @@ Menggabungkan pemantauan Uptime real-time, pelacakan SSL Expiry, audit event kea
   - **Scanner Audit On-Page**: Pemindaian otomatis untuk tag H1 yang hilang, Meta Description yang kosong (mendukung Yoast, RankMath, AIOSEO), gambar tanpa teks `alt`, serta tag `noindex` tak disengaja.
   - **Core Web Vitals Google**: Mengukur metrik LCP, CLS, INP, TTFB, dan Skor Performa Lighthouse untuk Mobile & Desktop.
   - **Smart SEO Opportunities Engine**: Algoritma deteksi kata kunci *Striking Distance* (peringkat 4-20), artikel *Low CTR*, *Content Decay* (>6 bulan), dan *Keyword Cannibalization*.
-- **🛡️ Engine Keamanan "WAZUH Lite"**:
+- **🛡️ Engine Keamanan Web Terintegrasi**:
   - **Deteksi Serangan Real-Time**: Mendeteksi percobaan serangan SQL Injection (SQLi), Cross-Site Scripting (XSS), Path Traversal, & Brute Force login secara otomatis.
   - **Audit Keamanan & Integritas File**: Mencatat riwayat login sukses/gagal serta perubahan file mencurigakan tanpa beban server yang berat.
 - **⚡ Pemantauan Dua Tipe Situs (WP + Non-WP)**:

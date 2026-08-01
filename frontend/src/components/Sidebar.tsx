@@ -1,9 +1,12 @@
+import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
   Globe,
   Sparkles,
   ShieldAlert,
+  Plug,
+  FileText,
   Settings,
   LogOut,
   Menu,
@@ -13,7 +16,6 @@ import {
   Sun,
   Moon,
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
 
 interface SidebarProps {
   onLogout: () => void;
@@ -44,6 +46,8 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
     { name: 'Sites', to: '/sites', icon: Globe },
     { name: 'SEO & Vitals', to: '/seo', icon: Sparkles },
     { name: 'Security & WAF', to: '/security', icon: ShieldAlert },
+    { name: 'Plugins & CVEs', to: '/plugins', icon: Plug },
+    { name: 'Audit Logs', to: '/logs', icon: FileText },
     { name: 'Settings', to: '/settings', icon: Settings },
   ];
 
@@ -99,7 +103,7 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
                 Growhaley WP
               </h1>
               <span className="text-[9px] font-bold text-primary-teal uppercase tracking-wider mt-0.5 block">
-                Monitor v1.0.0
+                Monitor v1.2.0
               </span>
             </div>
           </div>

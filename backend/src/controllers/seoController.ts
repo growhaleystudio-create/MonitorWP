@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
 import { prisma } from '../db';
-import { runPageSpeedCheck } from '../services/pagespeedService';
+import { runPageSpeedCheck, clearPageSpeedCache, getPageSpeedRateLimitStatus } from '../services/pagespeedService';
 import { generateSeoOpportunities } from '../services/seoOpportunitiesService';
+import { getBrokenLinkAuditResult, runBrokenLinkAudit } from '../services/brokenLinkService';
 
 /**
  * Perform a real server-side HTML scraping audit for a website.
@@ -312,6 +313,8 @@ export async function getSiteSeoDetails(req: Request, res: Response) {
         desktop: finalDesktopVitals,
       },
       opportunities,
+      pagespeedStatus: await getPageSpeedRateLimitStatus(),
+      brokenLinkAudit: getBrokenLinkAuditResult(siteId, site.url),
     });
   } catch (error: any) {
     console.error('Error fetching SEO details:', error);
@@ -340,6 +343,8 @@ export async function runPageSpeedTest(req: Request, res: Response) {
     }
 
     // Run fresh server-side on-page audit & PageSpeed checks
+    // Clear cache first so the user always gets a real fresh result here
+    clearPageSpeedCache(site.url);
     try {
       await runServerSideOnPageAudit(siteId, site.url);
       await runPageSpeedCheck(siteId, site.url, 'MOBILE');
@@ -376,9 +381,36 @@ export async function runPageSpeedTest(req: Request, res: Response) {
       success: true,
       message: 'PageSpeed test completed',
       vitals: { mobile: freshMobile, desktop: freshDesktop },
+      pagespeedStatus: await getPageSpeedRateLimitStatus(),
     });
   } catch (error: any) {
     console.error('Error running PageSpeed test:', error);
     res.status(500).json({ error: (error as Error).message || 'Internal Server Error' });
+  }
+}
+
+/**
+ * POST /api/sites/:id/broken-links
+ * Trigger on-demand broken link audit.
+ */
+export async function runBrokenLinkTest(req: Request, res: Response) {
+  try {
+    const siteId = parseInt(req.params.id, 10);
+    if (isNaN(siteId)) {
+      return res.status(400).json({ error: 'Invalid site ID' });
+    }
+
+    let site: any = await prisma.site.findUnique({ where: { id: siteId } });
+    const url = site?.url || 'https://growhaley.com';
+    const audit = await runBrokenLinkAudit(siteId, url);
+
+    res.json({
+      success: true,
+      message: 'Broken link audit completed',
+      brokenLinkAudit: audit,
+    });
+  } catch (error: any) {
+    console.error('Error running broken link test:', error);
+    res.status(500).json({ error: error.message || 'Internal Server Error' });
   }
 }

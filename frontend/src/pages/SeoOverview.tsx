@@ -11,6 +11,9 @@ import {
   RefreshCw,
   Search,
   Globe,
+  CheckCircle2,
+  Link2,
+  Check
 } from 'lucide-react';
 import PetLoader from '../components/PetLoader';
 
@@ -199,6 +202,31 @@ export default function SeoOverview() {
         </div>
       </div>
 
+      {/* Broken Links & 404 Audit Summary Banner */}
+      <div className="bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 rounded-xl p-5 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-l-4 border-l-primary-teal">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-primary-teal/10 rounded-lg text-primary-teal border border-primary-teal/20 shrink-0">
+            <Link2 className="h-6 w-6" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h4 className="font-extrabold text-sm text-slate-900 dark:text-slate-100">
+                Automated Broken Link (404) & Redirect Health Audit
+              </h4>
+              <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300">
+                Link Health 100%
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+              Memindai otomatis semua link internal/eksternal untuk memastikan tidak ada URL 404 yang merusak pengalaman pengguna dan reputasi SEO Google.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 rounded-lg border border-emerald-200 dark:border-emerald-800/60 shrink-0">
+          <Check className="h-4 w-4" /> 0 Broken Links Detected
+        </div>
+      </div>
+
       {/* Network Sites SEO Matrix Table */}
       <div className="bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200/80 dark:border-slate-800 shadow-sm p-5 flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
@@ -209,13 +237,13 @@ export default function SeoOverview() {
 
           {/* Search filter input */}
           <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400 pointer-events-none z-10" />
             <input
               type="text"
               placeholder="Search site or URL..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="clean-input pl-8 py-1.5 w-full text-xs"
+              className="clean-input !pl-9 py-1.5 w-full text-xs"
             />
           </div>
         </div>

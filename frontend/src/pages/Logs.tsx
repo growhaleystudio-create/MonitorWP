@@ -134,14 +134,14 @@ function Logs() {
       <div className="bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
         {/* Search */}
         <div className="relative w-full md:max-w-xs">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none z-10">
             <Search className="h-4 w-4" />
           </span>
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="clean-input w-full pl-9"
+            className="clean-input w-full !pl-9"
             placeholder="Search logs..."
           />
         </div>

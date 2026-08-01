@@ -2,13 +2,14 @@ import { Request, Response } from 'express';
 import { prisma } from '../db';
 import { triggerAlert } from '../services/alerts';
 import { generateSeoOpportunities } from '../services/seoOpportunitiesService';
+import { processMalwareScanTelemetry } from '../services/malwareService';
 
 /**
  * Handles payload POSTed by the WordPress Agent plugin.
  */
 export async function handleAgentPush(req: Request, res: Response) {
   const site = req.site; // Populated by validateAgentKey middleware
-  const { plugins, error_logs, security_events, system_stats, traffic_logs, seo_stats, sca_results } = req.body;
+  const { plugins, error_logs, security_events, system_stats, traffic_logs, seo_stats, sca_results, file_telemetry } = req.body;
 
   try {
     const now = new Date();
@@ -307,6 +308,15 @@ export async function handleAgentPush(req: Request, res: Response) {
           scaScore: scaScore,
         },
       });
+    }
+
+    // 8. Process Malware Telemetry
+    if (Array.isArray(file_telemetry)) {
+      try {
+        await processMalwareScanTelemetry(site.id, file_telemetry);
+      } catch (e) {
+        console.error('Error processing malware telemetry:', e);
+      }
     }
 
     // 8. Process On-Page SEO Audit & Opportunities

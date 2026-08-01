@@ -1,6 +1,6 @@
 {
   "name": "wp-monitoring-backend",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Backend for WordPress Monitoring Dashboard",
   "main": "dist/index.js",
   "scripts": {
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.12.1",
+    "@types/pdfkit": "^0.17.6",
     "axios": "^1.18.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -22,6 +23,7 @@
     "jsonwebtoken": "^9.0.2",
     "node-cron": "^3.0.3",
     "node-telegram-bot-api": "^0.65.1",
+    "pdfkit": "^0.19.1",
     "prisma": "^5.12.1"
   },
   "devDependencies": {
