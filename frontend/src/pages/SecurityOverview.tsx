@@ -13,8 +13,6 @@ import {
   CheckCircle,
   XCircle,
   AlertTriangle,
-  FileText,
-  Bug,
   FolderLock,
   UserX,
   Plus,

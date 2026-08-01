@@ -11,7 +11,6 @@ import {
   RefreshCw,
   Search,
   Globe,
-  CheckCircle2,
   Link2,
   Check
 } from 'lucide-react';

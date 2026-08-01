@@ -1,5 +1,4 @@
-import React from 'react';
-import { Activity, ShieldCheck, RefreshCw } from 'lucide-react';
+import { Activity, RefreshCw } from 'lucide-react';
 
 interface PetLoaderProps {
   size?: number;

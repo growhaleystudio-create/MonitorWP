@@ -28,9 +28,7 @@ import {
   Gauge,
   TrendingUp,
   Database,
-  Lock,
-  Wrench,
-  Trash2
+  Lock
 } from 'lucide-react';
 
 interface Site {

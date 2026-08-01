@@ -12,7 +12,6 @@ import {
   Clock,
   Mail,
   HelpCircle,
-  Key,
   Globe,
   ExternalLink,
   Sparkles
