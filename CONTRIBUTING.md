@@ -1,6 +1,6 @@
-# Contributing to Growhaley Monitor 🛡️
+# Contributing to WhalePod 🛡️
 
-First off, thank you for considering contributing to **Growhaley Monitor**! It's people like you that make open-source software such a wonderful tool for developers worldwide.
+First off, thank you for considering contributing to **WhalePod**! It's people like you that make open-source software such a wonderful tool for developers worldwide.
 
 ---
 
@@ -20,7 +20,7 @@ First off, thank you for considering contributing to **Growhaley Monitor**! It's
 
 #### 2. Suggesting Enhancements
 - Open a feature request Issue to discuss your idea before starting to write code.
-- Explain why this feature would be useful to Growhaley Monitor users.
+- Explain why this feature would be useful to WhalePod users.
 
 #### 3. Submitting Pull Requests (PR)
 1. **Fork** the repository to your own GitHub account.
@@ -47,7 +47,7 @@ First off, thank you for considering contributing to **Growhaley Monitor**! It's
 
 #### 2. Mengusulkan Fitur Baru
 - Buka Issue baru untuk berdiskusi mengenai ide fitur Anda sebelum mulai melakukan pengkodean.
-- Jelaskan mengapa fitur ini akan bermanfaat bagi pengguna Growhaley Monitor.
+- Jelaskan mengapa fitur ini akan bermanfaat bagi pengguna WhalePod.
 
 #### 3. Mengirimkan Pull Request (PR)
 1. **Fork** repositori ini ke akun GitHub Anda.
@@ -67,4 +67,4 @@ First off, thank you for considering contributing to **Growhaley Monitor**! It's
 
 Please be respectful, constructive, and welcoming to all community members.
 
-Thank you for helping make **Growhaley Monitor** better! ❤️
+Thank you for helping make **WhalePod** better! ❤️

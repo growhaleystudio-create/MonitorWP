@@ -1,8 +1,8 @@
 <div align="center">
 
-  <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/logo.svg" width="90" height="90" alt="Growhaley Monitor Logo" />
+  <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/logo.svg" width="90" height="90" alt="WhalePod Logo" />
 
-  # 🛡️ Growhaley Monitor
+  # 🛡️ WhalePod
 
   **Platform Pemantauan Uptime, Keamanan & SEO Engine Multi-Situs (WordPress + Non-WP) Berbasis Open-Source**
 
@@ -23,11 +23,11 @@
 ## 📌 Ringkasan
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docs/dashboard-preview-dark.png" alt="Growhaley Monitor Dark Mode Preview" width="49%" />
-  <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docs/dashboard-preview-light.png" alt="Growhaley Monitor Light Mode Preview" width="49%" />
+  <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docs/dashboard-preview-dark.png" alt="WhalePod Dark Mode Preview" width="49%" />
+  <img src="https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docs/dashboard-preview-light.png" alt="WhalePod Light Mode Preview" width="49%" />
 </p>
 
-**Growhaley Monitor** adalah platform pemantauan terpusat & self-hosted yang dirancang untuk memantau kesehatan website **WordPress** maupun **Non-WordPress** (Node.js, Laravel, React, HTML Statis, dll) dari satu panel terpadu.
+**WhalePod** adalah platform pemantauan terpusat & self-hosted yang dirancang untuk memantau kesehatan website **WordPress** maupun **Non-WordPress** (Node.js, Laravel, React, HTML Statis, dll) dari satu panel terpadu.
 
 Menggabungkan pemantauan Uptime real-time, pelacakan SSL Expiry, audit event keamanan (SQLi, XSS, Brute Force), **Engine Monitoring & Optimasi SEO ala CrawlSEO**, serta notifikasi instan via **Telegram Bot**.
 

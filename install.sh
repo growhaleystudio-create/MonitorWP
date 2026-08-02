@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Growhaley Monitor - 1-Line Installer Script (Linux & macOS Compatible)
+# WhalePod - 1-Line Installer Script (Linux, macOS & VPS Compatible)
 # Usage: curl -fsSL https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/install.sh | bash
 # ==============================================================================
 
@@ -13,14 +13,12 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 echo -e "${TEAL}"
-echo "   ____                      _           _             __  __ ___  _  ______ "
-echo "  / ___|_ __ _____      _| |__   __ _| | ___ _   _  |  \/  / _ \| ||_   _|"
-echo " | |  _| '__/ _ \ \ /\ / / '_ \ / _\` | |/ _ \ | | | | |\/| | | | | ||_| |  "
-echo " | |_| | | | (_) \ V  V /| | | | (_| | |  __/ |_| | | |  | | |_| |  _|| |  "
-echo "  \____|_|  \___/ \_/\_/ |_| |_|\__,_|_|\___|\__, | |_|  |_|\___/|_|  |_|  "
-echo "                                             |___/                         "
+echo " __        __/ _|  |_  | | __/ _ \ / _|"
+echo " \ \  /\  / / _ \ / _\` | |/ / | | |  _|"
+echo "  \ V  V /| | | | (_| |   <| |_| | |  "
+echo "   \_/\_/ |_| |_|\__,_|_|\_\\\___/|_|  "
 echo -e "${NC}"
-echo -e "${GREEN}🚀 Welcome to Growhaley Monitor Installer!${NC}\n"
+echo -e "${GREEN}🐋 Welcome to WhalePod Installer!${NC}\n"
 
 OS_TYPE="$(uname -s)"
 
@@ -83,7 +81,7 @@ else
     exit 1
 fi
 
-INSTALL_DIR="$HOME/growhaley-monitor"
+INSTALL_DIR="$HOME/whalepod"
 echo -e "${TEAL}📦 Setting up installation directory at ${INSTALL_DIR}...${NC}"
 mkdir -p "$INSTALL_DIR"
 cd "$INSTALL_DIR"
@@ -91,14 +89,13 @@ cd "$INSTALL_DIR"
 echo -e "${TEAL}📥 Downloading docker-compose.yml...${NC}"
 curl -fsSL https://raw.githubusercontent.com/growhaleystudio-create/MonitorWP/main/docker-compose.yml -o docker-compose.yml
 
-echo -e "${GREEN}⚡ Starting Growhaley Monitor containers...${NC}"
+echo -e "${GREEN}⚡ Starting WhalePod containers...${NC}"
 $COMPOSE_CMD up -d
 
 echo -e "\n${GREEN}======================================================${NC}"
-echo -e "${GREEN}🎉 Growhaley Monitor successfully installed!${NC}"
+echo -e "${GREEN}🎉 WhalePod successfully installed!${NC}"
 echo -e "${GREEN}======================================================${NC}"
 echo -e "🌐 Access Dashboard: ${TEAL}http://localhost:3000${NC}"
 echo -e "🔑 Default Username: ${YELLOW}admin${NC}"
 echo -e "🔑 Default Password: ${YELLOW}admin${NC}"
-echo -e "${YELLOW}⚠️ Please change the default password in Settings after logging in!${NC}"
 echo -e "${GREEN}======================================================${NC}\n"

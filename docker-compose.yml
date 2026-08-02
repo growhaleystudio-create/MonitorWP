@@ -1,11 +1,12 @@
 version: '3.8'
 
 services:
-  growhaley-monitor:
+  whalepod:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: growhaley-monitor
+    image: growhaleystudio/whalepod:latest
+    container_name: whalepod
     restart: always
     ports:
       - "3000:3000"
@@ -13,10 +14,10 @@ services:
       - PORT=3000
       - ADMIN_USER=admin
       - ADMIN_PASS=admin
-      - JWT_SECRET=growhaley-secure-random-jwt-key-2026
+      - JWT_SECRET=whalepod-secure-random-jwt-key-2026
       - DATABASE_URL=file:/app/backend/prisma/dev.db
     volumes:
-      - monitor-data:/app/backend/prisma
+      - whalepod-data:/app/backend/prisma
 
 volumes:
-  monitor-data:
+  whalepod-data:
