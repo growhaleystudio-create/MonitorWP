@@ -33,12 +33,12 @@ function Login({ onLogin }: LoginProps) {
       <div className="w-full max-w-md bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 rounded-lg p-8 md:p-10 shadow-lg relative z-10">
         {/* Logo / Brand Header */}
         <div className="flex flex-col items-center gap-2 mb-8 text-center">
-          <img src="/logo.svg" className="h-10 w-10 mb-2 shrink-0" alt="Growhaley Logo" />
-          <h1 className="font-bold text-[20px] tracking-tight text-slate-900 dark:text-slate-100 leading-none">
-            Growhaley
+          <img src="/logo.svg" className="h-10 w-10 mb-2 shrink-0" alt="WhalePod Logo" />
+          <h1 className="font-bold text-[22px] tracking-tight text-slate-900 dark:text-slate-100 leading-none">
+            WhalePod
           </h1>
-          <span className="text-[10px] font-semibold text-primary-teal uppercase tracking-widest mt-1.5 block">
-            WP Monitoring
+          <span className="text-[10px] font-extrabold text-primary-teal uppercase tracking-widest mt-1.5 block">
+            Multi-Site Command & Security
           </span>
         </div>
 

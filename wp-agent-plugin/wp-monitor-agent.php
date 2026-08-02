@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WordPress Multi-Site Monitor Agent
+ * Plugin Name: WhalePod WP Agent
  * Plugin URI: https://github.com/growhaleystudio-create/MonitorWP
  * Description: Lightweight monitoring agent that sends site status, plugin info, error logs, and security events to the central dashboard.
  * Version: 1.1.1

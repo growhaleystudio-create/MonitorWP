@@ -148,7 +148,7 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
       <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 fixed top-0 left-0 right-0 z-40 shadow-sm">
         <div className="flex items-center gap-2">
           <img src="/logo.svg" className="h-6 w-6 shrink-0" alt="Growhaley Logo" />
-          <span className="font-bold text-[12px] tracking-tight text-slate-800 dark:text-slate-100 uppercase">Growhaley WP</span>
+          <span className="font-bold text-[12px] tracking-tight text-slate-800 dark:text-slate-100 uppercase">WhalePod</span>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -185,13 +185,13 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
         <div className="flex flex-col gap-0.5 min-h-0">
           {/* Logo / Brand Header */}
           <div className={`flex items-center py-1 mb-1.5 ${isCollapsed ? 'md:justify-center' : 'gap-2 px-2'}`}>
-            <img src="/logo.svg" className="h-6 w-6 shrink-0" alt="Growhaley Logo" />
+            <img src="/logo.svg" className="h-6 w-6 shrink-0" alt="WhalePod Logo" />
             <div className={isCollapsed ? 'md:hidden' : ''}>
               <h1 className="font-bold text-[13px] tracking-tight text-slate-900 dark:text-slate-100 leading-none">
-                Growhaley WP
+                WhalePod
               </h1>
               <span className="text-[8px] font-bold text-primary-teal uppercase tracking-wider mt-0.5 block">
-                Monitor v1.2.0
+                Command v1.2.0
               </span>
             </div>
           </div>
