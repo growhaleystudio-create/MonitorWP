@@ -80,7 +80,7 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
     {
       label: 'MAIN',
       items: [
-        { name: 'Dashboard', to: '/', icon: LayoutDashboard, end: true },
+        { name: 'Summary', to: '/', icon: LayoutDashboard, end: true },
         { name: 'Sites', to: '/sites', icon: Globe, end: true },
       ],
     },
