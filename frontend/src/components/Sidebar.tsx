@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard,
-  Globe,
-  Sparkles,
-  ShieldAlert,
-  Plug,
-  FileText,
-  Settings,
+  BarChart3,
+  Server,
+  TrendingUp,
+  Shield,
+  Puzzle,
+  Terminal,
+  SlidersHorizontal,
   LogOut,
   Menu,
   X,
@@ -15,10 +15,10 @@ import {
   PanelLeftOpen,
   Sun,
   Moon,
-  MapPin,
-  Code2,
-  ShieldCheck,
-  ListChecks,
+  FolderTree,
+  FileJson,
+  LockKeyhole,
+  ShieldPlus,
   ChevronDown,
 } from 'lucide-react';
 
@@ -80,8 +80,8 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
     {
       label: 'MAIN',
       items: [
-        { name: 'Summary', to: '/', icon: LayoutDashboard, end: true },
-        { name: 'Sites', to: '/sites', icon: Globe, end: true },
+        { name: 'Summary', to: '/', icon: BarChart3, end: true },
+        { name: 'Sites', to: '/sites', icon: Server, end: true },
       ],
     },
     {
@@ -89,9 +89,9 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
       collapsible: true,
       activePrefix: '/seo',
       items: [
-        { name: 'SEO & Vitals', to: '/seo', icon: Sparkles, end: true },
-        { name: 'Sitemap Audit', to: '/seo/sitemap', icon: MapPin },
-        { name: 'Schema Validator', to: '/seo/schema', icon: Code2 },
+        { name: 'SEO & Vitals', to: '/seo', icon: TrendingUp, end: true },
+        { name: 'Sitemap Audit', to: '/seo/sitemap', icon: FolderTree },
+        { name: 'Schema Validator', to: '/seo/schema', icon: FileJson },
       ],
     },
     {
@@ -99,22 +99,22 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
       collapsible: true,
       activePrefix: '/security',
       items: [
-        { name: 'Security & WAF', to: '/security', icon: ShieldAlert, end: true },
-        { name: 'Security Headers', to: '/security/headers', icon: ShieldCheck },
-        { name: 'WP Hardening', to: '/security/hardening', icon: ListChecks },
+        { name: 'Security & WAF', to: '/security', icon: Shield, end: true },
+        { name: 'Security Headers', to: '/security/headers', icon: LockKeyhole },
+        { name: 'WP Hardening', to: '/security/hardening', icon: ShieldPlus },
       ],
     },
     {
       label: 'TOOLS',
       items: [
-        { name: 'Plugins & CVEs', to: '/plugins', icon: Plug },
-        { name: 'Audit Logs', to: '/logs', icon: FileText },
+        { name: 'Plugins & CVEs', to: '/plugins', icon: Puzzle },
+        { name: 'Audit Logs', to: '/logs', icon: Terminal },
       ],
     },
     {
       label: 'SYSTEM',
       items: [
-        { name: 'Settings', to: '/settings', icon: Settings },
+        { name: 'Settings', to: '/settings', icon: SlidersHorizontal },
       ],
     },
   ];
