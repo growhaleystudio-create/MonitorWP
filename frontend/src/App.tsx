@@ -13,6 +13,7 @@ import Plugins from './pages/Plugins';
 import Logs from './pages/Logs';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
+import ComingSoon from './pages/ComingSoon';
 
 function App() {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
@@ -76,13 +77,17 @@ function App() {
       {token ? (
         <div className="flex min-h-screen bg-bg-light dark:bg-bg-dark text-slate-800 dark:text-slate-100">
           <Sidebar onLogout={handleLogout} isCollapsed={isSidebarCollapsed} onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)} />
-          <main className={`flex-1 px-6 pt-20 pb-8 md:py-8 overflow-y-auto max-w-7xl mx-auto w-full transition-all duration-300 ${isSidebarCollapsed ? 'md:pl-20' : 'md:pl-60'}`}>
+          <main className={`flex-1 px-6 pt-20 pb-8 md:py-8 overflow-y-auto max-w-7xl mx-auto w-full transition-all duration-300 ${isSidebarCollapsed ? 'md:pl-[3.75rem]' : 'md:pl-56'}`}>
             <Routes>
               <Route path="/" element={<Overview />} />
               <Route path="/sites" element={<Sites />} />
               <Route path="/sites/:id" element={<SiteDetail />} />
               <Route path="/seo" element={<SeoOverview />} />
+              <Route path="/seo/sitemap" element={<ComingSoon />} />
+              <Route path="/seo/schema" element={<ComingSoon />} />
               <Route path="/security" element={<SecurityOverview />} />
+              <Route path="/security/headers" element={<ComingSoon />} />
+              <Route path="/security/hardening" element={<ComingSoon />} />
               <Route path="/plugins" element={<Plugins />} />
               <Route path="/logs" element={<Logs />} />
               <Route path="/settings" element={<Settings />} />
