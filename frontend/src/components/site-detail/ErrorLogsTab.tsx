@@ -1,5 +1,5 @@
 import React from 'react';
-import { ErrorLog } from '../../types/dashboard';
+import type { ErrorLog } from '../../types/dashboard';
 
 interface ErrorLogsTabProps {
   errorLogs: ErrorLog[];

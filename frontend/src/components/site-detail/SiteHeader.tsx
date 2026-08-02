@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Globe, ExternalLink, FileText } from 'lucide-react';
-import { Site } from '../../types/dashboard';
+import type { Site } from '../../types/dashboard';
 
 interface SiteHeaderProps {
   site: Site;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Shield, ShieldAlert, AlertOctagon } from 'lucide-react';
-import { Site, Plugin, SecurityEvent, SecurityStats } from '../../types/dashboard';
+import type { Site, Plugin, SecurityEvent, SecurityStats } from '../../types/dashboard';
 
 interface SecurityTabProps {
   site: Site;

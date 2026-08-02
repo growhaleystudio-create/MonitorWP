@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShieldAlert, ShieldCheck, AlertTriangle, ExternalLink } from 'lucide-react';
-import { Plugin } from '../../types/dashboard';
+import type { Plugin } from '../../types/dashboard';
 
 interface PluginsTabProps {
   plugins: Plugin[];

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Lock, ShieldCheck, Database, Check, Copy } from 'lucide-react';
-import { Site } from '../../types/dashboard';
+import type { Site } from '../../types/dashboard';
 
 interface OverviewTabProps {
   site: Site;
