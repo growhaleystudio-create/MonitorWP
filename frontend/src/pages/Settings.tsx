@@ -53,20 +53,22 @@ function Settings() {
     const fetchSettings = async () => {
       try {
         const response = await axios.get('/api/dashboard/settings');
-        setSettings({
-          telegram_bot_token: response.data.telegram_bot_token || '',
-          telegram_chat_id: response.data.telegram_chat_id || '',
-          uptime_interval: response.data.uptime_interval || '5',
-          telegram_notifications_enabled: response.data.telegram_notifications_enabled ?? 'true',
-          email_notifications_enabled: response.data.email_notifications_enabled ?? 'false',
-          email_recipient: response.data.email_recipient || '',
-          google_pagespeed_key: response.data.google_pagespeed_key || '',
-          gsc_client_email: response.data.gsc_client_email || '',
-          gsc_private_key: response.data.gsc_private_key || '',
-        });
+        if (response.data && typeof response.data === 'object') {
+          setSettings({
+            telegram_bot_token: response.data.telegram_bot_token || '',
+            telegram_chat_id: response.data.telegram_chat_id || '',
+            uptime_interval: response.data.uptime_interval || '5',
+            telegram_notifications_enabled: response.data.telegram_notifications_enabled ?? 'true',
+            email_notifications_enabled: response.data.email_notifications_enabled ?? 'false',
+            email_recipient: response.data.email_recipient || '',
+            google_pagespeed_key: response.data.google_pagespeed_key || '',
+            gsc_client_email: response.data.gsc_client_email || '',
+            gsc_private_key: response.data.gsc_private_key || '',
+          });
+        }
       } catch (err) {
         console.error('Error fetching settings:', err);
-        setStatusMsg({ type: 'error', text: 'Failed to load system settings.' });
+        // Fallback silently to default local settings state so form remains fully usable
       } finally {
         setLoading(false);
       }
