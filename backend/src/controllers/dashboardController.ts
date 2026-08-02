@@ -11,6 +11,8 @@ import { getMalwareScanResult } from '../services/malwareService';
 import { generateClientPdfReport } from '../services/pdfReportService';
 import { getBannedIps, banIpAddress, unbanIpAddress } from '../services/wafService';
 import { inspectSslCertificate } from '../services/sslService';
+import { auditSecurityHeaders } from '../services/securityHeadersService';
+import { auditWpHardening } from '../services/wpHardeningService';
 
 // Generate random API key (32 chars)
 function generateApiKey(): string {
@@ -931,6 +933,42 @@ export async function cleanSiteDatabase(req: Request, res: Response) {
     });
   } catch (error: any) {
     res.status(500).json({ error: error.message || 'Failed to clean site database' });
+  }
+}
+
+/**
+ * POST /api/security/headers-audit
+ * Audit OWASP Security Headers & Calculate Grade
+ */
+export async function securityHeadersAuditController(req: Request, res: Response) {
+  try {
+    const { url } = req.body;
+    if (!url) {
+      return res.status(400).json({ error: 'URL is required' });
+    }
+    const auditResult = await auditSecurityHeaders(url);
+    return res.json(auditResult);
+  } catch (err: any) {
+    console.error('Error auditing security headers:', err);
+    return res.status(500).json({ error: err.message || 'Failed to audit security headers' });
+  }
+}
+
+/**
+ * POST /api/security/hardening-audit
+ * Audit WP Server Hardening & Checklist
+ */
+export async function wpHardeningAuditController(req: Request, res: Response) {
+  try {
+    const { url } = req.body;
+    if (!url) {
+      return res.status(400).json({ error: 'URL is required' });
+    }
+    const auditResult = await auditWpHardening(url);
+    return res.json(auditResult);
+  } catch (err: any) {
+    console.error('Error auditing WP hardening:', err);
+    return res.status(500).json({ error: err.message || 'Failed to audit WP hardening' });
   }
 }
 

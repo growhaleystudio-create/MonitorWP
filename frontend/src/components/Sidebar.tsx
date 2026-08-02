@@ -90,8 +90,8 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
       activePrefix: '/seo',
       items: [
         { name: 'SEO & Vitals', to: '/seo', icon: Sparkles, end: true },
-        { name: 'Sitemap Audit', to: '/seo/sitemap', icon: MapPin, soon: true },
-        { name: 'Schema Validator', to: '/seo/schema', icon: Code2, soon: true },
+        { name: 'Sitemap Audit', to: '/seo/sitemap', icon: MapPin },
+        { name: 'Schema Validator', to: '/seo/schema', icon: Code2 },
       ],
     },
     {
@@ -100,8 +100,8 @@ function Sidebar({ onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
       activePrefix: '/security',
       items: [
         { name: 'Security & WAF', to: '/security', icon: ShieldAlert, end: true },
-        { name: 'Security Headers', to: '/security/headers', icon: ShieldCheck, soon: true },
-        { name: 'WP Hardening', to: '/security/hardening', icon: ListChecks, soon: true },
+        { name: 'Security Headers', to: '/security/headers', icon: ShieldCheck },
+        { name: 'WP Hardening', to: '/security/hardening', icon: ListChecks },
       ],
     },
     {

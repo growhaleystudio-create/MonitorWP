@@ -8,12 +8,15 @@ import Overview from './pages/Overview';
 import Sites from './pages/Sites';
 import SiteDetail from './pages/SiteDetail';
 import SeoOverview from './pages/SeoOverview';
+import SitemapAudit from './pages/SitemapAudit';
+import SchemaValidator from './pages/SchemaValidator';
 import SecurityOverview from './pages/SecurityOverview';
+import SecurityHeaders from './pages/SecurityHeaders';
+import WpHardening from './pages/WpHardening';
 import Plugins from './pages/Plugins';
 import Logs from './pages/Logs';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
-import ComingSoon from './pages/ComingSoon';
 
 function App() {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
@@ -83,11 +86,11 @@ function App() {
               <Route path="/sites" element={<Sites />} />
               <Route path="/sites/:id" element={<SiteDetail />} />
               <Route path="/seo" element={<SeoOverview />} />
-              <Route path="/seo/sitemap" element={<ComingSoon />} />
-              <Route path="/seo/schema" element={<ComingSoon />} />
+              <Route path="/seo/sitemap" element={<SitemapAudit />} />
+              <Route path="/seo/schema" element={<SchemaValidator />} />
               <Route path="/security" element={<SecurityOverview />} />
-              <Route path="/security/headers" element={<ComingSoon />} />
-              <Route path="/security/hardening" element={<ComingSoon />} />
+              <Route path="/security/headers" element={<SecurityHeaders />} />
+              <Route path="/security/hardening" element={<WpHardening />} />
               <Route path="/plugins" element={<Plugins />} />
               <Route path="/logs" element={<Logs />} />
               <Route path="/settings" element={<Settings />} />

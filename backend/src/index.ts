@@ -24,6 +24,8 @@ import {
   addBannedIp,
   removeBannedIp,
   cleanSiteDatabase,
+  securityHeadersAuditController,
+  wpHardeningAuditController,
 } from './controllers/dashboardController';
 import { startUptimeScheduler, runUptimeCycleImmediateAwaited } from './services/uptime';
 
@@ -113,12 +115,20 @@ app.delete('/api/dashboard/sites/:id', validateDashboardSession, deleteSite);
 app.get('/api/dashboard/plugins', validateDashboardSession, listPlugins);
 app.get('/api/dashboard/logs', validateDashboardSession, listLogs);
 
-import { getSiteSeoDetails, runPageSpeedTest, runBrokenLinkTest } from './controllers/seoController';
+import {
+  getSiteSeoDetails,
+  runPageSpeedTest,
+  runBrokenLinkTest,
+  auditSitemapController,
+  validateSchemaController,
+} from './controllers/seoController';
 
 // --- SEO API Routes (Protected) ---
 app.get('/api/dashboard/sites/:id/seo', validateDashboardSession, getSiteSeoDetails);
 app.post('/api/dashboard/sites/:id/pagespeed', validateDashboardSession, runPageSpeedTest);
 app.post('/api/dashboard/sites/:id/broken-links', validateDashboardSession, runBrokenLinkTest);
+app.post('/api/seo/sitemap-audit', validateDashboardSession, auditSitemapController);
+app.post('/api/seo/schema-validator', validateDashboardSession, validateSchemaController);
 
 app.get('/api/dashboard/settings', validateDashboardSession, getSettings);
 app.post('/api/dashboard/settings', validateDashboardSession, saveSettings);
@@ -127,10 +137,12 @@ app.get('/api/dashboard/download-plugin', validateDashboardSession, downloadAgen
 app.get('/api/dashboard/sites/:id/export-pdf', validateDashboardSession, exportPdfReport);
 app.post('/api/dashboard/sites/:id/clean-db', validateDashboardSession, cleanSiteDatabase);
 
-// --- Central WAF Routes ---
+// --- Central WAF & Security Audit Routes ---
 app.get('/api/dashboard/security/banned-ips', validateDashboardSession, listBannedIps);
 app.post('/api/dashboard/security/banned-ips', validateDashboardSession, addBannedIp);
 app.delete('/api/dashboard/security/banned-ips/:ip', validateDashboardSession, removeBannedIp);
+app.post('/api/security/headers-audit', validateDashboardSession, securityHeadersAuditController);
+app.post('/api/security/hardening-audit', validateDashboardSession, wpHardeningAuditController);
 
 // --- Cron Route for Serverless (Vercel) ---
 app.get('/api/cron/check-uptime', async (req, res) => {

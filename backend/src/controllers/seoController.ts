@@ -4,6 +4,8 @@ import { prisma } from '../db';
 import { runPageSpeedCheck, clearPageSpeedCache, getPageSpeedRateLimitStatus } from '../services/pagespeedService';
 import { generateSeoOpportunities } from '../services/seoOpportunitiesService';
 import { getBrokenLinkAuditResult, runBrokenLinkAudit } from '../services/brokenLinkService';
+import { auditSitemap } from '../services/sitemapService';
+import { validatePageSchemas } from '../services/schemaService';
 
 /**
  * Perform a real server-side HTML scraping audit for a website.
@@ -412,5 +414,41 @@ export async function runBrokenLinkTest(req: Request, res: Response) {
   } catch (error: any) {
     console.error('Error running broken link test:', error);
     res.status(500).json({ error: error.message || 'Internal Server Error' });
+  }
+}
+
+/**
+ * POST /api/seo/sitemap-audit
+ * Audit XML sitemap and check individual URLs
+ */
+export async function auditSitemapController(req: Request, res: Response) {
+  try {
+    const { url } = req.body;
+    if (!url) {
+      return res.status(400).json({ error: 'Sitemap URL is required' });
+    }
+    const auditResult = await auditSitemap(url);
+    return res.json(auditResult);
+  } catch (err: any) {
+    console.error('Error auditing sitemap:', err);
+    return res.status(500).json({ error: err.message || 'Failed to audit sitemap' });
+  }
+}
+
+/**
+ * POST /api/seo/schema-validator
+ * Validate JSON-LD and OpenGraph structured data
+ */
+export async function validateSchemaController(req: Request, res: Response) {
+  try {
+    const { url } = req.body;
+    if (!url) {
+      return res.status(400).json({ error: 'URL is required' });
+    }
+    const validationResult = await validatePageSchemas(url);
+    return res.json(validationResult);
+  } catch (err: any) {
+    console.error('Error validating schemas:', err);
+    return res.status(500).json({ error: err.message || 'Failed to validate schemas' });
   }
 }
