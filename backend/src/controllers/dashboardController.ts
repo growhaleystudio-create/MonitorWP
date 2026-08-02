@@ -23,91 +23,39 @@ function generateApiKey(): string {
  */
 export async function getOverview(req: Request, res: Response) {
   try {
-    let totalSites = 0;
-    let onlineSites = 0;
-    let offlineSites = 0;
-    let totalPluginsNeedingUpdate = 0;
-    let totalPluginsExpired = 0;
-    let recentErrors = 0;
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
-    try {
-      totalSites = await prisma.site.count();
-      onlineSites = await prisma.site.count({ where: { status: 'online' } });
-      offlineSites = await prisma.site.count({ where: { status: 'offline' } });
-    } catch (e) {
-      console.error('Error counting sites:', e);
-    }
-
-    try {
-      totalPluginsNeedingUpdate = await prisma.plugin.count({
-        where: { requiresUpdate: true, site: { isActive: true } },
-      });
-      totalPluginsExpired = await prisma.plugin.count({
-        where: { isExpired: true, site: { isActive: true } },
-      });
-    } catch (e) {
-      console.error('Error counting plugins:', e);
-    }
-
-    try {
-      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-      const recentErrorsSum = await prisma.errorLog.aggregate({
+    const [
+      totalSites,
+      onlineSites,
+      offlineSites,
+      totalPluginsNeedingUpdate,
+      totalPluginsExpired,
+      recentErrorsSum,
+      alerts,
+      securityEvents,
+      quickSites
+    ] = await Promise.all([
+      prisma.site.count().catch(() => 0),
+      prisma.site.count({ where: { status: 'online' } }).catch(() => 0),
+      prisma.site.count({ where: { status: 'offline' } }).catch(() => 0),
+      prisma.plugin.count({ where: { requiresUpdate: true, site: { isActive: true } } }).catch(() => 0),
+      prisma.plugin.count({ where: { isExpired: true, site: { isActive: true } } }).catch(() => 0),
+      prisma.errorLog.aggregate({
         where: { lastSeen: { gte: oneDayAgo } },
         _sum: { count: true },
-      });
-      recentErrors = recentErrorsSum?._sum?.count || 0;
-    } catch (e) {
-      console.error('Error aggregating error logs:', e);
-    }
-
-    let alerts: any[] = [];
-    try {
-      alerts = await prisma.alert.findMany({
+      }).catch(() => null),
+      prisma.alert.findMany({
         take: 15,
         orderBy: { createdAt: 'desc' },
         include: { site: true },
-      });
-    } catch (e) {
-      console.error('Error fetching alerts:', e);
-    }
-
-    let securityEvents: any[] = [];
-    try {
-      securityEvents = await prisma.securityEvent.findMany({
+      }).catch(() => []),
+      prisma.securityEvent.findMany({
         take: 15,
         orderBy: { createdAt: 'desc' },
         include: { site: true },
-      });
-    } catch (e) {
-      console.error('Error fetching security events:', e);
-    }
-
-    const timeline = [
-      ...alerts.map(a => ({
-        id: `alert-${a.id}`,
-        type: 'alert',
-        siteName: a.site?.name || 'System',
-        eventType: a.alertType || 'alert',
-        message: a.message || '',
-        severity: a.severity || 'info',
-        createdAt: a.createdAt,
-      })),
-      ...securityEvents.map(s => ({
-        id: `sec-${s.id}`,
-        type: 'security',
-        siteName: s.site?.name || 'System',
-        eventType: s.eventType || 'event',
-        message: `${(s.eventType || 'event').replace('_', ' ')}: ${s.username ? `User: ${s.username}` : ''} (${s.ipAddress || 'unknown IP'})`,
-        severity: (s.eventType && s.eventType.startsWith('injection_')) ? 'critical' : (s.eventType === 'login_failed' ? 'warning' : 'info'),
-        createdAt: s.createdAt,
-      }))
-    ]
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      .slice(0, 20);
-
-    let quickSites: any[] = [];
-    try {
-      quickSites = await prisma.site.findMany({
+      }).catch(() => []),
+      prisma.site.findMany({
         select: {
           id: true,
           name: true,
@@ -128,25 +76,33 @@ export async function getOverview(req: Request, res: Response) {
           }
         },
         orderBy: { name: 'asc' },
-      });
-    } catch (e) {
-      console.error('Error fetching quickSites:', e);
-      // Fallback simple query if column selection failed
-      try {
-        quickSites = await prisma.site.findMany({
-          select: {
-            id: true,
-            name: true,
-            url: true,
-            status: true,
-            lastSeenAt: true,
-          },
-          orderBy: { name: 'asc' },
-        });
-      } catch (err) {
-        console.error('Fallback quickSites query also failed:', err);
-      }
-    }
+      }).catch(() => []),
+    ]);
+
+    const recentErrors = recentErrorsSum?._sum?.count || 0;
+
+    const timeline = [
+      ...alerts.map((a: any) => ({
+        id: `alert-${a.id}`,
+        type: 'alert',
+        siteName: a.site?.name || 'System',
+        eventType: a.alertType || 'alert',
+        message: a.message || '',
+        severity: a.severity || 'info',
+        createdAt: a.createdAt,
+      })),
+      ...securityEvents.map((s: any) => ({
+        id: `sec-${s.id}`,
+        type: 'security',
+        siteName: s.site?.name || 'System',
+        eventType: s.eventType || 'event',
+        message: `${(s.eventType || 'event').replace('_', ' ')}: ${s.username ? `User: ${s.username}` : ''} (${s.ipAddress || 'unknown IP'})`,
+        severity: (s.eventType && s.eventType.startsWith('injection_')) ? 'critical' : (s.eventType === 'login_failed' ? 'warning' : 'info'),
+        createdAt: s.createdAt,
+      }))
+    ]
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 20);
 
     res.json({
       stats: {
