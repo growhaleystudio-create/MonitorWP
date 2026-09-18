@@ -46,6 +46,7 @@ function Sites() {
   
   // Modal states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [modalError, setModalError] = useState<string | null>(null);
   const [newSiteName, setNewSiteName] = useState('');
   const [newSiteUrl, setNewSiteUrl] = useState('');
   const [newSiteType, setNewSiteType] = useState<'wordpress' | 'non-wp'>('wordpress');
@@ -76,9 +77,10 @@ function Sites() {
       const response = await axios.get('/api/dashboard/sites');
       setSites(response.data);
       setError(null);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching sites:', err);
-      setError('Failed to fetch monitored websites.');
+      const errMsg = err.response?.data?.error || err.message || 'Failed to fetch monitored websites.';
+      setError(errMsg);
     } finally {
       setLoading(false);
     }
@@ -88,9 +90,17 @@ function Sites() {
     fetchSites();
   }, []);
 
+  const openAddModal = () => {
+    setModalError(null);
+    setError(null);
+    setCreatedSite(null);
+    setIsAddModalOpen(true);
+  };
+
   const handleAddSite = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    setModalError(null);
     setError(null);
 
     let formattedUrl = newSiteUrl.trim();
@@ -110,9 +120,12 @@ function Sites() {
       setNewSiteUrl('');
       setNewCheckKeyword('');
       setNewSiteType('wordpress');
+      setModalError(null);
       fetchSites();
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to register new site');
+      const msg = err.response?.data?.error || err.message || 'Failed to register new site';
+      setModalError(msg);
+      setError(msg);
     } finally {
       setSubmitting(false);
     }
@@ -186,7 +199,7 @@ function Sites() {
             Download WP Agent ZIP
           </button>
           <button
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={openAddModal}
             className="btn-gold px-4 py-2 flex items-center gap-2 text-xs font-semibold"
           >
             <Plus className="h-4 w-4" />
@@ -208,7 +221,7 @@ function Sites() {
           <p className="font-bold text-slate-800 dark:text-slate-200 text-lg">No Websites Registered</p>
           <p className="text-xs mt-1 mb-6 font-medium">Add your first website or WordPress node to start tracking.</p>
           <button
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={openAddModal}
             className="btn-teal px-5 py-2.5 mx-auto"
           >
             Add New Site
@@ -468,6 +481,22 @@ function Sites() {
                         className="clean-input"
                         placeholder="e.g. Welcome to My Site"
                       />
+                    </div>
+                  )}
+
+                  {modalError && (
+                    <div className="p-3.5 rounded-lg bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 text-xs font-medium flex items-start gap-2.5">
+                      <AlertOctagon className="h-4 w-4 shrink-0 mt-0.5 text-red-500" />
+                      <div className="flex-1 space-y-1">
+                        <p className="font-semibold text-red-700 dark:text-red-200">{modalError}</p>
+                        {(modalError.toLowerCase().includes('database') ||
+                          modalError.toLowerCase().includes('supabase') ||
+                          modalError.toLowerCase().includes('internal server error')) && (
+                          <p className="text-[11px] text-red-600/90 dark:text-red-400/90 leading-normal">
+                            💡 <strong>Catatan:</strong> Jika Anda menggunakan Supabase Free Tier, database otomatis di-pause jika tidak aktif selama 7 hari. Silakan buka dashboard Supabase Anda dan klik <em>Restore / Unpause</em> proyek database.
+                          </p>
+                        )}
+                      </div>
                     </div>
                   )}
 

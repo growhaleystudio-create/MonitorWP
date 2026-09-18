@@ -609,9 +609,18 @@ export async function createSite(req: Request, res: Response) {
     runUptimeCycleImmediate().catch(err => console.error(err));
 
     res.status(201).json(site);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating site:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    const errStr = error?.message || String(error);
+    let errorMessage = 'Failed to create site due to internal server error.';
+    if (error?.code === 'P2002') {
+      errorMessage = 'A site with this URL or API Key already exists.';
+    } else if (errStr.includes('tenant') || errStr.includes('ENOTFOUND') || errStr.includes('Can\'t reach database server')) {
+      errorMessage = 'Database connection failed: Your Supabase database appears to be paused or unreachable. Please unpause your project in the Supabase dashboard.';
+    } else if (error?.message) {
+      errorMessage = error.message;
+    }
+    res.status(500).json({ error: errorMessage });
   }
 }
 
